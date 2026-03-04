@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
 import { Plus, ArrowLeft, ArrowRight, MapPin, Building2, CheckCircle2, ChevronRight, Info, Map } from "lucide-react";
 import { PERMITS, STATUS_CONFIG, CATEGORY_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
 import PermitCard from "../components/permits/PermitCard";

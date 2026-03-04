@@ -48,21 +48,21 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Dashboard from './pages/Dashboard';
+import PermitDashboard from './pages/PermitDashboard';
 import PermitFinder from './pages/PermitFinder';
+import ProjectProfile from './pages/ProjectProfile';
 import Projects from './pages/Projects';
 import ReviewQueue from './pages/ReviewQueue';
-import PermitDashboard from './pages/PermitDashboard';
-import ProjectProfile from './pages/ProjectProfile';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Dashboard": Dashboard,
+    "PermitDashboard": PermitDashboard,
     "PermitFinder": PermitFinder,
+    "ProjectProfile": ProjectProfile,
     "Projects": Projects,
     "ReviewQueue": ReviewQueue,
-    "PermitDashboard": PermitDashboard,
-    "ProjectProfile": ProjectProfile,
 }
 
 export const pagesConfig = {
