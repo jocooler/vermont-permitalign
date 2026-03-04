@@ -210,7 +210,8 @@ export default function PermitDetailPanel({ permit, projectId, projectData, ipDa
               </button>
             </div>
           </div>
-        </div>}
+        </div>
+        )}
       </div>
     </div>
   );
