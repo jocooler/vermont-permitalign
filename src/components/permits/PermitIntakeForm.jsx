@@ -138,6 +138,12 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
   const [uploadedFiles, setUploadedFiles] = useState([]); // [{name, url}]
 
   const specificFields = PERMIT_SPECIFIC_FIELDS[permit.id] || [];
+  
+  // Build dynamic steps based on permit content
+  const STEPS = BASE_STEPS.filter((_, i) => {
+    if (i === 2) return specificFields.length > 0; // Hide "Specific Questions" if no fields
+    return true;
+  });
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
