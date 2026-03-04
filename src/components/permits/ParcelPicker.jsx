@@ -591,19 +591,60 @@ export default function ParcelPicker({ onClose, onSelect }) {
                   {[selectedParcel.addr, selectedParcel.town].filter(Boolean).join(" · ")}
                   {selectedParcel.owner && ` · ${selectedParcel.owner}`}
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 text-xs">
-                  {wetlandCheck === "checking" && (
-                    <span className="flex items-center gap-1 text-slate-400"><Loader2 size={11} className="animate-spin" /> Checking wetlands…</span>
-                  )}
-                  {wetlandCheck?.hasWetland === true && (
-                    <span className="flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                      <AlertTriangle size={11} /> Class {wetlandCheck.classes.sort().join(" & ")} wetland detected — wetland permits likely required
+                <div className="mt-1.5 flex flex-wrap gap-1.5 text-xs">
+                  {siteChecks === "checking" && (
+                    <span className="flex items-center gap-1 text-slate-400">
+                      <Loader2 size={11} className="animate-spin" /> Checking site conditions…
                     </span>
                   )}
-                  {wetlandCheck?.hasWetland === false && (
-                    <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
-                      <Leaf size={11} /> No classified wetlands on parcel
-                    </span>
+                  {siteChecks && siteChecks !== "checking" && (
+                    <>
+                      {/* Wetlands */}
+                      {siteChecks.wetland.hasWetland ? (
+                        <span className="flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          <AlertTriangle size={11} /> Class {siteChecks.wetland.classes.sort().join("/")} wetland
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
+                          <Leaf size={11} /> No wetlands
+                        </span>
+                      )}
+                      {/* Floodplain */}
+                      {siteChecks.floodplain ? (
+                        <span className="flex items-center gap-1 font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                          <AlertTriangle size={11} /> In floodplain
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
+                          <Leaf size={11} /> No floodplain
+                        </span>
+                      )}
+                      {/* Stream */}
+                      {siteChecks.stream && (
+                        <span className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          <AlertTriangle size={11} /> Near stream
+                        </span>
+                      )}
+                      {/* Lake */}
+                      {siteChecks.lake && (
+                        <span className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          <AlertTriangle size={11} /> Near lake/pond
+                        </span>
+                      )}
+                      {/* Elevation */}
+                      {siteChecks.elevation != null && (
+                        <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full border ${siteChecks.elevation > 2500 ? "text-amber-700 bg-amber-50 border-amber-200 font-semibold" : "text-slate-500 bg-slate-50 border-slate-200"}`}>
+                          {siteChecks.elevation > 2500 ? <AlertTriangle size={11} /> : null}
+                          {Math.round(siteChecks.elevation).toLocaleString()} ft
+                        </span>
+                      )}
+                      {/* State highway */}
+                      {siteChecks.stateHighway && (
+                        <span className="flex items-center gap-1 text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                          <AlertTriangle size={11} /> State highway access
+                        </span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
