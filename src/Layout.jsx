@@ -98,7 +98,7 @@ export default function Layout({ children, currentPageName }) {
       <footer className="bg-green-950 text-white py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-start gap-4">
           <div>
-            <div className="font-bold mb-1" style={{ fontFamily: "Georgia, serif" }}>Vermont Permitting System</div>
+            <div className="font-bold mb-1" style={{ fontFamily: "Georgia, serif" }}>Vermont Permitting System - DRAFT</div>
             <div className="text-xs opacity-60">Agency of Natural Resources · Department of Environmental Conservation</div>
           </div>
           <div className="text-xs opacity-50">Version 0.1 Draft · For internal use and testing only</div>
