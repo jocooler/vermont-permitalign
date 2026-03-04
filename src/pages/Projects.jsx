@@ -73,7 +73,7 @@ function ProjectForm({ onSave, onCancel }) {
             set("parcel_id", span);
             if (town && !form.town) set("town", town);
             if (addr && !form.address) set("address", addr);
-            if (nearWetlands) setSite("near_wetlands", true);
+            if (nearWetlands !== undefined) setSite("near_wetlands", !!nearWetlands);
           }}
         />
       )}
