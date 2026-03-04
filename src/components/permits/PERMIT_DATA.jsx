@@ -11,6 +11,7 @@ export const PERMITS = [
     sheet: "#1",
     description: "Ensures proper design and installation of wastewater and potable water systems to protect public health and water quality.",
     url: "https://dec.vermont.gov/water-investment/wastewater",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet01.pdf",
   },
   {
     id: "2",
@@ -23,6 +24,7 @@ export const PERMITS = [
     sheet: "#2",
     description: "Required when dividing land into two or more parcels.",
     url: "https://dec.vermont.gov/water-investment/wastewater/subdivision",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet02.pdf",
   },
   {
     id: "5",
@@ -35,6 +37,7 @@ export const PERMITS = [
     sheet: "#5",
     description: "Required for any extension of public sewer lines to serve new development.",
     url: "https://dec.vermont.gov/water-investment/wastewater",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet05.pdf",
   },
   {
     id: "6.1",
@@ -47,6 +50,7 @@ export const PERMITS = [
     sheet: "#6.1",
     description: "Required for construction sites disturbing one or more acres of land.",
     url: "https://dec.vermont.gov/watershed-management/stormwater",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet06_1.pdf",
   },
   {
     id: "6.2",
@@ -59,6 +63,7 @@ export const PERMITS = [
     sheet: "#6.2",
     description: "Required for new development with one or more acres of impervious surface.",
     url: "https://dec.vermont.gov/watershed-management/stormwater",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet06_2.pdf",
   },
   {
     id: "49",
@@ -71,6 +76,7 @@ export const PERMITS = [
     sheet: "#49",
     description: "Required for all multi-family buildings to ensure compliance with fire and life safety codes.",
     url: "https://firesafety.vermont.gov",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet49.pdf",
   },
   {
     id: "50",
@@ -83,6 +89,7 @@ export const PERMITS = [
     sheet: "#50",
     description: "Required for all electrical work in multi-family residential buildings.",
     url: "https://firesafety.vermont.gov/buildings/electrical",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet50.pdf",
   },
   {
     id: "50.1",
@@ -95,6 +102,7 @@ export const PERMITS = [
     sheet: "#50.1",
     description: "Required before electric utility can energize new service to a building.",
     url: "https://firesafety.vermont.gov/buildings/electrical",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet50_1.pdf",
   },
   {
     id: "50.2",
@@ -107,6 +115,7 @@ export const PERMITS = [
     sheet: "#50.2",
     description: "Required for all plumbing work in buildings connected to public water or sewer.",
     url: "https://firesafety.vermont.gov/buildings/plumbing",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet50_2.pdf",
   },
   {
     id: "47.2",
@@ -119,6 +128,7 @@ export const PERMITS = [
     sheet: "#47.2",
     description: "Vermont's energy efficiency standards for residential buildings of 3 stories or less.",
     url: "https://publicservice.vermont.gov/content/rbes",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet47_2.pdf",
   },
 
   // Likely Required
@@ -133,6 +143,7 @@ export const PERMITS = [
     sheet: "#29",
     description: "Required for any work in or near Class I or Class II wetlands.",
     url: "https://dec.vermont.gov/watershed-management/wetlands",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet29.pdf",
   },
   {
     id: "32.3",
@@ -145,6 +156,7 @@ export const PERMITS = [
     sheet: "#32.3",
     description: "Required for development in designated flood hazard areas.",
     url: "https://dec.vermont.gov/watershed-management/rivers/flood-hazard-area",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet32_3.pdf",
   },
   {
     id: "32",
@@ -157,6 +169,7 @@ export const PERMITS = [
     sheet: "#32",
     description: "Required for any alteration to or work near a perennial stream.",
     url: "https://dec.vermont.gov/watershed-management/rivers",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet32.pdf",
   },
   {
     id: "66",
@@ -169,6 +182,7 @@ export const PERMITS = [
     sheet: "#66",
     description: "Required if the project requires access from or work within a state highway right-of-way.",
     url: "https://vtrans.vermont.gov",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet66.pdf",
   },
   {
     id: "54",
@@ -181,6 +195,7 @@ export const PERMITS = [
     sheet: "#54",
     description: "Required before demolishing or extensively renovating any existing structure.",
     url: "https://dec.vermont.gov/air-quality/asbestos",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet54.pdf",
   },
   {
     id: "55.1",
@@ -193,6 +208,7 @@ export const PERMITS = [
     sheet: "#55.1",
     description: "Required for renovation, repair, or painting in pre-1978 structures.",
     url: "https://www.healthvermont.gov/environment/environmental-health/lead",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet55_1.pdf",
   },
 
   // Conditional
@@ -207,6 +223,7 @@ export const PERMITS = [
     sheet: "#47",
     description: "Vermont's major land use permit. Required for 10+ unit projects and certain other thresholds.",
     url: "https://nrb.vermont.gov/act250",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet47.pdf",
   },
   {
     id: "21",
@@ -219,6 +236,7 @@ export const PERMITS = [
     sheet: "#21",
     description: "Required for any public water system serving 15 or more connections or 25 or more people.",
     url: "https://dec.vermont.gov/drinking-water",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet21.pdf",
   },
   {
     id: "22",
@@ -231,6 +249,7 @@ export const PERMITS = [
     sheet: "#22",
     description: "Required before constructing a public water system.",
     url: "https://dec.vermont.gov/drinking-water",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet22.pdf",
   },
   {
     id: "28.1",
@@ -243,6 +262,7 @@ export const PERMITS = [
     sheet: "#28.1",
     description: "Required for development within 250 feet of a lake or pond larger than 10 acres.",
     url: "https://dec.vermont.gov/watershed-management/lakes-ponds/shoreland-protection",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet28_1.pdf",
   },
   {
     id: "28",
@@ -255,6 +275,7 @@ export const PERMITS = [
     sheet: "#28",
     description: "Required for any physical encroachment on or into a public water body.",
     url: "https://dec.vermont.gov/watershed-management/lakes-ponds",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet28.pdf",
   },
   {
     id: "101",
@@ -267,6 +288,7 @@ export const PERMITS = [
     sheet: "#101",
     description: "Required when federal funding or federal permits are involved in the project.",
     url: "https://accd.vermont.gov/historic-preservation",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet101.pdf",
   },
   {
     id: "97",
@@ -279,6 +301,7 @@ export const PERMITS = [
     sheet: "#97",
     description: "Federal permit required for any filling of wetlands or waters of the United States.",
     url: "https://www.nae.usace.army.mil/Missions/Regulatory/",
+    info_sheet_url: "https://dec.vermont.gov/sites/dec/files/permit-handbook/sheet97.pdf",
   },
 ];
 
