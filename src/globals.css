@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --vt-green-dark: #1a3d2e;
+  --vt-green: #2d6a4f;
+  --vt-green-mid: #3a7d5c;
+  --vt-green-light: #52b788;
+  --vt-green-pale: #d8f3dc;
+  --vt-blue: #1b4f72;
+  --vt-blue-light: #2980b9;
+  --vt-gold: #b7791f;
+  --vt-gold-light: #f6e05e;
+  --vt-gray-dark: #1a202c;
+  --vt-gray: #4a5568;
+  --vt-gray-mid: #718096;
+  --vt-gray-light: #e2e8f0;
+  --vt-gray-pale: #f7f8fa;
+  --vt-white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--vt-gray-dark);
+  background-color: var(--vt-gray-pale);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  color: var(--vt-green-dark);
+}
+
+.vt-header-bar {
+  background-color: var(--vt-green-dark);
+}
+
+.vt-nav {
+  background-color: var(--vt-white);
+  border-bottom: 3px solid var(--vt-green);
+}
+
+.vt-btn-primary {
+  background-color: var(--vt-green);
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.vt-btn-primary:hover {
+  background-color: var(--vt-green-dark);
+}
+
+.vt-btn-secondary {
+  background-color: var(--vt-blue);
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.vt-card {
+  background: white;
+  border: 1px solid var(--vt-gray-light);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.vt-badge-core {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vt-badge-likely {
+  background-color: #fef9c3;
+  color: #854d0e;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vt-badge-conditional {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
