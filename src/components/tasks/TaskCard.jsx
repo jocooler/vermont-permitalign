@@ -2,7 +2,7 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { CheckCircle2, Clock, AlertCircle, Trash2, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import TaskEditForm from "./TaskEditForm";
+import TaskEditForm from "./TaskEditForm.jsx";
 
 const STATUS_CONFIG = {
   pending: { label: "Pending", color: "#64748b", icon: Clock },
