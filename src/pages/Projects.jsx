@@ -500,6 +500,7 @@ export default function Projects() {
           project={selected}
           onBack={() => setView("list")}
           onStatusChange={handleStatusChange}
+          onNotesChange={handleNotesChange}
         />
       )}
     </div>
