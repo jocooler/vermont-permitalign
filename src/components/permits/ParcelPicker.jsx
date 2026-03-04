@@ -324,7 +324,10 @@ export default function ParcelPicker({ onClose, onSelect }) {
 
   const handleConfirm = () => {
     if (selectedParcel?.span) {
-      const nearWetlands = wetlandCheck?.hasWetland === true;
+      // Only pass nearWetlands if the check has completed (not null/checking)
+      const nearWetlands = (wetlandCheck && wetlandCheck !== "checking")
+        ? wetlandCheck.hasWetland
+        : undefined;
       onSelect(selectedParcel.span, selectedParcel.town, selectedParcel.addr, nearWetlands);
       onClose();
     }
