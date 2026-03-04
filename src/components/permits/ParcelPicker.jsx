@@ -324,7 +324,8 @@ export default function ParcelPicker({ onClose, onSelect }) {
 
   const handleConfirm = () => {
     if (selectedParcel?.span) {
-      onSelect(selectedParcel.span, selectedParcel.town, selectedParcel.addr);
+      const nearWetlands = wetlandCheck?.hasWetland === true;
+      onSelect(selectedParcel.span, selectedParcel.town, selectedParcel.addr, nearWetlands);
       onClose();
     }
   };
