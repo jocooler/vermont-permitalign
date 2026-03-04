@@ -69,9 +69,13 @@ function ProjectForm({ onSave, onCancel }) {
   return (
     <div className="max-w-2xl mx-auto">
       {showParcelMap && (
-        <ParcelMapModal
+        <ParcelPicker
           onClose={() => setShowParcelMap(false)}
-          onSelect={id => set("parcel_id", id)}
+          onSelect={(span, town, addr) => {
+            set("parcel_id", span);
+            if (town && !form.town) set("town", town);
+            if (addr && !form.address) set("address", addr);
+          }}
         />
       )}
 
