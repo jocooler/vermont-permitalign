@@ -611,14 +611,16 @@ export default function ParcelPicker({ onClose, onSelect }) {
                         )
                       )}
                       {/* Floodplain */}
-                      {siteChecks.floodplain ? (
-                        <span className="flex items-center gap-1 font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
-                          <AlertTriangle size={11} /> In floodplain
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
-                          <Leaf size={11} /> No floodplain
-                        </span>
+                      {siteChecks.floodplain != null && (
+                        siteChecks.floodplain ? (
+                          <span className="flex items-center gap-1 font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                            <AlertTriangle size={11} /> In floodplain
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
+                            <Leaf size={11} /> No floodplain
+                          </span>
+                        )
                       )}
                       {/* Stream */}
                       {siteChecks.stream && (
