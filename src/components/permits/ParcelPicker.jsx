@@ -219,7 +219,7 @@ export default function ParcelPicker({ onClose, onSelect }) {
     }
   };
 
-  const handleFeatureSelect = (feature) => {
+  const handleFeatureSelect = async (feature) => {
     // REST API uses `attributes`, GeoJSON uses `properties`
     const attrs = feature.attributes || feature.properties || {};
     const span = attrs.SPAN || "";
@@ -228,6 +228,27 @@ export default function ParcelPicker({ onClose, onSelect }) {
     const addr = attrs.ADDRGL1 || "";
     setSelectedParcel({ span, town, owner, addr, feature });
     setError(null);
+
+    // Run wetland intersection check in background
+    setWetlandCheck("checking");
+    try {
+      // Build GeoJSON geometry from feature
+      let geom = null;
+      if (feature.geometry?.rings) {
+        geom = { type: "Polygon", coordinates: feature.geometry.rings };
+      } else if (feature.geometry?.type === "Polygon") {
+        geom = feature.geometry;
+      }
+      if (geom) {
+        const hits = await checkWetlandIntersection(geom);
+        const classes = [...new Set(hits.map(h => (h.attributes || h.properties || {}).CLASS))];
+        setWetlandCheck({ hasWetland: hits.length > 0, classes });
+      } else {
+        setWetlandCheck(null);
+      }
+    } catch {
+      setWetlandCheck(null);
+    }
   };
 
   const handleMapClick = async (latlng, map) => {
