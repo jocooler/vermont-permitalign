@@ -166,8 +166,7 @@ function ProjectForm({ onSave, onCancel }) {
             <button
               onClick={() => setStep(1)}
               disabled={!form.name.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm disabled:opacity-40"
-              style={{ background: "var(--vt-green)", color: "white" }}
+              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm disabled:opacity-40 bg-green-700 text-white hover:bg-green-800"
             >
               Next: Site Conditions <ArrowRight size={15} />
             </button>
