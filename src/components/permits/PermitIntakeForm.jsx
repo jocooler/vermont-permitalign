@@ -150,7 +150,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
     setUploadingFiles(false);
   };
 
-  const handleSubmit = async () => {
+  const handleSaveDraft = async () => {
     setSaving(true);
     await base44.entities.PermitApplication.create({
       project_id: project.id,
@@ -158,8 +158,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
       permit_name: permit.name,
       agency: permit.agency,
       category: permit.category,
-      status: "submitted",
-      submitted_date: new Date().toISOString().split("T")[0],
+      status: "in_progress",
       sla_days: permit.sla_days,
       notes: JSON.stringify({
         applicant,
