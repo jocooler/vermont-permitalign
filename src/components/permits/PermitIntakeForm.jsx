@@ -63,7 +63,7 @@ const PERMIT_SPECIFIC_FIELDS = {
   ],
 };
 
-const STEPS = ["Applicant Info", "Project Details", "Specific Questions", "Documents", "Review & Submit"];
+const BASE_STEPS = ["Applicant Info", "Project Details", "Specific Questions", "Documents", "Review & Submit"];
 
 function FieldInput({ field, value, onChange }) {
   const base = "w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400";
