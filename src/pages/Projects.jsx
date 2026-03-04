@@ -15,8 +15,6 @@ const FORM_STEPS = [
   { id: "review", label: "Review & Save" },
 ];
 
-// ParcelMapModal replaced by ParcelPicker component
-
 // ── Project Creation Form ─────────────────────────────────────────────────────
 function ProjectForm({ onSave, onCancel }) {
   const [step, setStep] = useState(0);
