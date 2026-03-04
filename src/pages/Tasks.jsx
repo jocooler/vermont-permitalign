@@ -3,8 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus, Filter, CheckCircle2, Clock, AlertCircle } from "lucide-react";
-import TaskCard from "../components/tasks/TaskCard";
-import TaskForm from "../components/tasks/TaskForm";
+import TaskCard from "../components/tasks/TaskCard.jsx";
+import TaskForm from "../components/tasks/TaskForm.jsx";
 
 const STATUS_CONFIG = {
   pending: { label: "Pending", color: "#64748b", icon: Clock },
