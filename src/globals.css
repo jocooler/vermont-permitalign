@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,14 +28,14 @@
 }
 
 body {
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
   color: var(--vt-gray-dark);
   background-color: var(--vt-gray-pale);
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: Georgia, 'Times New Roman', serif;
   color: var(--vt-green-dark);
 }
 
@@ -71,16 +72,18 @@ h1, h2, h3, h4 {
 
 .vt-card {
   background: white;
-  border: 1px solid var(--vt-gray-light);
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .vt-badge-core {
+  display: inline-flex;
+  align-items: center;
   background-color: #dcfce7;
   color: #15803d;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
   text-transform: uppercase;
@@ -88,10 +91,12 @@ h1, h2, h3, h4 {
 }
 
 .vt-badge-likely {
+  display: inline-flex;
+  align-items: center;
   background-color: #fef9c3;
   color: #854d0e;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
   text-transform: uppercase;
@@ -99,10 +104,12 @@ h1, h2, h3, h4 {
 }
 
 .vt-badge-conditional {
+  display: inline-flex;
+  align-items: center;
   background-color: #e0e7ff;
   color: #3730a3;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 999px;
   text-transform: uppercase;
