@@ -16,6 +16,11 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
+      {/* Draft Banner */}
+      <div className="bg-amber-400 text-amber-900 text-xs py-1.5 px-4 flex items-center justify-center font-bold tracking-widest">
+        ⚠ DRAFT VERSION - FOR TESTING ONLY ⚠
+      </div>
+
       {/* Top Government Bar */}
       <div className="bg-green-950 text-white text-xs py-1.5 px-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
