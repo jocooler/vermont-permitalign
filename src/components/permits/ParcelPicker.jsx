@@ -444,6 +444,21 @@ export default function ParcelPicker({ onClose, onSelect }) {
                   {[selectedParcel.addr, selectedParcel.town].filter(Boolean).join(" · ")}
                   {selectedParcel.owner && ` · ${selectedParcel.owner}`}
                 </div>
+                <div className="mt-1 flex items-center gap-1.5 text-xs">
+                  {wetlandCheck === "checking" && (
+                    <span className="flex items-center gap-1 text-slate-400"><Loader2 size={11} className="animate-spin" /> Checking wetlands…</span>
+                  )}
+                  {wetlandCheck?.hasWetland === true && (
+                    <span className="flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                      <AlertTriangle size={11} /> Class {wetlandCheck.classes.sort().join(" & ")} wetland detected — wetland permits likely required
+                    </span>
+                  )}
+                  {wetlandCheck?.hasWetland === false && (
+                    <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
+                      <Leaf size={11} /> No classified wetlands on parcel
+                    </span>
+                  )}
+                </div>
               </div>
               <button
                 onPointerDown={e => { e.stopPropagation(); e.preventDefault(); handleConfirm(); }}
