@@ -66,6 +66,7 @@ export default function Dashboard() {
           className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded bg-green-700 text-white hover:bg-green-800 transition-colors"
         >
           <Plus size={16} /> New Project
+          
         </Link>
       </div>
 

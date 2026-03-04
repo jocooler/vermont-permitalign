@@ -210,7 +210,8 @@ function ProjectDetail({ project, onBack, onStatusChange }) {
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState("list"); // list | new | detail
+  const params = new URLSearchParams(window.location.search);
+  const [view, setView] = useState(params.get("new") ? "new" : "list"); // list | new | detail
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
