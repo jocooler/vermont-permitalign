@@ -352,7 +352,7 @@ export default function ParcelPicker({ onClose, onSelect }) {
         </div>
 
         {/* Selected Parcel Footer */}
-        <div className="flex-shrink-0 border-t bg-white px-4 py-3">
+        <div className="flex-shrink-0 border-t bg-white px-4 py-3" onClick={e => e.stopPropagation()}>
           {selectedParcel ? (
             <div className="flex items-center gap-3">
               <div className="flex-1 min-w-0">
