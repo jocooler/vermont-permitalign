@@ -62,11 +62,10 @@ export default function Dashboard() {
           </p>
         </div>
         <Link
-          to={createPageUrl("Projects")}
+          to={createPageUrl("Projects") + "?new=1"}
           className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded bg-green-700 text-white hover:bg-green-800 transition-colors"
         >
           <Plus size={16} /> New Project
-          
         </Link>
       </div>
 
