@@ -107,14 +107,14 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
             <p className="text-sm leading-relaxed text-slate-600">{permit.description}</p>
           </div>
 
-          {/* Timeline */}
-          <div className="flex items-center gap-3 rounded-lg p-4 bg-slate-50 border border-slate-200">
-            <Clock size={18} className="text-slate-400 flex-shrink-0" />
-            <div>
-              <div className="text-xs font-bold text-slate-500">Typical Processing Time</div>
-              <div className="text-sm font-semibold text-slate-700">~{permit.sla_days} business days</div>
-            </div>
-          </div>
+          {/* Timeline Visualization */}
+          <PermitTimeline
+            permit={permit}
+            permit_status={currentStatus}
+            submitted_date={ipData?.submitted_date}
+            decision_date={ipData?.decision_date}
+            sla_days={permit.sla_days}
+          />
 
           {/* Links */}
           <div>
