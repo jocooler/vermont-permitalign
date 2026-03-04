@@ -438,11 +438,11 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
             </button>
           ) : (
             <button
-              onClick={handleSubmit}
+              onClick={handleSaveDraft}
               disabled={saving}
               className="flex items-center gap-2 px-6 py-2 rounded font-semibold text-sm bg-green-700 text-white hover:bg-green-800 disabled:opacity-60"
             >
-              {saving ? "Submitting…" : <><CheckCircle2 size={14} /> Submit Application</>}
+              {saving ? "Saving…" : <><CheckCircle2 size={14} /> Save Draft</>}
             </button>
           )}
         </div>
