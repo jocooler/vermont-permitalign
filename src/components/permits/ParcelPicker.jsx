@@ -132,10 +132,14 @@ export default function ParcelPicker({ onClose, onSelect }) {
       },
     }).addTo(map);
 
-    // Click on map (not on a feature) — do a REST query
+    // Click on map tiles only — do a REST query
     map.on("click", async (e) => {
-      if (e.originalEvent.target !== map._container &&
-        !e.originalEvent.target.classList.contains("leaflet-tile")) return;
+      const target = e.originalEvent.target;
+      const isMapSurface = target === map._container ||
+        target.classList.contains("leaflet-tile") ||
+        target.classList.contains("leaflet-tile-container") ||
+        target.closest?.(".leaflet-tile-pane");
+      if (!isMapSurface) return;
       handleMapClick(e.latlng, map);
     });
 
