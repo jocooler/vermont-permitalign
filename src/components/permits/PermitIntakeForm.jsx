@@ -198,19 +198,25 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
         <div className="px-6 pt-5 pb-2">
           <div className="flex items-center justify-between gap-1">
             {STEPS.map((s, i) => (
-              <div key={i} className="flex items-center gap-1 flex-1 last:flex-none">
+              <button
+                key={i}
+                type="button"
+                onClick={() => setStep(i)}
+                className="flex items-center gap-1 flex-1 last:flex-none hover:opacity-80 transition-opacity"
+              >
                 <div
                   className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold flex-shrink-0"
                   style={{
                     background: i < step ? "var(--vt-green)" : i === step ? "var(--vt-green-dark)" : "var(--vt-gray-light)",
                     color: i <= step ? "white" : "var(--vt-gray)",
+                    cursor: "pointer",
                   }}
                 >
                   {i < step ? <CheckCircle2 size={12} /> : i + 1}
                 </div>
-                <span className={`text-xs font-medium hidden sm:block truncate ${i === step ? "text-green-800" : "text-slate-400"}`}>{s}</span>
+                <span className={`text-xs font-medium hidden sm:block truncate cursor-pointer ${i === step ? "text-green-800" : "text-slate-400"}`}>{s}</span>
                 {i < STEPS.length - 1 && <div className="flex-1 h-px bg-slate-200 mx-1" />}
-              </div>
+              </button>
             ))}
           </div>
         </div>
