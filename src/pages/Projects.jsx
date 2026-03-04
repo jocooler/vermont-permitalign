@@ -329,19 +329,25 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
                       key={p.id}
                       permit={p}
                       status={ipMap[p.id]?.status || "not_started"}
-                      onClick={() => {
-                        const current = ipMap[p.id]?.status || "not_started";
-                        const next = STATUS_OPTS[(STATUS_OPTS.indexOf(current) + 1) % STATUS_OPTS.length];
-                        onStatusChange(p.id, next);
-                      }}
+                      onClick={() => setActivePermit(p)}
                     />
                   ))}
                 </div>
               </div>
             );
           })}
-          <p className="text-xs mt-2" style={{ color: "var(--vt-gray-mid)" }}>Click any permit card to cycle its status.</p>
+          <p className="text-xs mt-2" style={{ color: "var(--vt-gray-mid)" }}>Click any permit card to view details and update status.</p>
         </div>
+      )}
+
+      {activePermit && (
+        <PermitDetailPanel
+          permit={activePermit}
+          ipData={ipMap[activePermit.id]}
+          onClose={() => setActivePermit(null)}
+          onStatusChange={(permitId, newStatus) => { onStatusChange(permitId, newStatus); }}
+          onNotesChange={(permitId, notes) => onNotesChange(permitId, notes)}
+        />
       )}
     </div>
   );
