@@ -267,7 +267,8 @@ function ProjectForm({ onSave, onCancel }) {
 }
 
 // ── Project Detail ────────────────────────────────────────────────────────────
-function ProjectDetail({ project, onBack, onStatusChange }) {
+function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
+  const [activePermit, setActivePermit] = useState(null);
   const permits = PERMITS.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
   const ipMap = Object.fromEntries((project.identified_permits || []).map(ip => [ip.permit_id, ip]));
 
