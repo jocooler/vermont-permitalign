@@ -117,16 +117,22 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
   const [saving, setSaving] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState(false);
 
+  // Pre-fill from project profile if available
+  const profile = project?.profile || {};
   const [applicant, setApplicant] = useState({
-    name: "", organization: "", email: "", phone: "", mailing_address: "",
+    name: profile.applicant_name || "", 
+    organization: profile.applicant_organization || "", 
+    email: profile.applicant_email || "", 
+    phone: profile.applicant_phone || "", 
+    mailing_address: profile.applicant_mailing_address || "",
   });
   const [projectInfo, setProjectInfo] = useState({
     site_address: project?.address || "",
     town: project?.town || "",
     parcel_id: project?.parcel_id || "",
-    project_description: project?.description || "",
-    anticipated_start_date: "",
-    anticipated_end_date: "",
+    project_description: profile.project_description || project?.description || "",
+    anticipated_start_date: profile.anticipated_start_date || "",
+    anticipated_end_date: profile.anticipated_end_date || "",
   });
   const [specificAnswers, setSpecificAnswers] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]); // [{name, url}]
