@@ -152,17 +152,40 @@ export default function ParcelPicker({ onClose, onSelect }) {
   const highlightParcel = (feature) => {
     const L = window.L;
     const map = leafletMapRef.current;
-    if (!map) return;
+    if (!map || !L) return;
 
     // Remove old highlight
-    if (map._parcelHighlight) { map.removeLayer(map._parcelHighlight); }
+    if (map._parcelHighlight) {
+      try { map.removeLayer(map._parcelHighlight); } catch (_) {}
+      map._parcelHighlight = null;
+    }
 
-    if (feature?.geometry) {
-      const geojsonLayer = L.geoJSON(feature, {
+    if (!feature?.geometry) return;
+
+    // Normalize: REST API returns {geometry: {rings: [...]}} not GeoJSON
+    let geojsonFeature = feature;
+    if (feature.geometry?.rings) {
+      geojsonFeature = {
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: feature.geometry.rings,
+        },
+        properties: feature.attributes || feature.properties || {},
+      };
+    }
+
+    try {
+      const geojsonLayer = L.geoJSON(geojsonFeature, {
         style: { color: "#1a3d2e", weight: 3, fillColor: "#52b788", fillOpacity: 0.5 },
       }).addTo(map);
+      const bounds = geojsonLayer.getBounds();
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { maxZoom: 17, padding: [40, 40] });
+      }
       map._parcelHighlight = geojsonLayer;
-      map.fitBounds(geojsonLayer.getBounds(), { maxZoom: 17, padding: [40, 40] });
+    } catch (e) {
+      console.warn("Could not highlight parcel:", e);
     }
   };
 
