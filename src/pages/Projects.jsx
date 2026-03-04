@@ -4,7 +4,7 @@ import { Plus, ArrowLeft, ArrowRight, MapPin, Building2, CheckCircle2, ChevronRi
 import { PERMITS, STATUS_CONFIG, CATEGORY_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
 import PermitCard from "../components/permits/PermitCard";
 import StepIndicator from "../components/permits/StepIndicator";
-import Toggle from "../components/permits/Toggle";
+import SiteConditions from "../components/permits/SiteConditions";
 import ParcelPicker from "../components/permits/ParcelPicker";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
