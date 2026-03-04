@@ -66,26 +66,14 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           {/* Status */}
           <div>
             <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Application Status</div>
-            <div className="grid grid-cols-2 gap-2">
-              {STATUS_OPTS.map(s => {
-                const cfg = STATUS_CONFIG[s];
-                const isActive = s === currentStatus;
-                return (
-                  <button
-                    key={s}
-                    onClick={() => onStatusChange(permit.id, s)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-semibold border-2 transition-all`}
-                    style={{
-                      borderColor: isActive ? cfg.color : "transparent",
-                      background: isActive ? cfg.bg : "#f8fafc",
-                      color: isActive ? cfg.color : "#64748b",
-                    }}
-                  >
-                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: cfg.color }} />
-                    {cfg.label}
-                  </button>
-                );
-              })}
+            <div className="flex items-center gap-3">
+              <div
+                className="w-3 h-3 rounded-full flex-shrink-0"
+                style={{ background: STATUS_CONFIG[currentStatus]?.color || "#64748b" }}
+              />
+              <span className="text-sm font-semibold" style={{ color: STATUS_CONFIG[currentStatus]?.color || "#64748b" }}>
+                {STATUS_CONFIG[currentStatus]?.label || "Unknown"}
+              </span>
             </div>
             <p className="mt-2 text-xs text-slate-400 italic">{STATUS_DESCRIPTIONS[currentStatus]}</p>
           </div>
