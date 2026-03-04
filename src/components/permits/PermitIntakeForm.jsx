@@ -225,6 +225,11 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Applicant Information</h3>
                 <p className="text-sm text-slate-500">Who is submitting this application?</p>
+                {profile.applicant_name && (
+                  <p className="text-xs mt-2 p-2 rounded bg-green-50 text-green-800">
+                    ✓ Loaded from project profile
+                  </p>
+                )}
               </div>
               {[
                 { key: "name", label: "Full Name *", placeholder: "First and Last Name", icon: User },
