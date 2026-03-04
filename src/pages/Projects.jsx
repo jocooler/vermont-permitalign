@@ -5,6 +5,7 @@ import { PERMITS, STATUS_CONFIG, CATEGORY_CONFIG, determinePermits } from "../co
 import PermitCard from "../components/permits/PermitCard";
 import StepIndicator from "../components/permits/StepIndicator";
 import Toggle from "../components/permits/Toggle";
+import ParcelPicker from "../components/permits/ParcelPicker";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
