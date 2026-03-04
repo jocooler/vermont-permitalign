@@ -95,30 +95,28 @@ function ParcelMapModal({ onClose, onSelect }) {
         </div>
 
         {/* Footer: enter parcel ID */}
-        <div className="border-t bg-white px-4 py-3 flex items-center gap-3">
-          <div className="flex-1">
-            <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>
-              Enter the Parcel ID (SPAN) shown when you click a parcel on the map
-            </label>
-            <div className="flex gap-2 mt-1">
-              <input
-                className="flex-1 border rounded px-3 py-2 text-sm"
-                style={{ borderColor: "var(--vt-gray-light)" }}
-                value={parcelInput}
-                onChange={e => setParcelInput(e.target.value)}
-                placeholder="e.g. 273-086-10023"
-                autoFocus
-                onKeyDown={e => { if (e.key === "Enter" && parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
-              />
-              <button
-                onClick={() => { if (parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
-                disabled={!parcelInput.trim()}
-                className="px-4 py-2 text-sm font-semibold rounded disabled:opacity-50"
-                style={{ background: "var(--vt-green)", color: "white" }}
-              >
-                Done
-              </button>
-            </div>
+        <div className="border-t bg-white px-4 py-3">
+          <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>
+            Enter the Parcel ID (SPAN) shown when you click a parcel on the map
+          </label>
+          <div className="flex gap-2">
+            <input
+              className="flex-1 border rounded px-3 py-2 text-sm"
+              style={{ borderColor: "var(--vt-gray-light)" }}
+              value={parcelInput}
+              onChange={e => setParcelInput(e.target.value)}
+              placeholder="e.g. 273-086-10023"
+              autoFocus
+              onKeyDown={e => { if (e.key === "Enter" && parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
+            />
+            <button
+              onClick={() => { if (parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
+              disabled={!parcelInput.trim()}
+              className="px-4 py-2 text-sm font-semibold rounded disabled:opacity-50"
+              style={{ background: "var(--vt-green)", color: "white" }}
+            >
+              Done
+            </button>
           </div>
         </div>
       </div>
