@@ -1,5 +1,7 @@
-import { X, ExternalLink, FileText, Clock, Building2, ChevronRight, CheckCircle2, AlertCircle, Info } from "lucide-react";
+import { useState } from "react";
+import { X, ExternalLink, FileText, Clock, Building2, CheckCircle2, AlertCircle, Info, ClipboardEdit } from "lucide-react";
 import { STATUS_CONFIG, CATEGORY_CONFIG } from "./PERMIT_DATA";
+import PermitApplicationForm from "./PermitApplicationForm";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
