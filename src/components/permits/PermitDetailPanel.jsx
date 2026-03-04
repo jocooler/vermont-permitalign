@@ -152,6 +152,20 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
             </div>
           </div>
 
+          {/* Apply Button */}
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Application</div>
+            <button
+              onClick={() => setShowIntakeForm(true)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm bg-green-700 text-white hover:bg-green-800 transition-colors"
+            >
+              <ClipboardList size={15} /> Start / Complete Application
+            </button>
+            {currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved" ? (
+              <p className="mt-2 text-xs text-center text-green-700">Application previously submitted for this permit.</p>
+            ) : null}
+          </div>
+
           {/* Notes */}
           <div>
             <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Notes</div>
@@ -166,6 +180,18 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           </div>
         </div>
       </div>
+
+      {showIntakeForm && (
+        <PermitIntakeForm
+          permit={permit}
+          project={project}
+          onClose={() => setShowIntakeForm(false)}
+          onSubmitted={() => {
+            setShowIntakeForm(false);
+            onStatusChange(permit.id, "submitted");
+          }}
+        />
+      )}
     </div>
   );
 }
