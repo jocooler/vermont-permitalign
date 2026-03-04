@@ -8,6 +8,7 @@ const navLinks = [
   { name: "My Projects", page: "Projects", Icon: FolderOpen },
   { name: "Permit Finder", page: "PermitFinder", Icon: ClipboardList },
   { name: "Review Queue", page: "ReviewQueue", Icon: BarChart3 },
+  { name: "Progress Dashboard", page: "PermitDashboard", Icon: BarChart3 },
 ];
 
 export default function Layout({ children, currentPageName }) {
