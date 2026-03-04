@@ -69,10 +69,11 @@ function ProjectForm({ onSave, onCancel }) {
       {showParcelMap && (
         <ParcelPicker
           onClose={() => setShowParcelMap(false)}
-          onSelect={(span, town, addr) => {
+          onSelect={(span, town, addr, nearWetlands) => {
             set("parcel_id", span);
             if (town && !form.town) set("town", town);
             if (addr && !form.address) set("address", addr);
+            if (nearWetlands) setSite("near_wetlands", true);
           }}
         />
       )}
