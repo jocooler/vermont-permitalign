@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, ExternalLink, FileText, Clock, Building2, ChevronRight, CheckCircle2, AlertCircle, Info, ClipboardList } from "lucide-react";
 import { STATUS_CONFIG, CATEGORY_CONFIG } from "./PERMIT_DATA";
 import PermitIntakeForm from "./PermitIntakeForm";
+import PermitTimeline from "./PermitTimeline";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
