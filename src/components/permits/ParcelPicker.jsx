@@ -190,8 +190,9 @@ export default function ParcelPicker({ onClose, onSelect }) {
   };
 
   const handleFeatureSelect = (feature) => {
-    const attrs = feature.properties || feature.attributes || {};
-    const span = attrs.SPAN || attrs.span || "";
+    // REST API uses `attributes`, GeoJSON uses `properties`
+    const attrs = feature.attributes || feature.properties || {};
+    const span = attrs.SPAN || "";
     const town = attrs.TOWN || attrs.TNAME || "";
     const owner = attrs.OWNER1 || "";
     const addr = attrs.ADDRGL1 || "";
