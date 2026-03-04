@@ -197,7 +197,7 @@ function ProjectForm({ onSave, onCancel }) {
             <button onClick={() => setStep(0)} className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm" style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}>
               <ArrowLeft size={15} /> Back
             </button>
-            <button onClick={() => setStep(2)} className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm" style={{ background: "var(--vt-green)", color: "white" }}>
+            <button onClick={() => setStep(2)} className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm bg-green-700 text-white hover:bg-green-800">
               Review Permits <ArrowRight size={15} />
             </button>
           </div>
