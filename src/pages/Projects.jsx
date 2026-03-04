@@ -178,8 +178,18 @@ function ProjectForm({ onSave, onCancel, initial }) {
               <input className="w-full border rounded px-3 py-2 text-sm" style={{ borderColor: "var(--vt-gray-light)" }} value={form.town} onChange={e => set("town", e.target.value)} placeholder="e.g. Burlington" />
             </div>
             <div>
-              <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Parcel ID</label>
-              <input className="w-full border rounded px-3 py-2 text-sm" style={{ borderColor: "var(--vt-gray-light)" }} value={form.parcel_id} onChange={e => set("parcel_id", e.target.value)} placeholder="e.g. 000-000-00000" />
+              <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Parcel ID (SPAN)</label>
+              <div className="flex gap-2">
+                <input className="flex-1 border rounded px-3 py-2 text-sm" style={{ borderColor: "var(--vt-gray-light)" }} value={form.parcel_id} onChange={e => set("parcel_id", e.target.value)} placeholder="e.g. 273-086-10023" />
+                <button
+                  type="button"
+                  onClick={() => setShowParcelMap(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded border whitespace-nowrap"
+                  style={{ borderColor: "var(--vt-green)", color: "var(--vt-green)", background: "var(--vt-green-pale)" }}
+                >
+                  <Map size={13} /> Map Lookup
+                </button>
+              </div>
             </div>
             <div className="sm:col-span-2">
               <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Site Address</label>
