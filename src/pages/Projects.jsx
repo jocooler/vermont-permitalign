@@ -15,70 +15,7 @@ const FORM_STEPS = [
   { id: "review", label: "Review & Save" },
 ];
 
-// ── Parcel Map Modal ──────────────────────────────────────────────────────────
-function ParcelMapModal({ onClose, onSelect }) {
-  const [parcelInput, setParcelInput] = useState("");
-
-  const handleDone = () => {
-    if (parcelInput.trim()) {
-      onSelect(parcelInput.trim());
-      onClose();
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black/60">
-      <div className="bg-white flex flex-col h-full">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 flex-shrink-0" style={{ background: "#1a3d2e" }}>
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-green-300">Vermont Parcel Viewer</div>
-            <div className="text-white font-semibold text-sm">Click a parcel on the map, then enter the SPAN below</div>
-          </div>
-          <button onClick={onClose} className="text-white/70 hover:text-white p-1 rounded">
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Map iframe */}
-        <div className="flex-1 min-h-0">
-          <iframe
-            src="https://experience.arcgis.com/experience/b5a5cc7663c84761a305f70b913e1a60/"
-            className="w-full h-full border-0"
-            title="Vermont Parcel Viewer"
-            allow="geolocation"
-          />
-        </div>
-
-        {/* Footer: enter parcel ID */}
-        <div className="border-t bg-white px-4 py-3 flex-shrink-0">
-          <label className="block text-xs font-semibold mb-1.5" style={{ color: "var(--vt-gray)" }}>
-            Enter the Parcel ID (SPAN) shown when you click a parcel on the map
-          </label>
-          <div className="flex gap-2">
-            <input
-              className="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2"
-              style={{ borderColor: "var(--vt-gray-light)", focusRingColor: "var(--vt-green)" }}
-              value={parcelInput}
-              onChange={e => setParcelInput(e.target.value)}
-              placeholder="e.g. 273-086-10023"
-              autoFocus
-              onKeyDown={e => { if (e.key === "Enter") handleDone(); }}
-            />
-            <button
-              onClick={handleDone}
-              disabled={!parcelInput.trim()}
-              className="px-4 py-2 text-sm font-semibold rounded disabled:opacity-40 transition-opacity"
-              style={{ background: "var(--vt-green)", color: "white" }}
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+// ParcelMapModal replaced by ParcelPicker component
 
 // ── Project Creation Form ─────────────────────────────────────────────────────
 function ProjectForm({ onSave, onCancel }) {
