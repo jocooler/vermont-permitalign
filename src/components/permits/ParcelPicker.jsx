@@ -599,14 +599,16 @@ export default function ParcelPicker({ onClose, onSelect }) {
                   {siteChecks && siteChecks !== "checking" && (
                     <>
                       {/* Wetlands */}
-                      {siteChecks.wetland.hasWetland ? (
-                        <span className="flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                          <AlertTriangle size={11} /> Class {siteChecks.wetland.classes.sort().join("/")} wetland
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
-                          <Leaf size={11} /> No wetlands
-                        </span>
+                      {siteChecks.wetland != null && (
+                        siteChecks.wetland.hasWetland ? (
+                          <span className="flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            <AlertTriangle size={11} /> Class {siteChecks.wetland.classes.sort().join("/")} wetland
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
+                            <Leaf size={11} /> No wetlands
+                          </span>
+                        )
                       )}
                       {/* Floodplain */}
                       {siteChecks.floodplain ? (
