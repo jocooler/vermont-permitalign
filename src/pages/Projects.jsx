@@ -193,7 +193,7 @@ function ProjectForm({ onSave, onCancel }) {
             setSite={setSite}
             set={set}
           />
-          <div className="mt-4 flex justify-between">
+          <div className="mt-6 pt-4 border-t flex justify-between sticky bottom-0 bg-white" style={{ borderColor: "var(--vt-gray-light)" }}>
             <button onClick={() => setStep(0)} className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm" style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}>
               <ArrowLeft size={15} /> Back
             </button>
