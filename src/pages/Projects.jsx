@@ -342,8 +342,7 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
       {activePermit && (
         <PermitDetailPanel
           permit={activePermit}
-          projectId={project.id}
-          projectData={project}
+          project={project}
           ipData={ipMap[activePermit.id]}
           onClose={() => setActivePermit(null)}
           onStatusChange={(permitId, newStatus) => { onStatusChange(permitId, newStatus); }}
