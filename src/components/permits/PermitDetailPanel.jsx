@@ -60,8 +60,36 @@ export default function PermitDetailPanel({ permit, projectId, projectData, ipDa
           </div>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 px-6 py-5 space-y-6">
+        {/* Tabs */}
+        <div className="flex border-b bg-slate-50 flex-shrink-0">
+          <button
+            onClick={() => setTab("overview")}
+            className={`flex-1 py-2.5 text-xs font-semibold transition-colors ${tab === "overview" ? "text-green-700 border-b-2 border-green-600 bg-white" : "text-slate-400 hover:text-slate-600"}`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setTab("apply")}
+            className={`flex-1 py-2.5 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 ${tab === "apply" ? "text-green-700 border-b-2 border-green-600 bg-white" : "text-slate-400 hover:text-slate-600"}`}
+          >
+            <ClipboardEdit size={12} /> Apply
+          </button>
+        </div>
+
+        {/* Apply Tab */}
+        {tab === "apply" && (
+          <PermitApplicationForm
+            permit={permit}
+            projectId={projectId}
+            projectData={projectData}
+            existingApp={null}
+            onSave={(update) => { onStatusChange(permit.id, update.status); if (update.status === "submitted") setTab("overview"); }}
+            onClose={onClose}
+          />
+        )}
+
+        {/* Overview Body */}
+        {tab === "overview" && <div className="flex-1 px-6 py-5 space-y-6 overflow-y-auto">
 
           {/* Status */}
           <div>
