@@ -186,22 +186,14 @@ function ProjectForm({ onSave, onCancel }) {
       {step === 1 && (
         <div className="vt-card p-6">
           <h3 className="font-bold mb-1" style={{ color: "var(--vt-green-dark)" }}>Site Conditions</h3>
-          <p className="text-sm mb-4" style={{ color: "var(--vt-gray-mid)" }}>Check all conditions that apply to your site.</p>
-          <div className="space-y-1">
-            <Toggle label="Creating separate lots (subdivision)" hint="Dividing land into two or more parcels" value={form.creating_lots} onChange={v => set("creating_lots", v)} />
-            <Toggle label="Connecting to municipal sewer" hint="Project will tie into existing public sewer system" value={form.site_conditions.connects_municipal_sewer} onChange={v => setSite("connects_municipal_sewer", v)} />
-            <Toggle label="Creating own water system" hint="Project will serve 15+ connections or 25+ people" value={form.site_conditions.own_water_system} onChange={v => setSite("own_water_system", v)} />
-            <Toggle label="Site is near wetlands" hint="Class I or II wetlands within or adjacent to the project area" value={form.site_conditions.near_wetlands} onChange={v => setSite("near_wetlands", v)} />
-            <Toggle label="Site is in a floodplain" hint="Within FEMA 100-year floodplain" value={form.site_conditions.in_floodplain} onChange={v => setSite("in_floodplain", v)} />
-            <Toggle label="Work near a perennial stream" hint="Stream crossings or work within stream buffer" value={form.site_conditions.near_stream} onChange={v => setSite("near_stream", v)} />
-            <Toggle label="Within 250 ft of a lake or pond >10 acres" hint="Shoreland protection zone" value={form.site_conditions.near_lake_or_pond} onChange={v => setSite("near_lake_or_pond", v)} />
-            <Toggle label="Access from a state highway" hint="Driveway or access point is off a VTrans-maintained road" value={form.site_conditions.state_highway_access} onChange={v => setSite("state_highway_access", v)} />
-            <Toggle label="Site is above 2,500 ft elevation" hint="May trigger Act 250 review" value={form.site_conditions.elevation_above_2500} onChange={v => setSite("elevation_above_2500", v)} />
-            <Toggle label="Demolishing or renovating existing structures" hint="Any existing buildings on site" value={form.site_conditions.existing_structures} onChange={v => setSite("existing_structures", v)} />
-            <Toggle label="Existing structures built before 1978" hint="Potential lead-based paint hazard" value={form.site_conditions.pre_1978_structures} onChange={v => setSite("pre_1978_structures", v)} />
-            <Toggle label="Project involves federal funding or federal permits" hint="e.g., Army Corps of Engineers involvement" value={form.site_conditions.federal_funding} onChange={v => setSite("federal_funding", v)} />
-          </div>
-          <div className="mt-6 flex justify-between">
+          <p className="text-sm mb-5" style={{ color: "var(--vt-gray-mid)" }}>Select all conditions that apply to your site. Auto-detected items come from your parcel selection.</p>
+          <SiteConditions
+            form={form}
+            autoDetectedFields={autoDetectedFields}
+            setSite={setSite}
+            set={set}
+          />
+          <div className="mt-4 flex justify-between">
             <button onClick={() => setStep(0)} className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm" style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}>
               <ArrowLeft size={15} /> Back
             </button>
