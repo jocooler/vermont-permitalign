@@ -1,4 +1,4 @@
-import { ExternalLink, Clock, ChevronRight } from "lucide-react";
+import { FileText, Clock, ChevronRight } from "lucide-react";
 import { CATEGORY_CONFIG, STATUS_CONFIG } from "./PERMIT_DATA";
 
 export default function PermitCard({ permit, status, onClick }) {
@@ -35,9 +35,16 @@ export default function PermitCard({ permit, status, onClick }) {
           <div className="w-1.5 h-1.5 rounded-full" style={{ background: st.color }} />
           {st.label}
         </div>
-        <div className="flex items-center gap-1 text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
-          <Clock size={10} />
-          <span>~{permit.sla_days}d</span>
+        <div className="flex items-center gap-1.5">
+          {permit.info_sheet_url && (
+            <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
+              <FileText size={10} /> Info Sheet
+            </span>
+          )}
+          <div className="flex items-center gap-1 text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
+            <Clock size={10} />
+            <span>~{permit.sla_days}d</span>
+          </div>
         </div>
       </div>
     </div>
