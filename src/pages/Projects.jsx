@@ -253,8 +253,7 @@ function ProjectForm({ onSave, onCancel }) {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 px-6 py-2.5 rounded font-semibold text-sm disabled:opacity-60"
-              style={{ background: "var(--vt-green)", color: "white" }}
+              className="flex items-center gap-2 px-6 py-2.5 rounded font-semibold text-sm disabled:opacity-60 bg-green-700 text-white hover:bg-green-800"
             >
               {saving ? "Saving…" : <><CheckCircle2 size={15} /> Save Project</>}
             </button>
