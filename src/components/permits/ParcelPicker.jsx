@@ -465,12 +465,12 @@ export default function ParcelPicker({ onClose, onSelect }) {
         selectedParcel.span,
         selectedParcel.town,
         selectedParcel.addr,
-        checks?.wetland?.hasWetland,
-        checks?.floodplain,
-        checks?.stream,
-        checks?.lake,
-        checks?.stateHighway,
-        checks?.elevation,
+        checks?.wetland != null ? checks.wetland.hasWetland : undefined,
+        checks?.floodplain != null ? checks.floodplain : undefined,
+        checks?.stream != null ? checks.stream : undefined,
+        checks?.lake != null ? checks.lake : undefined,
+        checks?.stateHighway != null ? checks.stateHighway : undefined,
+        checks?.elevation != null ? checks.elevation : undefined,
       );
       onClose();
     }
