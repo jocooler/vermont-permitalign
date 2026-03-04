@@ -161,6 +161,12 @@ function ProjectForm({ onSave, onCancel, initial }) {
 
   return (
     <div className="max-w-2xl mx-auto">
+      {showParcelMap && (
+        <ParcelMapModal
+          onClose={() => setShowParcelMap(false)}
+          onSelect={id => set("parcel_id", id)}
+        />
+      )}
       <FormStepIndicator currentStep={step} />
 
       {/* Step 0: Project Details */}
