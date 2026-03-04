@@ -184,7 +184,7 @@ function ProjectForm({ onSave, onCancel }) {
 
       {/* Step 1: Site Conditions */}
       {step === 1 && (
-        <div className="vt-card p-6">
+        <div className="vt-card p-6 overflow-y-auto">
           <h3 className="font-bold mb-1" style={{ color: "var(--vt-green-dark)" }}>Site Conditions</h3>
           <p className="text-sm mb-5" style={{ color: "var(--vt-gray-mid)" }}>Select all conditions that apply to your site. Auto-detected items come from your parcel selection.</p>
           <SiteConditions
