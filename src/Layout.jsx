@@ -6,6 +6,7 @@ import { Menu, X, Mountain, ChevronRight, Home, FolderOpen, ClipboardList, BarCh
 const navLinks = [
   { name: "Dashboard", page: "Dashboard", Icon: Home },
   { name: "My Projects", page: "Projects", Icon: FolderOpen },
+  { name: "Tasks", page: "Tasks", Icon: ClipboardList },
   { name: "Permit Finder", page: "PermitFinder", Icon: ClipboardList },
   { name: "Review Queue", page: "ReviewQueue", Icon: BarChart3 },
   { name: "Progress Dashboard", page: "PermitDashboard", Icon: BarChart3 },
