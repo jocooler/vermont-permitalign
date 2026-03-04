@@ -122,7 +122,10 @@ export default function ParcelPicker({ onClose, onSelect }) {
         fillOpacity: 0.3,
       }),
       onEachFeature: (feature, layer) => {
-        layer.on("click", () => handleFeatureSelect(feature));
+        layer.on("click", () => {
+          handleFeatureSelect(feature);
+          highlightParcel(feature);
+        });
         layer.on("mouseover", function () {
           this.setStyle({ fillOpacity: 0.6, weight: 2.5 });
         });
