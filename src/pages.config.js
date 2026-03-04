@@ -51,6 +51,7 @@ import Dashboard from './pages/Dashboard';
 import PermitFinder from './pages/PermitFinder';
 import Projects from './pages/Projects';
 import ReviewQueue from './pages/ReviewQueue';
+import PermitDashboard from './pages/PermitDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +60,7 @@ export const PAGES = {
     "PermitFinder": PermitFinder,
     "Projects": Projects,
     "ReviewQueue": ReviewQueue,
+    "PermitDashboard": PermitDashboard,
 }
 
 export const pagesConfig = {
