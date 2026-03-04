@@ -395,6 +395,18 @@ export default function Projects() {
     setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
   };
 
+  const handleNotesChange = async (permitId, notes) => {
+    const updated = {
+      ...selected,
+      identified_permits: (selected.identified_permits || []).map(ip =>
+        ip.permit_id === permitId ? { ...ip, notes } : ip
+      )
+    };
+    await base44.entities.Project.update(selected.id, { identified_permits: updated.identified_permits });
+    setSelected(updated);
+    setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
 
