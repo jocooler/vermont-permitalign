@@ -364,28 +364,27 @@ export default function ParcelPicker({ onClose, onSelect }) {
     if (!geom) { setSiteChecks(null); return; }
 
     setSiteChecks("checking");
-    try {
-      const [wetlandHits, floodplain, stream, lake, elevation, stateHighway] = await Promise.all([
-        checkWetlandIntersection(geom),
-        checkFloodplain(geom),
-        checkNearStream(geom),
-        checkNearLake(geom),
-        checkElevation(geom.coordinates),
-        checkStateHighway(geom),
-      ]);
-      const classes = [...new Set(wetlandHits.map(h => (h.attributes || h.properties || {}).CLASS))];
-      setSiteChecks({
-        wetland: { hasWetland: wetlandHits.length > 0, classes },
-        floodplain,
-        stream,
-        lake,
-        elevation,
-        stateHighway,
-      });
-    } catch (e) {
-      console.warn("Site checks failed:", e);
-      setSiteChecks(null);
-    }
+
+    const safe = async (fn) => { try { return await fn(); } catch { return null; } };
+
+    const [wetlandHits, floodplain, stream, lake, elevation, stateHighway] = await Promise.all([
+      safe(() => checkWetlandIntersection(geom)),
+      safe(() => checkFloodplain(geom)),
+      safe(() => checkNearStream(geom)),
+      safe(() => checkNearLake(geom)),
+      safe(() => checkElevation(geom.coordinates)),
+      safe(() => checkStateHighway(geom)),
+    ]);
+
+    const classes = wetlandHits ? [...new Set(wetlandHits.map(h => (h.attributes || h.properties || {}).CLASS))] : [];
+    setSiteChecks({
+      wetland: wetlandHits ? { hasWetland: wetlandHits.length > 0, classes } : null,
+      floodplain,
+      stream,
+      lake,
+      elevation,
+      stateHighway,
+    });
   };
 
   const handleMapClick = async (latlng, map) => {
