@@ -53,6 +53,7 @@ import PermitFinder from './pages/PermitFinder';
 import ProjectProfile from './pages/ProjectProfile';
 import Projects from './pages/Projects';
 import ReviewQueue from './pages/ReviewQueue';
+import Tasks from './pages/Tasks';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +64,7 @@ export const PAGES = {
     "ProjectProfile": ProjectProfile,
     "Projects": Projects,
     "ReviewQueue": ReviewQueue,
+    "Tasks": Tasks,
 }
 
 export const pagesConfig = {
