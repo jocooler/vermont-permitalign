@@ -1,0 +1,313 @@
+import { useState } from "react";
+import { ArrowRight, ArrowLeft, CheckCircle2, Info, ExternalLink } from "lucide-react";
+import { PERMITS, CATEGORY_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
+
+const STEPS = [
+  { id: "basic", label: "Project Basics" },
+  { id: "site", label: "Site Conditions" },
+  { id: "results", label: "Your Permits" },
+];
+
+const defaultConditions = {
+  unit_count: 4,
+  disturbed_acres: 0,
+  creating_lots: false,
+  connects_municipal_sewer: false,
+  own_water_system: false,
+  near_wetlands: false,
+  in_floodplain: false,
+  near_stream: false,
+  near_lake_or_pond: false,
+  state_highway_access: false,
+  elevation_above_2500: false,
+  existing_structures: false,
+  pre_1978_structures: false,
+  federal_funding: false,
+};
+
+function StepIndicator({ currentStep }) {
+  return (
+    <div className="flex items-center justify-center gap-2 mb-8">
+      {STEPS.map((step, idx) => {
+        const done = idx < currentStep;
+        const active = idx === currentStep;
+        return (
+          <div key={step.id} className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+                style={{
+                  background: done ? "var(--vt-green)" : active ? "var(--vt-green-dark)" : "var(--vt-gray-light)",
+                  color: done || active ? "white" : "var(--vt-gray-mid)",
+                }}
+              >
+                {done ? <CheckCircle2 size={14} /> : idx + 1}
+              </div>
+              <span className="text-sm font-medium hidden sm:block" style={{ color: active ? "var(--vt-green-dark)" : "var(--vt-gray-mid)" }}>
+                {step.label}
+              </span>
+            </div>
+            {idx < STEPS.length - 1 && (
+              <div className="w-8 h-px mx-1" style={{ background: done ? "var(--vt-green)" : "var(--vt-gray-light)" }} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function Toggle({ label, hint, value, onChange }) {
+  return (
+    <label className="flex items-start gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-all">
+      <button
+        role="checkbox"
+        aria-checked={value}
+        onClick={() => onChange(!value)}
+        className="mt-0.5 w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all"
+        style={{
+          borderColor: value ? "var(--vt-green)" : "var(--vt-gray-light)",
+          background: value ? "var(--vt-green)" : "white",
+        }}
+      >
+        {value && <CheckCircle2 size={12} color="white" />}
+      </button>
+      <div>
+        <div className="text-sm font-medium" style={{ color: "var(--vt-gray-dark)" }}>{label}</div>
+        {hint && <div className="text-xs mt-0.5" style={{ color: "var(--vt-gray-mid)" }}>{hint}</div>}
+      </div>
+    </label>
+  );
+}
+
+export default function PermitFinder() {
+  const [step, setStep] = useState(0);
+  const [conditions, setConditions] = useState(defaultConditions);
+  const [expandedPermit, setExpandedPermit] = useState(null);
+
+  const set = (key, val) => setConditions(prev => ({ ...prev, [key]: val }));
+
+  const matchedPermits = determinePermits(conditions);
+  const byCategory = {
+    core: matchedPermits.filter(p => p.category === "core"),
+    likely: matchedPermits.filter(p => p.category === "likely"),
+    conditional: matchedPermits.filter(p => p.category === "conditional"),
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      <div className="mb-8">
+        <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--vt-green)" }}>
+          Vermont Permitting System
+        </div>
+        <h1 className="text-2xl font-bold mb-2" style={{ color: "var(--vt-green-dark)" }}>Permit Finder</h1>
+        <p className="text-sm" style={{ color: "var(--vt-gray)" }}>
+          Answer a few questions about your project to see which permits apply. Results are based on your project type and site conditions.
+        </p>
+      </div>
+
+      <StepIndicator currentStep={step} />
+
+      {/* Step 0: Basic Info */}
+      {step === 0 && (
+        <div className="vt-card p-6">
+          <h2 className="font-bold mb-1" style={{ color: "var(--vt-green-dark)" }}>Project Basics</h2>
+          <p className="text-sm mb-6" style={{ color: "var(--vt-gray-mid)" }}>Tell us about the scale of your project.</p>
+
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: "var(--vt-gray-dark)" }}>
+                Number of residential units
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min={1}
+                  max={20}
+                  value={conditions.unit_count}
+                  onChange={e => set("unit_count", Number(e.target.value))}
+                  className="flex-1"
+                  style={{ accentColor: "var(--vt-green)" }}
+                />
+                <div className="w-16 text-center font-bold text-lg rounded-lg py-1" style={{ background: "var(--vt-green-pale)", color: "var(--vt-green-dark)" }}>
+                  {conditions.unit_count}
+                </div>
+              </div>
+              {conditions.unit_count >= 10 && (
+                <div className="mt-2 text-xs flex items-start gap-1.5 p-2 rounded" style={{ background: "#fff7ed", color: "#92400e" }}>
+                  <Info size={13} className="mt-0.5 flex-shrink-0" />
+                  At 10+ units, Act 250 land use permit may be triggered.
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: "var(--vt-gray-dark)" }}>
+                Estimated acres of land disturbed during construction
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min={0}
+                  max={5}
+                  step={0.25}
+                  value={conditions.disturbed_acres}
+                  onChange={e => set("disturbed_acres", Number(e.target.value))}
+                  className="flex-1"
+                  style={{ accentColor: "var(--vt-green)" }}
+                />
+                <div className="w-16 text-center font-bold text-lg rounded-lg py-1" style={{ background: "var(--vt-green-pale)", color: "var(--vt-green-dark)" }}>
+                  {conditions.disturbed_acres}
+                </div>
+              </div>
+              {conditions.disturbed_acres >= 1 && (
+                <div className="mt-2 text-xs flex items-start gap-1.5 p-2 rounded" style={{ background: "#fff7ed", color: "#92400e" }}>
+                  <Info size={13} className="mt-0.5 flex-shrink-0" />
+                  At ≥1 acre disturbed, stormwater permits are required.
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Toggle label="Creating separate lots (subdivision)" hint="Dividing land into two or more parcels" value={conditions.creating_lots} onChange={v => set("creating_lots", v)} />
+              <Toggle label="Connecting to municipal sewer" hint="Project will tie into existing public sewer system" value={conditions.connects_municipal_sewer} onChange={v => set("connects_municipal_sewer", v)} />
+              <Toggle label="Creating own water system" hint="Project will serve 15+ connections or 25+ people" value={conditions.own_water_system} onChange={v => set("own_water_system", v)} />
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-end">
+            <button
+              onClick={() => setStep(1)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm transition-all"
+              style={{ background: "var(--vt-green)", color: "white" }}
+            >
+              Next: Site Conditions <ArrowRight size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 1: Site Conditions */}
+      {step === 1 && (
+        <div className="vt-card p-6">
+          <h2 className="font-bold mb-1" style={{ color: "var(--vt-green-dark)" }}>Site Conditions</h2>
+          <p className="text-sm mb-6" style={{ color: "var(--vt-gray-mid)" }}>Check all conditions that apply to your site.</p>
+
+          <div className="space-y-1">
+            <Toggle label="Site is near wetlands" hint="Class I or II wetlands within or adjacent to the project area" value={conditions.near_wetlands} onChange={v => set("near_wetlands", v)} />
+            <Toggle label="Site is in a floodplain" hint="Within FEMA 100-year floodplain" value={conditions.in_floodplain} onChange={v => set("in_floodplain", v)} />
+            <Toggle label="Work near a perennial stream" hint="Stream crossings or work within stream buffer" value={conditions.near_stream} onChange={v => set("near_stream", v)} />
+            <Toggle label="Within 250 ft of a lake or pond >10 acres" hint="Shoreland protection zone" value={conditions.near_lake_or_pond} onChange={v => set("near_lake_or_pond", v)} />
+            <Toggle label="Access from a state highway" hint="Driveway or access point is off a VTrans-maintained road" value={conditions.state_highway_access} onChange={v => set("state_highway_access", v)} />
+            <Toggle label="Site is above 2,500 ft elevation" hint="May trigger Act 250 review" value={conditions.elevation_above_2500} onChange={v => set("elevation_above_2500", v)} />
+            <Toggle label="Demolishing or renovating existing structures" hint="Any existing buildings on site" value={conditions.existing_structures} onChange={v => set("existing_structures", v)} />
+            <Toggle label="Existing structures built before 1978" hint="Potential lead-based paint hazard" value={conditions.pre_1978_structures} onChange={v => set("pre_1978_structures", v)} />
+            <Toggle label="Project involves federal funding or federal permits" hint="e.g., Army Corps of Engineers involvement" value={conditions.federal_funding} onChange={v => set("federal_funding", v)} />
+          </div>
+
+          <div className="mt-8 flex justify-between">
+            <button
+              onClick={() => setStep(0)}
+              className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm transition-all"
+              style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}
+            >
+              <ArrowLeft size={15} /> Back
+            </button>
+            <button
+              onClick={() => setStep(2)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm transition-all"
+              style={{ background: "var(--vt-green)", color: "white" }}
+            >
+              See My Permits <ArrowRight size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 2: Results */}
+      {step === 2 && (
+        <div>
+          <div className="vt-card p-5 mb-6 flex items-center justify-between gap-4">
+            <div>
+              <div className="text-sm font-semibold" style={{ color: "var(--vt-green-dark)" }}>
+                {matchedPermits.length} permit{matchedPermits.length !== 1 ? "s" : ""} identified for your project
+              </div>
+              <div className="text-xs mt-0.5" style={{ color: "var(--vt-gray-mid)" }}>
+                Based on {conditions.unit_count} units · {conditions.disturbed_acres} acres disturbed
+              </div>
+            </div>
+            <button
+              onClick={() => setStep(0)}
+              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded"
+              style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray)" }}
+            >
+              <ArrowLeft size={12} /> Adjust
+            </button>
+          </div>
+
+          {[
+            { key: "core", title: "Core Permits", subtitle: "Almost always required for your project type", permits: byCategory.core },
+            { key: "likely", title: "Likely Required", subtitle: "Based on your site conditions", permits: byCategory.likely },
+            { key: "conditional", title: "Conditional Permits", subtitle: "May apply depending on additional thresholds", permits: byCategory.conditional },
+          ].map(({ key, title, subtitle, permits }) => permits.length > 0 && (
+            <div key={key} className="mb-6">
+              <div className="mb-3">
+                <h3 className="font-bold text-sm" style={{ color: "var(--vt-green-dark)" }}>{title}</h3>
+                <p className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>{subtitle}</p>
+              </div>
+              <div className="space-y-3">
+                {permits.map(permit => {
+                  const expanded = expandedPermit === permit.id;
+                  const cat = CATEGORY_CONFIG[permit.category];
+                  return (
+                    <div key={permit.id} className="vt-card overflow-hidden">
+                      <button
+                        className="w-full p-4 text-left flex items-center gap-3 hover:bg-gray-50 transition-all"
+                        onClick={() => setExpandedPermit(expanded ? null : permit.id)}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className="text-xs font-mono font-bold opacity-40">{permit.sheet}</span>
+                            <span className={cat.className}>{cat.label}</span>
+                          </div>
+                          <div className="font-semibold text-sm" style={{ color: "var(--vt-gray-dark)" }}>{permit.name}</div>
+                          <div className="text-xs mt-0.5" style={{ color: "var(--vt-gray-mid)" }}>{permit.agency}</div>
+                        </div>
+                        <div className="text-xs font-medium flex-shrink-0" style={{ color: "var(--vt-gray-mid)" }}>
+                          {expanded ? "Hide ▲" : "Details ▼"}
+                        </div>
+                      </button>
+
+                      {expanded && (
+                        <div className="px-4 pb-4 pt-0 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
+                          <p className="text-sm my-3" style={{ color: "var(--vt-gray)" }}>{permit.description}</p>
+                          <div className="flex items-center justify-between text-xs">
+                            <span style={{ color: "var(--vt-gray-mid)" }}>
+                              Typical processing: <strong>{permit.sla_days} business days</strong>
+                            </span>
+                            <a href={permit.url} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-1 font-semibold"
+                              style={{ color: "var(--vt-green)" }}
+                            >
+                              Agency page <ExternalLink size={12} />
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+
+          <div className="vt-card p-4 mt-2" style={{ borderLeft: "4px solid var(--vt-green)" }}>
+            <p className="text-xs" style={{ color: "var(--vt-gray)" }}>
+              <strong>Note:</strong> This tool provides guidance only. Permit requirements depend on your specific site, project details, and current regulations. Contact the relevant agency for definitive requirements.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
