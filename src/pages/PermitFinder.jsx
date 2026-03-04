@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { ArrowRight, ArrowLeft, CheckCircle2, Info, ExternalLink } from "lucide-react";
+import { ArrowRight, ArrowLeft, ExternalLink } from "lucide-react";
 import { PERMITS, CATEGORY_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
+import StepIndicator from "../components/permits/StepIndicator";
+import Toggle from "../components/permits/Toggle";
 
 const STEPS = [
   { id: "basic", label: "Project Basics" },
@@ -25,62 +27,6 @@ const defaultConditions = {
   federal_funding: false,
 };
 
-function StepIndicator({ currentStep }) {
-  return (
-    <div className="flex items-center justify-center mb-8">
-      {STEPS.map((step, idx) => {
-        const done = idx < currentStep;
-        const active = idx === currentStep;
-        return (
-          <div key={step.id} className="flex items-center">
-            <div className="flex flex-col items-center gap-1.5">
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all border-2"
-                style={{
-                  background: done ? "#2d6a4f" : active ? "#1a3d2e" : "white",
-                  borderColor: done || active ? (done ? "#2d6a4f" : "#1a3d2e") : "#cbd5e1",
-                  color: done || active ? "white" : "#94a3b8",
-                }}
-              >
-                {done ? <CheckCircle2 size={16} /> : idx + 1}
-              </div>
-              <span className="text-xs font-semibold hidden sm:block whitespace-nowrap" style={{ color: active ? "#1a3d2e" : done ? "#2d6a4f" : "#94a3b8" }}>
-                {step.label}
-              </span>
-            </div>
-            {idx < STEPS.length - 1 && (
-              <div className="w-16 h-0.5 mb-5 mx-2" style={{ background: done ? "#2d6a4f" : "#e2e8f0" }} />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function Toggle({ label, hint, value, onChange }) {
-  return (
-    <label className="flex items-start gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-all">
-      <button
-        role="checkbox"
-        aria-checked={value}
-        onClick={() => onChange(!value)}
-        className="mt-0.5 w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all"
-        style={{
-          borderColor: value ? "var(--vt-green)" : "var(--vt-gray-light)",
-          background: value ? "var(--vt-green)" : "white",
-        }}
-      >
-        {value && <CheckCircle2 size={12} color="white" />}
-      </button>
-      <div>
-        <div className="text-sm font-medium" style={{ color: "var(--vt-gray-dark)" }}>{label}</div>
-        {hint && <div className="text-xs mt-0.5" style={{ color: "var(--vt-gray-mid)" }}>{hint}</div>}
-      </div>
-    </label>
-  );
-}
-
 export default function PermitFinder() {
   const [step, setStep] = useState(0);
   const [conditions, setConditions] = useState(defaultConditions);
@@ -101,13 +47,13 @@ export default function PermitFinder() {
         <div className="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">Vermont Permitting System</div>
         <h1 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "Georgia, serif" }}>Permit Finder</h1>
         <p className="text-sm text-green-100 opacity-80">
-          Answer a few questions about your project to see which permits apply. Results are based on your project type and site conditions.
+          Answer a few questions about your project to see which permits apply.
         </p>
       </div>
 
-      <StepIndicator currentStep={step} />
+      <StepIndicator steps={STEPS} currentStep={step} />
 
-      {/* Step 0: Basic Info */}
+      {/* Step 0: Project Basics */}
       {step === 0 && (
         <div className="vt-card p-6">
           <h2 className="font-bold mb-1" style={{ color: "var(--vt-green-dark)" }}>Project Basics</h2>
@@ -120,13 +66,10 @@ export default function PermitFinder() {
               </label>
               <div className="flex items-center gap-3">
                 <input
-                  type="range"
-                  min={1}
-                  max={20}
+                  type="range" min={1} max={20}
                   value={conditions.unit_count}
                   onChange={e => set("unit_count", Number(e.target.value))}
-                  className="flex-1"
-                  style={{ accentColor: "var(--vt-green)" }}
+                  className="flex-1" style={{ accentColor: "var(--vt-green)" }}
                 />
                 <div className="w-16 text-center font-bold text-lg rounded-lg py-1" style={{ background: "var(--vt-green-pale)", color: "var(--vt-green-dark)" }}>
                   {conditions.unit_count}
@@ -134,8 +77,7 @@ export default function PermitFinder() {
               </div>
               {conditions.unit_count >= 10 && (
                 <div className="mt-2 text-xs flex items-start gap-1.5 p-2 rounded" style={{ background: "#fff7ed", color: "#92400e" }}>
-                  <Info size={13} className="mt-0.5 flex-shrink-0" />
-                  At 10+ units, Act 250 land use permit may be triggered.
+                  ⚠ At 10+ units, Act 250 land use permit may be triggered.
                 </div>
               )}
             </div>
@@ -146,14 +88,10 @@ export default function PermitFinder() {
               </label>
               <div className="flex items-center gap-3">
                 <input
-                  type="range"
-                  min={0}
-                  max={5}
-                  step={0.25}
+                  type="range" min={0} max={5} step={0.25}
                   value={conditions.disturbed_acres}
                   onChange={e => set("disturbed_acres", Number(e.target.value))}
-                  className="flex-1"
-                  style={{ accentColor: "var(--vt-green)" }}
+                  className="flex-1" style={{ accentColor: "var(--vt-green)" }}
                 />
                 <div className="w-16 text-center font-bold text-lg rounded-lg py-1" style={{ background: "var(--vt-green-pale)", color: "var(--vt-green-dark)" }}>
                   {conditions.disturbed_acres}
@@ -161,13 +99,12 @@ export default function PermitFinder() {
               </div>
               {conditions.disturbed_acres >= 1 && (
                 <div className="mt-2 text-xs flex items-start gap-1.5 p-2 rounded" style={{ background: "#fff7ed", color: "#92400e" }}>
-                  <Info size={13} className="mt-0.5 flex-shrink-0" />
-                  At ≥1 acre disturbed, stormwater permits are required.
+                  ⚠ At ≥1 acre disturbed, stormwater permits are required.
                 </div>
               )}
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1 border-t pt-4" style={{ borderColor: "var(--vt-gray-light)" }}>
               <Toggle label="Creating separate lots (subdivision)" hint="Dividing land into two or more parcels" value={conditions.creating_lots} onChange={v => set("creating_lots", v)} />
               <Toggle label="Connecting to municipal sewer" hint="Project will tie into existing public sewer system" value={conditions.connects_municipal_sewer} onChange={v => set("connects_municipal_sewer", v)} />
               <Toggle label="Creating own water system" hint="Project will serve 15+ connections or 25+ people" value={conditions.own_water_system} onChange={v => set("own_water_system", v)} />
@@ -177,7 +114,7 @@ export default function PermitFinder() {
           <div className="mt-8 flex justify-end">
             <button
               onClick={() => setStep(1)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm"
               style={{ background: "var(--vt-green)", color: "white" }}
             >
               Next: Site Conditions <ArrowRight size={15} />
@@ -190,7 +127,7 @@ export default function PermitFinder() {
       {step === 1 && (
         <div className="vt-card p-6">
           <h2 className="font-bold mb-1" style={{ color: "var(--vt-green-dark)" }}>Site Conditions</h2>
-          <p className="text-sm mb-6" style={{ color: "var(--vt-gray-mid)" }}>Check all conditions that apply to your site.</p>
+          <p className="text-sm mb-5" style={{ color: "var(--vt-gray-mid)" }}>Check all conditions that apply to your site.</p>
 
           <div className="space-y-1">
             <Toggle label="Site is near wetlands" hint="Class I or II wetlands within or adjacent to the project area" value={conditions.near_wetlands} onChange={v => set("near_wetlands", v)} />
@@ -205,18 +142,10 @@ export default function PermitFinder() {
           </div>
 
           <div className="mt-8 flex justify-between">
-            <button
-              onClick={() => setStep(0)}
-              className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm transition-all"
-              style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}
-            >
+            <button onClick={() => setStep(0)} className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm" style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}>
               <ArrowLeft size={15} /> Back
             </button>
-            <button
-              onClick={() => setStep(2)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm transition-all"
-              style={{ background: "var(--vt-green)", color: "white" }}
-            >
+            <button onClick={() => setStep(2)} className="flex items-center gap-2 px-5 py-2.5 rounded font-semibold text-sm" style={{ background: "var(--vt-green)", color: "white" }}>
               See My Permits <ArrowRight size={15} />
             </button>
           </div>
@@ -234,7 +163,7 @@ export default function PermitFinder() {
               <div className="text-xs mt-0.5 text-green-200">
                 {conditions.unit_count} units · {conditions.disturbed_acres} acres disturbed
               </div>
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 flex-wrap">
                 {byCategory.core.length > 0 && <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.core.length} core</span>}
                 {byCategory.likely.length > 0 && <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.likely.length} likely</span>}
                 {byCategory.conditional.length > 0 && <span className="text-xs bg-indigo-500 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.conditional.length} conditional</span>}
@@ -242,11 +171,18 @@ export default function PermitFinder() {
             </div>
             <button
               onClick={() => setStep(0)}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded bg-white/20 text-white hover:bg-white/30 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded whitespace-nowrap"
+              style={{ background: "rgba(255,255,255,0.2)", color: "white" }}
             >
               <ArrowLeft size={12} /> Adjust
             </button>
           </div>
+
+          {matchedPermits.length === 0 && (
+            <div className="vt-card p-8 text-center text-sm mb-4" style={{ color: "var(--vt-gray-mid)" }}>
+              No permits identified based on your inputs. Try adjusting your project details.
+            </div>
+          )}
 
           {[
             { key: "core", title: "Core Permits", subtitle: "Almost always required for your project type", permits: byCategory.core, accent: "border-l-4 border-green-500", titleColor: "text-green-800", subtitleColor: "text-green-600", bg: "bg-green-50" },
@@ -258,14 +194,14 @@ export default function PermitFinder() {
                 <h3 className={`font-bold text-sm ${titleColor}`}>{title} <span className="font-normal opacity-70">({permits.length})</span></h3>
                 <p className={`text-xs ${subtitleColor}`}>{subtitle}</p>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {permits.map(permit => {
                   const expanded = expandedPermit === permit.id;
                   const cat = CATEGORY_CONFIG[permit.category];
                   return (
                     <div key={permit.id} className="vt-card overflow-hidden">
                       <button
-                        className="w-full p-4 text-left flex items-center gap-3 hover:bg-gray-50 transition-all"
+                        className="w-full p-4 text-left flex items-start gap-3 hover:bg-gray-50 transition-all"
                         onClick={() => setExpandedPermit(expanded ? null : permit.id)}
                       >
                         <div className="flex-1 min-w-0">
@@ -276,23 +212,27 @@ export default function PermitFinder() {
                           <div className="font-semibold text-sm" style={{ color: "var(--vt-gray-dark)" }}>{permit.name}</div>
                           <div className="text-xs mt-0.5" style={{ color: "var(--vt-gray-mid)" }}>{permit.agency}</div>
                         </div>
-                        <div className="text-xs font-medium flex-shrink-0" style={{ color: "var(--vt-gray-mid)" }}>
+                        <span className="text-xs font-medium flex-shrink-0 mt-1" style={{ color: "var(--vt-gray-mid)" }}>
                           {expanded ? "Hide ▲" : "Details ▼"}
-                        </div>
+                        </span>
                       </button>
 
                       {expanded && (
-                        <div className="px-4 pb-4 pt-0 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
-                          <p className="text-sm my-3" style={{ color: "var(--vt-gray)" }}>{permit.description}</p>
+                        <div className="px-4 pb-4 pt-2 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
+                          <p className="text-sm mb-3" style={{ color: "var(--vt-gray)" }}>{permit.description}</p>
                           <div className="flex items-center justify-between text-xs">
                             <span style={{ color: "var(--vt-gray-mid)" }}>
                               Typical processing: <strong>{permit.sla_days} business days</strong>
                             </span>
-                            <a href={permit.url} target="_blank" rel="noopener noreferrer"
-                              className="flex items-center gap-1 font-semibold"
+                            <a
+                              href={permit.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 font-semibold hover:underline"
                               style={{ color: "var(--vt-green)" }}
+                              onClick={e => e.stopPropagation()}
                             >
-                              Agency page <ExternalLink size={12} />
+                              Agency page <ExternalLink size={11} />
                             </a>
                           </div>
                         </div>
