@@ -68,8 +68,64 @@ function Toggle({ label, hint, value, onChange }) {
   );
 }
 
+function ParcelMapModal({ onClose, onSelect }) {
+  const [parcelInput, setParcelInput] = useState("");
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(0,0,0,0.6)" }}>
+      <div className="bg-white flex flex-col" style={{ height: "100vh" }}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ background: "#1a3d2e" }}>
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest text-green-300">Vermont Parcel Viewer</div>
+            <div className="text-white font-semibold text-sm">Find your parcel, then enter the Parcel ID below</div>
+          </div>
+          <button onClick={onClose} className="text-white/70 hover:text-white p-1">
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Map iframe */}
+        <div className="flex-1 relative">
+          <iframe
+            src="https://experience.arcgis.com/experience/b5a5cc7663c84761a305f70b913e1a60/"
+            className="w-full h-full border-0"
+            title="Vermont Parcel Viewer"
+            allow="geolocation"
+          />
+        </div>
+
+        {/* Footer: enter parcel ID */}
+        <div className="border-t bg-white px-4 py-3 flex items-center gap-3">
+          <div className="flex-1">
+            <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>
+              Enter the Parcel ID (SPAN) shown when you click a parcel on the map
+            </label>
+            <input
+              className="w-full border rounded px-3 py-2 text-sm"
+              style={{ borderColor: "var(--vt-gray-light)" }}
+              value={parcelInput}
+              onChange={e => setParcelInput(e.target.value)}
+              placeholder="e.g. 273-086-10023"
+              autoFocus
+            />
+          </div>
+          <button
+            onClick={() => { if (parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
+            disabled={!parcelInput.trim()}
+            className="px-4 py-2 text-sm font-semibold rounded disabled:opacity-50 mt-4"
+            style={{ background: "var(--vt-green)", color: "white" }}
+          >
+            Use This Parcel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProjectForm({ onSave, onCancel, initial }) {
   const [step, setStep] = useState(0);
+  const [showParcelMap, setShowParcelMap] = useState(false);
   const [form, setForm] = useState(initial || {
     name: "", description: "", address: "", town: "", parcel_id: "",
     project_type: "residential", unit_count: 4, disturbed_acres: 0,
