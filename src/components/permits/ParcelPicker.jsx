@@ -4,6 +4,32 @@ import { X, Search, CheckCircle2, MapPin, Loader2 } from "lucide-react";
 const PARCEL_URL =
   "https://services1.arcgis.com/BkFxaEFNwHqX3tAw/arcgis/rest/services/FS_VCGI_OPENDATA_Cadastral_VTPARCELS_poly_standardized_parcels_SP_v1/FeatureServer/0";
 
+const WETLAND_URL =
+  "https://services5.arcgis.com/Uzks6LSde6r23wwG/arcgis/rest/services/Vermont_Significant_Wetland_Inventory/FeatureServer/0";
+
+// Check if a parcel (GeoJSON geometry) intersects a classified wetland (Class I or II)
+async function checkWetlandIntersection(parcelGeometry) {
+  // parcelGeometry is GeoJSON {type:"Polygon", coordinates:[rings]}
+  // Convert back to Esri JSON for the spatial query
+  const esriGeom = {
+    rings: parcelGeometry.coordinates,
+    spatialReference: { wkid: 4326 },
+  };
+  const url = `${WETLAND_URL}/query?` + new URLSearchParams({
+    geometry: JSON.stringify(esriGeom),
+    geometryType: "esriGeometryPolygon",
+    spatialRel: "esriSpatialRelIntersects",
+    where: "CLASS IN (1, 2)", // Class I and II only
+    outFields: "CLASS,NWICode",
+    returnGeometry: false,
+    inSR: 4326,
+    f: "json",
+  });
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.features || [];
+}
+
 // Query the feature service via REST — no SDK needed
 async function queryParcelAtPoint(mapPoint, mapView) {
   // Convert screen click to map coords, then do a spatial query
