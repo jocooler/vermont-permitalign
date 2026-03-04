@@ -354,7 +354,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
 
               {uploadedFiles.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded ({uploadedFiles.length})</div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400">Attached ({uploadedFiles.length})</div>
                   {uploadedFiles.map((f, i) => (
                     <div key={i} className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-2.5">
                       <FileText size={15} className="text-green-700 flex-shrink-0" />
