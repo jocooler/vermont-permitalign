@@ -461,11 +461,18 @@ export default function ParcelPicker({ onClose, onSelect }) {
 
   const handleConfirm = () => {
     if (selectedParcel?.span) {
-      // Only pass nearWetlands if the check has completed (not null/checking)
-      const nearWetlands = (wetlandCheck && wetlandCheck !== "checking")
-        ? wetlandCheck.hasWetland
-        : undefined;
-      onSelect(selectedParcel.span, selectedParcel.town, selectedParcel.addr, nearWetlands);
+      const checks = (siteChecks && siteChecks !== "checking") ? siteChecks : null;
+      onSelect(
+        selectedParcel.span,
+        selectedParcel.town,
+        selectedParcel.addr,
+        checks?.wetland?.hasWetland,
+        checks?.floodplain,
+        checks?.stream,
+        checks?.lake,
+        checks?.stateHighway,
+        checks?.elevation,
+      );
       onClose();
     }
   };
