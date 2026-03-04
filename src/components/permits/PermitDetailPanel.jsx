@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { X, ExternalLink, FileText, Clock, Building2, ChevronRight, CheckCircle2, AlertCircle, Info, ClipboardList } from "lucide-react";
+import { X, ExternalLink, FileText, Clock, Building2, CheckCircle2, AlertCircle, Info, ClipboardEdit } from "lucide-react";
 import { STATUS_CONFIG, CATEGORY_CONFIG } from "./PERMIT_DATA";
-import PermitIntakeForm from "./PermitIntakeForm";
+import PermitApplicationForm from "./PermitApplicationForm";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
@@ -15,9 +15,10 @@ const STATUS_DESCRIPTIONS = {
   denied: "Permit application was denied.",
 };
 
-export default function PermitDetailPanel({ permit, project, ipData, onClose, onStatusChange, onNotesChange }) {
-  const [showIntakeForm, setShowIntakeForm] = useState(false);
+const TABS = ["overview", "apply"];
 
+export default function PermitDetailPanel({ permit, projectId, projectData, ipData, onClose, onStatusChange, onNotesChange }) {
+  const [tab, setTab] = useState("overview");
   if (!permit) return null;
 
   const cat = CATEGORY_CONFIG[permit.category] || CATEGORY_CONFIG.core;
@@ -59,8 +60,37 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           </div>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 px-6 py-5 space-y-6">
+        {/* Tabs */}
+        <div className="flex border-b bg-slate-50 flex-shrink-0">
+          <button
+            onClick={() => setTab("overview")}
+            className={`flex-1 py-2.5 text-xs font-semibold transition-colors ${tab === "overview" ? "text-green-700 border-b-2 border-green-600 bg-white" : "text-slate-400 hover:text-slate-600"}`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setTab("apply")}
+            className={`flex-1 py-2.5 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 ${tab === "apply" ? "text-green-700 border-b-2 border-green-600 bg-white" : "text-slate-400 hover:text-slate-600"}`}
+          >
+            <ClipboardEdit size={12} /> Apply
+          </button>
+        </div>
+
+        {/* Apply Tab */}
+        {tab === "apply" && (
+          <PermitApplicationForm
+            permit={permit}
+            projectId={projectId}
+            projectData={projectData}
+            existingApp={null}
+            onSave={(update) => { onStatusChange(permit.id, update.status); if (update.status === "submitted") setTab("overview"); }}
+            onClose={onClose}
+          />
+        )}
+
+        {/* Overview Body */}
+        {tab === "overview" && (
+        <div className="flex-1 px-6 py-5 space-y-6 overflow-y-auto">
 
           {/* Status */}
           <div>
@@ -152,20 +182,6 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
             </div>
           </div>
 
-          {/* Apply Button */}
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Application</div>
-            <button
-              onClick={() => setShowIntakeForm(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm bg-green-700 text-white hover:bg-green-800 transition-colors"
-            >
-              <ClipboardList size={15} /> Start / Complete Application
-            </button>
-            {currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved" ? (
-              <p className="mt-2 text-xs text-center text-green-700">Application previously submitted for this permit.</p>
-            ) : null}
-          </div>
-
           {/* Notes */}
           <div>
             <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Notes</div>
@@ -178,20 +194,24 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
               onChange={e => onNotesChange(permit.id, e.target.value)}
             />
           </div>
-        </div>
-      </div>
 
-      {showIntakeForm && (
-        <PermitIntakeForm
-          permit={permit}
-          project={project}
-          onClose={() => setShowIntakeForm(false)}
-          onSubmitted={() => {
-            setShowIntakeForm(false);
-            onStatusChange(permit.id, "submitted");
-          }}
-        />
-      )}
+          {/* Apply CTA */}
+          <div className="rounded-lg p-4 bg-green-50 border border-green-200">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="text-sm font-semibold text-green-800">Ready to apply?</div>
+                <div className="text-xs text-green-600 mt-0.5">Fill out your application details and track submission.</div>
+              </div>
+              <button
+                onClick={() => setTab("apply")}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-green-700 text-white hover:bg-green-800 flex-shrink-0"
+              >
+                <ClipboardEdit size={14} /> Apply
+              </button>
+            </div>
+          </div>
+        </div>}
+      </div>
     </div>
   );
 }
