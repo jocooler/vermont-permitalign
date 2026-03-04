@@ -7,10 +7,42 @@ const PARCEL_URL =
 const WETLAND_URL =
   "https://services5.arcgis.com/Uzks6LSde6r23wwG/arcgis/rest/services/Vermont_Significant_Wetland_Inventory/FeatureServer/0";
 
+const FEMA_NFHL_URL =
+  "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28"; // Flood Hazard Zones
+
+const NHD_FLOWLINE_URL =
+  "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6"; // Flowline - Large Scale
+
+const NHD_WATERBODY_URL =
+  "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/12"; // Waterbody - Large Scale
+
+const VTRANS_ROADS_URL =
+  "https://maps.vtrans.vermont.gov/arcgis/rest/services/Master/General/FeatureServer/39"; // All Roads
+
+// Degrees per meter at ~44°N latitude
+const DEG_PER_METER = 1 / 111320;
+const STREAM_BUFFER_M = 100;
+const LAKE_BUFFER_M = 250 * 0.3048; // 250 ft in meters (about 76m)
+
+function bufferEnvelope(rings, bufferDeg) {
+  let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+  for (const ring of rings) {
+    for (const [lon, lat] of ring) {
+      if (lon < minLon) minLon = lon;
+      if (lon > maxLon) maxLon = lon;
+      if (lat < minLat) minLat = lat;
+      if (lat > maxLat) maxLat = lat;
+    }
+  }
+  return {
+    xmin: minLon - bufferDeg, ymin: minLat - bufferDeg,
+    xmax: maxLon + bufferDeg, ymax: maxLat + bufferDeg,
+    spatialReference: { wkid: 4326 },
+  };
+}
+
 // Check if a parcel (GeoJSON geometry) intersects a classified wetland (Class I or II)
 async function checkWetlandIntersection(parcelGeometry) {
-  // parcelGeometry is GeoJSON {type:"Polygon", coordinates:[rings]}
-  // Convert back to Esri JSON for the spatial query
   const esriGeom = {
     rings: parcelGeometry.coordinates,
     spatialReference: { wkid: 4326 },
@@ -19,7 +51,7 @@ async function checkWetlandIntersection(parcelGeometry) {
     geometry: JSON.stringify(esriGeom),
     geometryType: "esriGeometryPolygon",
     spatialRel: "esriSpatialRelIntersects",
-    where: "CLASS IN (1, 2)", // Class I and II only
+    where: "CLASS IN (1, 2)",
     outFields: "CLASS,NWICode",
     returnGeometry: false,
     inSR: 4326,
@@ -28,6 +60,99 @@ async function checkWetlandIntersection(parcelGeometry) {
   const res = await fetch(url);
   const data = await res.json();
   return data.features || [];
+}
+
+// Check FEMA floodplain — intersect parcel with SFHA zones (A, AE, AO, AH, etc.)
+async function checkFloodplain(parcelGeometry) {
+  const esriGeom = {
+    rings: parcelGeometry.coordinates,
+    spatialReference: { wkid: 4326 },
+  };
+  const url = `${FEMA_NFHL_URL}/query?` + new URLSearchParams({
+    geometry: JSON.stringify(esriGeom),
+    geometryType: "esriGeometryPolygon",
+    spatialRel: "esriSpatialRelIntersects",
+    where: "FLD_ZONE LIKE 'A%' OR FLD_ZONE LIKE 'V%'",
+    outFields: "FLD_ZONE,ZONE_SUBTY",
+    returnGeometry: false,
+    inSR: 4326,
+    f: "json",
+  });
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data.features || []).length > 0;
+}
+
+// Check NHD perennial streams within ~100m buffer of parcel
+async function checkNearStream(parcelGeometry) {
+  const bufDeg = STREAM_BUFFER_M * DEG_PER_METER;
+  const env = bufferEnvelope(parcelGeometry.coordinates, bufDeg);
+  const url = `${NHD_FLOWLINE_URL}/query?` + new URLSearchParams({
+    geometry: JSON.stringify(env),
+    geometryType: "esriGeometryEnvelope",
+    spatialRel: "esriSpatialRelIntersects",
+    // FCode 46006 = perennial stream/river
+    where: "FCode = 46006",
+    outFields: "FCode,GNIS_Name",
+    returnGeometry: false,
+    inSR: 4326,
+    f: "json",
+  });
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data.features || []).length > 0;
+}
+
+// Check NHD waterbodies (lakes/ponds >10 acres) within 250ft (~76m) buffer
+async function checkNearLake(parcelGeometry) {
+  const bufDeg = LAKE_BUFFER_M * DEG_PER_METER;
+  const env = bufferEnvelope(parcelGeometry.coordinates, bufDeg);
+  const url = `${NHD_WATERBODY_URL}/query?` + new URLSearchParams({
+    geometry: JSON.stringify(env),
+    geometryType: "esriGeometryEnvelope",
+    spatialRel: "esriSpatialRelIntersects",
+    // FCode 39004 = lake/pond; filter >10 acres (~40469 sqm). AreaSqKm > 0.040469
+    where: "FCode IN (39004, 39009, 39010, 39011) AND AreaSqKm > 0.040469",
+    outFields: "FCode,GNIS_Name,AreaSqKm",
+    returnGeometry: false,
+    inSR: 4326,
+    f: "json",
+  });
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data.features || []).length > 0;
+}
+
+// Check elevation at parcel centroid using USGS EPQS
+async function checkElevation(rings) {
+  const coords = rings[0];
+  let sumLon = 0, sumLat = 0;
+  for (const [lon, lat] of coords) { sumLon += lon; sumLat += lat; }
+  const lon = sumLon / coords.length;
+  const lat = sumLat / coords.length;
+  const url = `https://epqs.nationalmap.gov/v1/json?x=${lon}&y=${lat}&units=Feet&includeDate=false`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.value; // feet
+}
+
+// Check if parcel touches a state-maintained highway (VTrans AOTCLASS state routes)
+async function checkStateHighway(parcelGeometry) {
+  const env = bufferEnvelope(parcelGeometry.coordinates, 0.0005); // ~50m buffer
+  const url = `${VTRANS_ROADS_URL}/query?` + new URLSearchParams({
+    geometry: JSON.stringify(env),
+    geometryType: "esriGeometryEnvelope",
+    spatialRel: "esriSpatialRelIntersects",
+    // AOTCLASS: 5=US Route, 6=State Route, 7=Interstate
+    where: "AOTCLASS IN (5, 6, 7)",
+    outFields: "AOTCLASS,PRIMARYNAME,RTNAME",
+    returnGeometry: false,
+    inSR: 4326,
+    f: "json",
+  });
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data.features || []).length > 0;
 }
 
 // Query the feature service via REST — no SDK needed
