@@ -15,7 +15,10 @@ const STATUS_DESCRIPTIONS = {
   denied: "Permit application was denied.",
 };
 
-export default function PermitDetailPanel({ permit, ipData, onClose, onStatusChange, onNotesChange }) {
+const TABS = ["overview", "apply"];
+
+export default function PermitDetailPanel({ permit, projectId, projectData, ipData, onClose, onStatusChange, onNotesChange }) {
+  const [tab, setTab] = useState("overview");
   if (!permit) return null;
 
   const cat = CATEGORY_CONFIG[permit.category] || CATEGORY_CONFIG.core;
