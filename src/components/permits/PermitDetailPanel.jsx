@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { X, ExternalLink, FileText, Clock, Building2, CheckCircle2, AlertCircle, Info, ClipboardEdit } from "lucide-react";
+import { X, ExternalLink, FileText, Clock, Building2, ChevronRight, CheckCircle2, AlertCircle, Info, ClipboardList } from "lucide-react";
 import { STATUS_CONFIG, CATEGORY_CONFIG } from "./PERMIT_DATA";
-import PermitApplicationForm from "./PermitApplicationForm";
+import PermitIntakeForm from "./PermitIntakeForm";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
@@ -15,10 +15,7 @@ const STATUS_DESCRIPTIONS = {
   denied: "Permit application was denied.",
 };
 
-const TABS = ["overview", "apply"];
-
-export default function PermitDetailPanel({ permit, projectId, projectData, ipData, onClose, onStatusChange, onNotesChange }) {
-  const [tab, setTab] = useState("overview");
+export default function PermitDetailPanel({ permit, ipData, onClose, onStatusChange, onNotesChange }) {
   if (!permit) return null;
 
   const cat = CATEGORY_CONFIG[permit.category] || CATEGORY_CONFIG.core;
@@ -60,36 +57,8 @@ export default function PermitDetailPanel({ permit, projectId, projectData, ipDa
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b bg-slate-50 flex-shrink-0">
-          <button
-            onClick={() => setTab("overview")}
-            className={`flex-1 py-2.5 text-xs font-semibold transition-colors ${tab === "overview" ? "text-green-700 border-b-2 border-green-600 bg-white" : "text-slate-400 hover:text-slate-600"}`}
-          >
-            Overview
-          </button>
-          <button
-            onClick={() => setTab("apply")}
-            className={`flex-1 py-2.5 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 ${tab === "apply" ? "text-green-700 border-b-2 border-green-600 bg-white" : "text-slate-400 hover:text-slate-600"}`}
-          >
-            <ClipboardEdit size={12} /> Apply
-          </button>
-        </div>
-
-        {/* Apply Tab */}
-        {tab === "apply" && (
-          <PermitApplicationForm
-            permit={permit}
-            projectId={projectId}
-            projectData={projectData}
-            existingApp={null}
-            onSave={(update) => { onStatusChange(permit.id, update.status); if (update.status === "submitted") setTab("overview"); }}
-            onClose={onClose}
-          />
-        )}
-
-        {/* Overview Body */}
-        {tab === "overview" && <div className="flex-1 px-6 py-5 space-y-6 overflow-y-auto">
+        {/* Body */}
+        <div className="flex-1 px-6 py-5 space-y-6">
 
           {/* Status */}
           <div>
