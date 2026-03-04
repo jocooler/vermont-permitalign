@@ -397,8 +397,8 @@ export default function ParcelPicker({ onClose, onSelect }) {
                 </div>
               </div>
               <button
-                onClick={handleConfirm}
-                className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded flex-shrink-0"
+                onPointerDown={e => { e.stopPropagation(); e.preventDefault(); handleConfirm(); }}
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded flex-shrink-0 cursor-pointer"
                 style={{ background: "#1a3d2e", color: "white" }}
               >
                 <CheckCircle2 size={15} /> Use This Parcel
