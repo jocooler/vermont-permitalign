@@ -69,11 +69,16 @@ function ProjectForm({ onSave, onCancel }) {
       {showParcelMap && (
         <ParcelPicker
           onClose={() => setShowParcelMap(false)}
-          onSelect={(span, town, addr, nearWetlands) => {
+          onSelect={(span, town, addr, nearWetlands, floodplain, stream, lake, stateHighway, elevation) => {
             set("parcel_id", span);
             if (town && !form.town) set("town", town);
             if (addr && !form.address) set("address", addr);
             if (nearWetlands !== undefined) setSite("near_wetlands", !!nearWetlands);
+            if (floodplain !== undefined) setSite("in_floodplain", !!floodplain);
+            if (stream !== undefined) setSite("near_stream", !!stream);
+            if (lake !== undefined) setSite("near_lake_or_pond", !!lake);
+            if (stateHighway !== undefined) setSite("state_highway_access", !!stateHighway);
+            if (elevation !== undefined) setSite("elevation_above_2500", elevation > 2500);
           }}
         />
       )}
