@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { X, Search, CheckCircle2, MapPin, Loader2 } from "lucide-react";
+import { X, Search, CheckCircle2, MapPin, Loader2, AlertTriangle, Leaf } from "lucide-react";
 
 const PARCEL_URL =
   "https://services1.arcgis.com/BkFxaEFNwHqX3tAw/arcgis/rest/services/FS_VCGI_OPENDATA_Cadastral_VTPARCELS_poly_standardized_parcels_SP_v1/FeatureServer/0";
