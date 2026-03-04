@@ -354,25 +354,37 @@ export default function ParcelPicker({ onClose, onSelect }) {
     setSelectedParcel({ span, town, owner, addr, feature });
     setError(null);
 
-    // Run wetland intersection check in background
-    setWetlandCheck("checking");
+    // Build GeoJSON geometry from feature
+    let geom = null;
+    if (feature.geometry?.rings) {
+      geom = { type: "Polygon", coordinates: feature.geometry.rings };
+    } else if (feature.geometry?.type === "Polygon") {
+      geom = feature.geometry;
+    }
+    if (!geom) { setSiteChecks(null); return; }
+
+    setSiteChecks("checking");
     try {
-      // Build GeoJSON geometry from feature
-      let geom = null;
-      if (feature.geometry?.rings) {
-        geom = { type: "Polygon", coordinates: feature.geometry.rings };
-      } else if (feature.geometry?.type === "Polygon") {
-        geom = feature.geometry;
-      }
-      if (geom) {
-        const hits = await checkWetlandIntersection(geom);
-        const classes = [...new Set(hits.map(h => (h.attributes || h.properties || {}).CLASS))];
-        setWetlandCheck({ hasWetland: hits.length > 0, classes });
-      } else {
-        setWetlandCheck(null);
-      }
-    } catch {
-      setWetlandCheck(null);
+      const [wetlandHits, floodplain, stream, lake, elevation, stateHighway] = await Promise.all([
+        checkWetlandIntersection(geom),
+        checkFloodplain(geom),
+        checkNearStream(geom),
+        checkNearLake(geom),
+        checkElevation(geom.coordinates),
+        checkStateHighway(geom),
+      ]);
+      const classes = [...new Set(wetlandHits.map(h => (h.attributes || h.properties || {}).CLASS))];
+      setSiteChecks({
+        wetland: { hasWetland: wetlandHits.length > 0, classes },
+        floodplain,
+        stream,
+        lake,
+        elevation,
+        stateHighway,
+      });
+    } catch (e) {
+      console.warn("Site checks failed:", e);
+      setSiteChecks(null);
     }
   };
 
