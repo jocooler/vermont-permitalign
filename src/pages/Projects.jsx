@@ -100,23 +100,26 @@ function ParcelMapModal({ onClose, onSelect }) {
             <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>
               Enter the Parcel ID (SPAN) shown when you click a parcel on the map
             </label>
-            <input
-              className="w-full border rounded px-3 py-2 text-sm"
-              style={{ borderColor: "var(--vt-gray-light)" }}
-              value={parcelInput}
-              onChange={e => setParcelInput(e.target.value)}
-              placeholder="e.g. 273-086-10023"
-              autoFocus
-            />
+            <div className="flex gap-2 mt-1">
+              <input
+                className="flex-1 border rounded px-3 py-2 text-sm"
+                style={{ borderColor: "var(--vt-gray-light)" }}
+                value={parcelInput}
+                onChange={e => setParcelInput(e.target.value)}
+                placeholder="e.g. 273-086-10023"
+                autoFocus
+                onKeyDown={e => { if (e.key === "Enter" && parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
+              />
+              <button
+                onClick={() => { if (parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
+                disabled={!parcelInput.trim()}
+                className="px-4 py-2 text-sm font-semibold rounded disabled:opacity-50"
+                style={{ background: "var(--vt-green)", color: "white" }}
+              >
+                Done
+              </button>
+            </div>
           </div>
-          <button
-            onClick={() => { if (parcelInput.trim()) { onSelect(parcelInput.trim()); onClose(); } }}
-            disabled={!parcelInput.trim()}
-            className="px-4 py-2 text-sm font-semibold rounded disabled:opacity-50 mt-4"
-            style={{ background: "var(--vt-green)", color: "white" }}
-          >
-            Use This Parcel
-          </button>
         </div>
       </div>
     </div>
