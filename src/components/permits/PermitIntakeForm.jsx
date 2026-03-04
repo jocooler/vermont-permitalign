@@ -259,6 +259,11 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Project & Site Details</h3>
                 <p className="text-sm text-slate-500">Confirm site information for this permit application.</p>
+                {profile.project_description && (
+                  <p className="text-xs mt-2 p-2 rounded bg-green-50 text-green-800">
+                    ✓ Loaded from project profile
+                  </p>
+                )}
               </div>
               {[
                 { key: "site_address", label: "Site Address *", placeholder: "Street address" },
