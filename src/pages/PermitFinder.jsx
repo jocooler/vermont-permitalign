@@ -96,12 +96,10 @@ export default function PermitFinder() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8">
-        <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--vt-green)" }}>
-          Vermont Permitting System
-        </div>
-        <h1 className="text-2xl font-bold mb-2" style={{ color: "var(--vt-green-dark)" }}>Permit Finder</h1>
-        <p className="text-sm" style={{ color: "var(--vt-gray)" }}>
+      <div className="rounded-xl mb-8 p-6" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #2d6a4f 100%)" }}>
+        <div className="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">Vermont Permitting System</div>
+        <h1 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "Georgia, serif" }}>Permit Finder</h1>
+        <p className="text-sm text-green-100 opacity-80">
           Answer a few questions about your project to see which permits apply. Results are based on your project type and site conditions.
         </p>
       </div>
@@ -227,33 +225,37 @@ export default function PermitFinder() {
       {/* Step 2: Results */}
       {step === 2 && (
         <div>
-          <div className="vt-card p-5 mb-6 flex items-center justify-between gap-4">
+          <div className="rounded-xl mb-6 p-5 flex items-center justify-between gap-4" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #3a7d5c 100%)" }}>
             <div>
-              <div className="text-sm font-semibold" style={{ color: "var(--vt-green-dark)" }}>
-                {matchedPermits.length} permit{matchedPermits.length !== 1 ? "s" : ""} identified for your project
+              <div className="text-lg font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>
+                {matchedPermits.length} permit{matchedPermits.length !== 1 ? "s" : ""} identified
               </div>
-              <div className="text-xs mt-0.5" style={{ color: "var(--vt-gray-mid)" }}>
-                Based on {conditions.unit_count} units · {conditions.disturbed_acres} acres disturbed
+              <div className="text-xs mt-0.5 text-green-200">
+                {conditions.unit_count} units · {conditions.disturbed_acres} acres disturbed
+              </div>
+              <div className="flex gap-2 mt-2">
+                {byCategory.core.length > 0 && <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.core.length} core</span>}
+                {byCategory.likely.length > 0 && <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.likely.length} likely</span>}
+                {byCategory.conditional.length > 0 && <span className="text-xs bg-indigo-500 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.conditional.length} conditional</span>}
               </div>
             </div>
             <button
               onClick={() => setStep(0)}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded"
-              style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray)" }}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded bg-white/20 text-white hover:bg-white/30 transition-colors"
             >
               <ArrowLeft size={12} /> Adjust
             </button>
           </div>
 
           {[
-            { key: "core", title: "Core Permits", subtitle: "Almost always required for your project type", permits: byCategory.core },
-            { key: "likely", title: "Likely Required", subtitle: "Based on your site conditions", permits: byCategory.likely },
-            { key: "conditional", title: "Conditional Permits", subtitle: "May apply depending on additional thresholds", permits: byCategory.conditional },
-          ].map(({ key, title, subtitle, permits }) => permits.length > 0 && (
+            { key: "core", title: "Core Permits", subtitle: "Almost always required for your project type", permits: byCategory.core, accent: "border-l-4 border-green-500", titleColor: "text-green-800", subtitleColor: "text-green-600", bg: "bg-green-50" },
+            { key: "likely", title: "Likely Required", subtitle: "Based on your site conditions", permits: byCategory.likely, accent: "border-l-4 border-amber-400", titleColor: "text-amber-800", subtitleColor: "text-amber-600", bg: "bg-amber-50" },
+            { key: "conditional", title: "Conditional Permits", subtitle: "May apply depending on additional thresholds", permits: byCategory.conditional, accent: "border-l-4 border-indigo-400", titleColor: "text-indigo-800", subtitleColor: "text-indigo-600", bg: "bg-indigo-50" },
+          ].map(({ key, title, subtitle, permits, accent, titleColor, subtitleColor, bg }) => permits.length > 0 && (
             <div key={key} className="mb-6">
-              <div className="mb-3">
-                <h3 className="font-bold text-sm" style={{ color: "var(--vt-green-dark)" }}>{title}</h3>
-                <p className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>{subtitle}</p>
+              <div className={`mb-3 p-3 rounded-lg ${bg} ${accent}`}>
+                <h3 className={`font-bold text-sm ${titleColor}`}>{title} <span className="font-normal opacity-70">({permits.length})</span></h3>
+                <p className={`text-xs ${subtitleColor}`}>{subtitle}</p>
               </div>
               <div className="space-y-3">
                 {permits.map(permit => {

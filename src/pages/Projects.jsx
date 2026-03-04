@@ -145,28 +145,28 @@ function ProjectDetail({ project, onBack, onStatusChange }) {
         <ArrowLeft size={15} /> All Projects
       </button>
 
-      <div className="mb-6">
-        <div className="flex items-start gap-4">
+      <div className="rounded-xl mb-6 p-6" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #2d6a4f 100%)" }}>
+        <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h2 className="text-2xl font-bold" style={{ color: "var(--vt-green-dark)" }}>{project.name}</h2>
+            <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{project.name}</h2>
             {(project.town || project.address) && (
-              <div className="flex items-center gap-1.5 mt-1 text-sm" style={{ color: "var(--vt-gray-mid)" }}>
+              <div className="flex items-center gap-1.5 mt-1.5 text-sm text-green-200">
                 <MapPin size={14} /> {[project.address, project.town].filter(Boolean).join(", ")}
               </div>
             )}
+            {project.description && <p className="mt-2 text-sm text-green-100 opacity-80">{project.description}</p>}
           </div>
-          <div className="flex items-center gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold" style={{ color: "var(--vt-green-dark)", fontFamily: "'Source Serif 4', serif" }}>{project.unit_count || "—"}</div>
-              <div className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>units</div>
+          <div className="flex items-center gap-3">
+            <div className="text-center bg-white/10 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{project.unit_count || "—"}</div>
+              <div className="text-xs text-green-200">units</div>
             </div>
-            <div>
-              <div className="text-2xl font-bold" style={{ color: "var(--vt-green-dark)", fontFamily: "'Source Serif 4', serif" }}>{permits.length}</div>
-              <div className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>permits</div>
+            <div className="text-center bg-white/10 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{permits.length}</div>
+              <div className="text-xs text-green-200">permits</div>
             </div>
           </div>
         </div>
-        {project.description && <p className="mt-3 text-sm" style={{ color: "var(--vt-gray)" }}>{project.description}</p>}
       </div>
 
       {permits.length === 0 ? (
@@ -250,12 +250,13 @@ export default function Projects() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
       {view === "list" && (
         <>
-          <div className="flex items-center justify-between mb-8">
+          <div className="rounded-xl mb-8 p-6 flex items-center justify-between gap-4" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #2d6a4f 100%)" }}>
             <div>
-              <h1 className="text-2xl font-bold" style={{ color: "var(--vt-green-dark)" }}>My Projects</h1>
-              <p className="text-sm mt-1" style={{ color: "var(--vt-gray-mid)" }}>{projects.length} project{projects.length !== 1 ? "s" : ""}</p>
+              <div className="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">Vermont Permitting System</div>
+              <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>My Projects</h1>
+              <p className="text-sm mt-1 text-green-200">{projects.length} project{projects.length !== 1 ? "s" : ""}</p>
             </div>
-            <button onClick={() => setView("new")} className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded" style={{ background: "var(--vt-green)", color: "white" }}>
+            <button onClick={() => setView("new")} className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded bg-white hover:bg-green-50 transition-colors" style={{ color: "var(--vt-green-dark)" }}>
               <Plus size={15} /> New Project
             </button>
           </div>
@@ -278,28 +279,29 @@ export default function Projects() {
                 const permitCount = (p.identified_permits || []).length;
                 const approved = (p.identified_permits || []).filter(ip => ip.status === "approved").length;
                 return (
-                  <div key={p.id} className="vt-card p-5 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all" onClick={() => { setSelected(p); setView("detail"); }}>
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--vt-green-pale)" }}>
-                      <Building2 size={18} style={{ color: "var(--vt-green)" }} />
+                  <div key={p.id} className="vt-card p-5 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all border-l-4 hover:border-green-500" style={{ borderLeftColor: s.color }} onClick={() => { setSelected(p); setView("detail"); }}>
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 bg-green-700">
+                      <Building2 size={20} className="text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold" style={{ color: "var(--vt-gray-dark)" }}>{p.name}</div>
-                      <div className="text-xs mt-0.5 flex items-center gap-3" style={{ color: "var(--vt-gray-mid)" }}>
+                      <div className="font-semibold text-slate-800">{p.name}</div>
+                      <div className="text-xs mt-1 flex items-center gap-3 text-slate-500">
                         {p.town && <span className="flex items-center gap-1"><MapPin size={11} />{p.town}</span>}
-                        {p.unit_count && <span>{p.unit_count} units</span>}
+                        {p.unit_count && <span className="bg-green-50 text-green-700 px-1.5 py-0.5 rounded font-medium">{p.unit_count} units</span>}
                         {permitCount > 0 && <span>{approved}/{permitCount} permits done</span>}
                       </div>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0">
                       {permitCount > 0 && (
-                        <div className="hidden sm:flex items-center gap-1">
-                          <div className="w-24 h-1.5 rounded-full" style={{ background: "var(--vt-gray-light)" }}>
-                            <div className="h-1.5 rounded-full transition-all" style={{ background: "var(--vt-green)", width: `${permitCount ? (approved / permitCount) * 100 : 0}%` }} />
+                        <div className="hidden sm:flex flex-col items-end gap-1">
+                          <span className="text-xs text-slate-400">{Math.round((approved/permitCount)*100)}%</span>
+                          <div className="w-24 h-2 rounded-full bg-slate-100">
+                            <div className="h-2 rounded-full transition-all bg-green-500" style={{ width: `${permitCount ? (approved / permitCount) * 100 : 0}%` }} />
                           </div>
                         </div>
                       )}
                       <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ color: s.color, background: s.bg }}>{s.label}</span>
-                      <ChevronRight size={15} style={{ color: "var(--vt-gray-mid)" }} />
+                      <ChevronRight size={15} className="text-slate-400" />
                     </div>
                   </div>
                 );
@@ -311,10 +313,13 @@ export default function Projects() {
 
       {view === "new" && (
         <div>
-          <button onClick={() => setView("list")} className="flex items-center gap-1.5 text-sm font-medium mb-6" style={{ color: "var(--vt-green)" }}>
+          <button onClick={() => setView("list")} className="flex items-center gap-1.5 text-sm font-medium mb-6 text-green-700 hover:text-green-900">
             <ArrowLeft size={15} /> Back to Projects
           </button>
-          <h1 className="text-2xl font-bold mb-6" style={{ color: "var(--vt-green-dark)" }}>Create New Project</h1>
+          <div className="rounded-xl mb-6 p-5" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #2d6a4f 100%)" }}>
+            <div className="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">New Project</div>
+            <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>Create New Project</h1>
+          </div>
           <ProjectForm onSave={handleSave} onCancel={() => setView("list")} />
         </div>
       )}
@@ -322,7 +327,7 @@ export default function Projects() {
       {view === "detail" && selected && (
         <ProjectDetail
           project={selected}
-          onBack={() => setView("list")}
+          onBack={() => { setView("list"); }}
           onStatusChange={handleStatusChange}
         />
       )}
