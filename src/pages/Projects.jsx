@@ -20,6 +20,7 @@ function ProjectForm({ onSave, onCancel }) {
   const [step, setStep] = useState(0);
   const [showParcelMap, setShowParcelMap] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [autoDetectedFields, setAutoDetectedFields] = useState([]);
   const [form, setForm] = useState({
     name: "", description: "", address: "", town: "", parcel_id: "",
     project_type: "residential", unit_count: 4, disturbed_acres: 0,
