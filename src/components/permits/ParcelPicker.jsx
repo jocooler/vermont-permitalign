@@ -96,6 +96,7 @@ export default function ParcelPicker({ onClose, onSelect }) {
   const [mapReady, setMapReady] = useState(false);
   const [searchMode, setSearchMode] = useState("address"); // "address" | "span"
   const [error, setError] = useState(null);
+  const [wetlandCheck, setWetlandCheck] = useState(null); // null | "checking" | {hasWetland, classes}
 
   // Load Leaflet + ESRI-Leaflet from CDN
   useEffect(() => {
