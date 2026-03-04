@@ -74,12 +74,14 @@ function ProjectForm({ onSave, onCancel }) {
             set("parcel_id", span);
             if (town && !form.town) set("town", town);
             if (addr && !form.address) set("address", addr);
-            if (nearWetlands !== undefined) setSite("near_wetlands", !!nearWetlands);
-            if (floodplain !== undefined) setSite("in_floodplain", !!floodplain);
-            if (stream !== undefined) setSite("near_stream", !!stream);
-            if (lake !== undefined) setSite("near_lake_or_pond", !!lake);
-            if (stateHighway !== undefined) setSite("state_highway_access", !!stateHighway);
-            if (elevation !== undefined) setSite("elevation_above_2500", elevation > 2500);
+            const detected = [];
+            if (nearWetlands !== undefined) { setSite("near_wetlands", !!nearWetlands); detected.push("near_wetlands"); }
+            if (floodplain !== undefined) { setSite("in_floodplain", !!floodplain); detected.push("in_floodplain"); }
+            if (stream !== undefined) { setSite("near_stream", !!stream); detected.push("near_stream"); }
+            if (lake !== undefined) { setSite("near_lake_or_pond", !!lake); detected.push("near_lake_or_pond"); }
+            if (stateHighway !== undefined) { setSite("state_highway_access", !!stateHighway); detected.push("state_highway_access"); }
+            if (elevation !== undefined) { setSite("elevation_above_2500", elevation > 2500); detected.push("elevation_above_2500"); }
+            setAutoDetectedFields(detected);
           }}
         />
       )}
