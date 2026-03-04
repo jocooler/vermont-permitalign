@@ -32,7 +32,7 @@ function ProjectForm({ onSave, onCancel }) {
       near_lake_or_pond: false, state_highway_access: false,
       elevation_above_2500: false, existing_structures: false,
       pre_1978_structures: false, connects_municipal_sewer: false,
-      own_water_system: false, federal_funding: false,
+      own_water_system: false, federal_funding: false, soil_test_completed: false,
     }
   });
 
