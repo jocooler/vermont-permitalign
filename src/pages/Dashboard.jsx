@@ -39,10 +39,10 @@ export default function Dashboard() {
   };
 
   const statCards = [
-    { label: "Total Projects", value: stats.total, Icon: FolderOpen, iconColor: "text-green-700", iconBg: "bg-green-50" },
-    { label: "In Progress", value: stats.inProgress, Icon: Clock, iconColor: "text-blue-600", iconBg: "bg-blue-50" },
-    { label: "Approved", value: stats.approved, Icon: CheckCircle2, iconColor: "text-emerald-600", iconBg: "bg-emerald-50" },
-    { label: "Drafts", value: stats.draft, Icon: AlertCircle, iconColor: "text-slate-500", iconBg: "bg-slate-100" },
+    { label: "Total Projects", value: stats.total, Icon: FolderOpen, iconColor: "text-white", iconBg: "bg-green-700", cardBorder: "border-l-4 border-green-600", valuColor: "text-green-900" },
+    { label: "In Progress", value: stats.inProgress, Icon: Clock, iconColor: "text-white", iconBg: "bg-blue-600", cardBorder: "border-l-4 border-blue-500", valuColor: "text-blue-900" },
+    { label: "Approved", value: stats.approved, Icon: CheckCircle2, iconColor: "text-white", iconBg: "bg-emerald-600", cardBorder: "border-l-4 border-emerald-500", valuColor: "text-emerald-900" },
+    { label: "Drafts", value: stats.draft, Icon: AlertCircle, iconColor: "text-white", iconBg: "bg-amber-500", cardBorder: "border-l-4 border-amber-400", valuColor: "text-amber-900" },
   ];
 
   return (
@@ -71,15 +71,15 @@ export default function Dashboard() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-        {statCards.map(({ label, value, Icon, iconColor, iconBg }) => (
-          <div key={label} className="vt-card p-5">
+        {statCards.map(({ label, value, Icon, iconColor, iconBg, cardBorder, valuColor }) => (
+          <div key={label} className={`vt-card p-5 ${cardBorder}`}>
             <div className="flex items-center gap-3 mb-3">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${iconBg}`}>
-                <Icon size={17} className={iconColor} />
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${iconBg}`}>
+                <Icon size={18} className={iconColor} />
               </div>
               <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</span>
             </div>
-            <div className="text-3xl font-bold text-green-900" style={{ fontFamily: "Georgia, serif" }}>
+            <div className={`text-3xl font-bold ${valuColor}`} style={{ fontFamily: "Georgia, serif" }}>
               {loading ? "—" : value}
             </div>
           </div>
@@ -167,14 +167,14 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="rounded-lg p-5 bg-green-800 text-white">
-            <div className="text-xs font-bold uppercase tracking-wide mb-2 opacity-70">Our Vision</div>
+          <div className="rounded-lg p-5 text-white" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #2d6a4f 60%, #3a7d5c 100%)" }}>
+            <div className="text-xs font-bold uppercase tracking-widest mb-2 text-green-300">Our Vision</div>
             <h3 className="font-bold mb-3 text-lg" style={{ fontFamily: "Georgia, serif" }}>Aligned. Predictable. Transparent.</h3>
-            <ul className="space-y-2 text-sm opacity-85">
-              <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-green-300" /> Permits aligned across agencies</li>
-              <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-green-300" /> Clear timelines & requirements</li>
-              <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-green-300" /> Real-time visibility into status</li>
-              <li className="flex items-start gap-2"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-green-300" /> Information entered once, shared across agencies</li>
+            <ul className="space-y-2.5 text-sm">
+              <li className="flex items-start gap-2.5"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-emerald-300" /> <span className="opacity-90">Permits aligned across agencies</span></li>
+              <li className="flex items-start gap-2.5"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-emerald-300" /> <span className="opacity-90">Clear timelines & requirements</span></li>
+              <li className="flex items-start gap-2.5"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-emerald-300" /> <span className="opacity-90">Real-time visibility into status</span></li>
+              <li className="flex items-start gap-2.5"><CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-emerald-300" /> <span className="opacity-90">Information entered once, shared across agencies</span></li>
             </ul>
           </div>
         </div>
