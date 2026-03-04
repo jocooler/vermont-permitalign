@@ -173,6 +173,13 @@ export default function SiteConditions({ form, autoDetectedFields, setSite, set 
           onChange={v => setSite("federal_funding", v)}
           autoDetected={false}
         />
+        <ConditionCard
+          label="Soil test/reveal completed"
+          hint="Site has undergone soil investigation or revealed soil conditions"
+          value={sc.soil_test_completed}
+          onChange={v => setSite("soil_test_completed", v)}
+          autoDetected={false}
+        />
       </Section>
     </div>
   );
