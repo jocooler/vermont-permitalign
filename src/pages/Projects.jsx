@@ -472,9 +472,14 @@ export default function Projects() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
+    const returnProjectId = new URLSearchParams(window.location.search).get("project");
     base44.entities.Project.list("-created_date").then(p => {
       setProjects(p || []);
       setLoading(false);
+      if (returnProjectId) {
+        const found = (p || []).find(proj => proj.id === returnProjectId);
+        if (found) { setSelected(found); setView("detail"); }
+      }
     });
   }, []);
 
