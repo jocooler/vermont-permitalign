@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus, Filter, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { Plus, Filter, CheckCircle2, Clock, AlertCircle, FolderOpen } from "lucide-react";
 import TaskCard from "../components/tasks/TaskCard.jsx";
 import TaskForm from "../components/tasks/TaskForm.jsx";
 
@@ -23,16 +23,25 @@ export default function TasksPage() {
   const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPriority, setFilterPriority] = useState("all");
+  const [filterProject, setFilterProject] = useState("all");
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    base44.entities.Project.list("-created_date", 100).then(setProjects);
+  }, []);
+
+  const projectMap = Object.fromEntries(projects.map(p => [p.id, p.name]));
 
   const { data: tasks = [], refetch } = useQuery({
     queryKey: ["tasks"],
-    queryFn: () => base44.entities.Task.list("-due_date", 100),
+    queryFn: () => base44.entities.Task.list("-due_date", 200),
   });
 
   const filteredTasks = tasks.filter((task) => {
     const statusMatch = filterStatus === "all" || task.status === filterStatus;
     const priorityMatch = filterPriority === "all" || task.priority === filterPriority;
-    return statusMatch && priorityMatch;
+    const projectMatch = filterProject === "all" || task.project_id === filterProject;
+    return statusMatch && priorityMatch && projectMatch;
   });
 
   const stats = {
@@ -53,10 +62,7 @@ export default function TasksPage() {
             </h1>
             <p className="text-sm text-slate-500 mt-1">Manage your project tasks and requirements</p>
           </div>
-          <Button
-            onClick={() => setShowForm(true)}
-            className="gap-2 bg-green-700 hover:bg-green-800"
-          >
+          <Button onClick={() => setShowForm(true)} className="gap-2 bg-green-700 hover:bg-green-800">
             <Plus size={16} /> New Task
           </Button>
         </div>
@@ -82,24 +88,30 @@ export default function TasksPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="flex items-center gap-2">
-            <Filter size={14} className="text-slate-400" />
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="border rounded px-3 py-2 text-sm bg-white"
-              style={{ borderColor: "var(--vt-gray-light)" }}
-            >
-              <option value="all">All Status</option>
-              {Object.entries(STATUS_CONFIG).map(([key, val]) => (
-                <option key={key} value={key}>
-                  {val.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
+        <div className="flex flex-wrap gap-3 mb-6 items-center">
+          <Filter size={14} className="text-slate-400" />
+          <select
+            value={filterProject}
+            onChange={(e) => setFilterProject(e.target.value)}
+            className="border rounded px-3 py-2 text-sm bg-white"
+            style={{ borderColor: "var(--vt-gray-light)" }}
+          >
+            <option value="all">All Projects</option>
+            {projects.map(p => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="border rounded px-3 py-2 text-sm bg-white"
+            style={{ borderColor: "var(--vt-gray-light)" }}
+          >
+            <option value="all">All Status</option>
+            {Object.entries(STATUS_CONFIG).map(([key, val]) => (
+              <option key={key} value={key}>{val.label}</option>
+            ))}
+          </select>
           <select
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
@@ -108,9 +120,7 @@ export default function TasksPage() {
           >
             <option value="all">All Priority</option>
             {Object.entries(PRIORITY_CONFIG).map(([key, val]) => (
-              <option key={key} value={key}>
-                {val.label}
-              </option>
+              <option key={key} value={key}>{val.label}</option>
             ))}
           </select>
         </div>
@@ -119,20 +129,20 @@ export default function TasksPage() {
         <div className="space-y-3">
           {filteredTasks.length > 0 ? (
             filteredTasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onUpdated={() => refetch()}
-              />
+              <div key={task.id}>
+                {task.project_id && projectMap[task.project_id] && (
+                  <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium mb-1 ml-1">
+                    <FolderOpen size={11} />
+                    {projectMap[task.project_id]}
+                  </div>
+                )}
+                <TaskCard task={task} onUpdated={() => refetch()} />
+              </div>
             ))
           ) : (
             <div className="vt-card p-8 text-center">
               <p className="text-slate-500 mb-4">No tasks match your filters</p>
-              <Button
-                onClick={() => setShowForm(true)}
-                variant="outline"
-                className="gap-2"
-              >
+              <Button onClick={() => setShowForm(true)} variant="outline" className="gap-2">
                 <Plus size={16} /> Create Task
               </Button>
             </div>
