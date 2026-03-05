@@ -70,7 +70,7 @@ const TRIGGERS = {
   pre_1978_structures: (c) => c.pre_1978_structures,
   unit_count_gte_4: (c) => c.unit_count >= 4,
   connects_municipal_sewer: (c) => c.connects_municipal_sewer,
-  agricultural_soils_rural: (c) => c.soil_test_completed && !c.in_city_or_village,
+  agricultural_soils_rural: (c) => !c.connects_municipal_sewer || c.own_water_system,
 };
 
 // Convert a DB PermitType record to the shape the UI expects
