@@ -147,13 +147,34 @@ export default function ReviewQueue() {
     addField("Status", STATUS_CONFIG[ip.status]?.label || ip.status);
     addField("Category", ip.category || "—");
     if (meta?.sla_days) addField("SLA", `${meta.sla_days} business days`);
+    
+    // Always include Applicant/Project Profile section
     y += 4;
+    doc.setFont(undefined, "bold"); 
+    doc.text("Applicant & Project Information", 20, y); 
+    doc.setFont(undefined, "normal"); 
+    y += 9;
+    
     if (project.profile?.applicant_name) {
-      doc.setFont(undefined, "bold"); doc.text("Applicant Information", 20, y); doc.setFont(undefined, "normal"); y += 9;
-      addField("Name", project.profile.applicant_name);
+      addField("Applicant Name", project.profile.applicant_name);
       addField("Organization", project.profile.applicant_organization || "—");
       addField("Email", project.profile.applicant_email || "—");
       addField("Phone", project.profile.applicant_phone || "—");
+    } else {
+      addField("Applicant Name", "—");
+      addField("Organization", "—");
+      addField("Email", "—");
+      addField("Phone", "—");
+    }
+    
+    if (project.profile?.project_description) {
+      addField("Project Description", project.profile.project_description);
+    }
+    if (project.profile?.anticipated_start_date) {
+      addField("Anticipated Start", project.profile.anticipated_start_date);
+    }
+    if (project.profile?.anticipated_end_date) {
+      addField("Anticipated End", project.profile.anticipated_end_date);
     }
     if (ip.reviewer_notes) {
       y += 4;
