@@ -383,21 +383,14 @@ export default function ReviewQueue() {
 
                   {selectedStatus === "info_requested" && (
                     <div className="mb-5 p-3 rounded-lg border-l-4 border-amber-400 bg-amber-50">
-                      <div className="text-xs font-bold text-amber-900 mb-2">📋 Information Requested (Required)</div>
+                      <div className="text-xs font-bold text-amber-900 mb-2">📋 Information Requested</div>
                       <textarea
                         value={infoRequestedText}
-                        onChange={(e) => { setInfoRequestedText(e.target.value); setInfoRequestSaved(false); }}
+                        onChange={(e) => setInfoRequestedText(e.target.value)}
                         placeholder="Specify what information is needed from the applicant..."
-                        className="w-full border rounded px-2 py-1.5 text-xs resize-none mb-2"
+                        className="w-full border rounded px-2 py-1.5 text-xs resize-none"
                         style={{ borderColor: "#fbbf24", background: "white" }}
                       />
-                      <button
-                        onClick={() => handleInfoRequestedChange(infoRequestedText)}
-                        className="text-xs font-semibold px-3 py-1 rounded transition-all flex items-center gap-1.5"
-                        style={{ background: infoRequestSaved ? "#10b981" : "#f59e0b", color: "white" }}
-                      >
-                        {infoRequestSaved ? <><CheckCircle2 size={12} /> Saved</> : "Save Info Request"}
-                      </button>
                       <p className="text-xs text-amber-700 mt-2">The applicant will see this information prominently in their permit view.</p>
                     </div>
                   )}
