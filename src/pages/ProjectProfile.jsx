@@ -91,6 +91,7 @@ export default function ProjectProfile() {
   };
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const setProject = (k, v) => setProjectForm(f => ({ ...f, [k]: v }));
 
   if (loading) {
     return (
