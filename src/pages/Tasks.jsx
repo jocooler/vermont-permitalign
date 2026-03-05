@@ -46,6 +46,10 @@ export default function TasksPage() {
       return statusMatch && priorityMatch && projectMatch;
     })
     .sort((a, b) => {
+      const isProfileA = a.title === "Complete Project Profile";
+      const isProfileB = b.title === "Complete Project Profile";
+      if (isProfileA && !isProfileB) return -1;
+      if (!isProfileA && isProfileB) return 1;
       const statusDiff = (statusOrder[a.status] ?? 999) - (statusOrder[b.status] ?? 999);
       if (statusDiff !== 0) return statusDiff;
       return (priorityOrder[a.priority] ?? 999) - (priorityOrder[b.priority] ?? 999);
