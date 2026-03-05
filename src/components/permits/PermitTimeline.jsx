@@ -26,10 +26,8 @@ export default function PermitTimeline({ permit, permit_status, submitted_date, 
   if (permit_status !== "not_started" && permit_status !== "in_progress") {
     completedMilestones.push("submitted");
   }
-  if (["under_review", "info_requested", "approved", "denied"].includes(permit_status)) {
-    completedMilestones.push("under_review");
-  }
   if (["approved", "denied"].includes(permit_status)) {
+    completedMilestones.push("under_review");
     completedMilestones.push("approved");
   }
 
@@ -62,6 +60,7 @@ export default function PermitTimeline({ permit, permit_status, submitted_date, 
           const Icon = ms.icon;
           const completed = isCompleted(ms.id);
           const current = isCurrent(ms.id);
+          const isInfoRequested = current && permit_status === "info_requested";
           const estimatedDate = getEstimatedDate(ms.id);
 
           return (
@@ -70,29 +69,30 @@ export default function PermitTimeline({ permit, permit_status, submitted_date, 
               <div className="flex flex-col items-center">
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    completed ? "bg-green-100" : current ? "bg-blue-100" : "bg-slate-100"
+                    completed ? "bg-green-100" : current && isInfoRequested ? "bg-yellow-100" : current ? "bg-blue-100" : "bg-slate-100"
                   }`}
                 >
                   <Icon
                     size={14}
                     className={`${
-                      completed ? "text-green-600" : current ? "text-blue-600" : "text-slate-400"
+                      completed ? "text-green-600" : current && isInfoRequested ? "text-yellow-600" : current ? "text-blue-600" : "text-slate-400"
                     }`}
                   />
                 </div>
                 {idx !== MILESTONES.length - 1 && (
-                  <div className={`w-0.5 h-12 mt-1 ${completed ? "bg-green-200" : "bg-slate-200"}`} />
+                  <div className={`w-0.5 h-12 mt-1 ${completed ? "bg-green-200" : current && isInfoRequested ? "bg-yellow-200" : "bg-slate-200"}`} />
                 )}
               </div>
 
               {/* Content */}
               <div className="pt-0.5 flex-1 min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-sm font-semibold ${completed ? "text-green-700" : current ? "text-blue-700" : "text-slate-600"}`}>
+                  <span className={`text-sm font-semibold ${completed ? "text-green-700" : current && isInfoRequested ? "text-yellow-700" : current ? "text-blue-700" : "text-slate-600"}`}>
                     {ms.label}
                   </span>
                   {completed && <span className="text-xs text-green-600 font-medium">Completed</span>}
-                  {current && <span className="text-xs text-blue-600 font-medium">In Progress</span>}
+                  {current && isInfoRequested && <span className="text-xs text-yellow-600 font-medium">Information Requested</span>}
+                  {current && !isInfoRequested && <span className="text-xs text-blue-600 font-medium">In Progress</span>}
                 </div>
 
                 {estimatedDate && (
