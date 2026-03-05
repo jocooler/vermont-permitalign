@@ -431,8 +431,8 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
             <span className="text-sm text-slate-500">{tasks.length} task{tasks.length !== 1 ? "s" : ""} total</span>
           </div>
           <div className="space-y-3">
-            {tasks.length === 0 && !showTaskForm ? (
-              <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No tasks yet. Add one above.</div>
+            {tasks.length === 0 ? (
+              <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No tasks yet.</div>
             ) : (
               tasks.map(task => <TaskCard key={task.id} task={task} onUpdated={loadTasks} />)
             )}
