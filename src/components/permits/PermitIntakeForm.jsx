@@ -199,17 +199,19 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, onClo
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col" onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="px-6 py-5 border-b bg-green-900 rounded-t-xl flex items-start justify-between gap-3">
+        <div className={`px-6 py-5 border-b rounded-t-xl flex items-start justify-between gap-3 ${isInfoRequest ? "bg-amber-800" : "bg-green-900"}`}>
           <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">Permit Intake Application</div>
+            <div className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: isInfoRequest ? "#fcd34d" : "#86efac" }}>
+              {isInfoRequest ? "📋 Information Request Response" : "Permit Intake Application"}
+            </div>
             <h2 className="text-lg font-bold text-white leading-snug" style={{ fontFamily: "Georgia, serif" }}>
               {permit.sheet} — {permit.name}
             </h2>
-            <div className="flex items-center gap-1.5 mt-1 text-sm text-green-200">
+            <div className="flex items-center gap-1.5 mt-1 text-sm" style={{ color: isInfoRequest ? "#fef3c7" : "#86efac" }}>
               <Building2 size={13} />{permit.agency}
             </div>
           </div>
-          <button onClick={onClose} className="text-green-300 hover:text-white p-1.5 rounded flex-shrink-0">
+          <button onClick={onClose} className="p-1.5 rounded flex-shrink-0" style={{ color: isInfoRequest ? "#fcd34d" : "#86efac" }}>
             <X size={18} />
           </button>
         </div>
