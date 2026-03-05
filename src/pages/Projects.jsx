@@ -385,17 +385,21 @@ export default function Projects() {
     const saved = await base44.entities.Project.create({ ...data, status: "draft" });
 
     // Auto-generate tasks for each identified permit
-    const taskPromises = (data.identified_permits || []).map(ip =>
-      base44.entities.Task.create({
+    const permitLookup = Object.fromEntries(PERMITS.map(p => [p.id, p]));
+    const taskPromises = (data.identified_permits || []).map(ip => {
+      const permitData = permitLookup[ip.permit_id];
+      const phase = permitData?.phase || 2;
+      const phaseLabel = PHASE_CONFIG[phase]?.label || `Phase ${phase}`;
+      return base44.entities.Task.create({
         project_id: saved.id,
         permit_id: ip.permit_id,
-        title: `Apply for: ${ip.permit_name}`,
+        title: `[${phaseLabel}] Apply for: ${ip.permit_name}`,
         description: ip.why_required || "",
         task_type: "information_required",
         status: "pending",
         priority: ip.category === "core" ? "high" : ip.category === "likely" ? "medium" : "low",
-      })
-    );
+      });
+    });
     await Promise.all(taskPromises);
 
     setProjects(prev => [saved, ...prev]);
