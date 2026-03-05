@@ -171,7 +171,7 @@ export default function ReviewQueue() {
           <div className="fixed inset-0 z-50 lg:relative lg:inset-auto lg:w-80 lg:flex-shrink-0 flex items-end lg:items-start justify-center lg:justify-start">
             {/* Mobile backdrop */}
             <div className="absolute inset-0 bg-black/40 lg:hidden" onClick={() => setSelected(null)} />
-            <div className="vt-card p-5 lg:sticky lg:top-20 w-full max-w-lg lg:max-w-none relative z-10 rounded-t-2xl lg:rounded-lg max-h-[85vh] lg:max-h-none overflow-y-auto">
+            <div className="bg-white p-5 lg:sticky lg:top-20 w-full max-w-lg lg:max-w-none relative z-10 rounded-t-2xl lg:rounded-lg max-h-[85vh] lg:max-h-none overflow-y-auto shadow-xl border border-slate-200">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="font-bold text-sm" style={{ color: "var(--vt-green-dark)" }}>{selected.ip.permit_name}</div>
