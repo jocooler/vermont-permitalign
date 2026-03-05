@@ -266,7 +266,7 @@ export default function ProjectProfile() {
                         max={5}
                         step={0.25}
                         value={projectForm.disturbed_acres}
-                        onChange={e => setProject("disturbed_acres", Number(e.target.value))}
+                        onChange={e => setProjectField("disturbed_acres", Number(e.target.value))}
                         className="flex-1"
                         style={{ accentColor: "var(--vt-green)" }}
                       />
