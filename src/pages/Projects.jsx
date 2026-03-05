@@ -273,8 +273,9 @@ function ProjectForm({ onSave, onCancel }) {
 
 // ── Project Detail ────────────────────────────────────────────────────────────
 function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
+  const { permits: allPermits } = usePermits();
   const [activePermit, setActivePermit] = useState(null);
-  const permits = PERMITS.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
+  const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
   const ipMap = Object.fromEntries((project.identified_permits || []).map(ip => [ip.permit_id, ip]));
 
   const approvedCount = (project.identified_permits || []).filter(ip => ip.status === "approved").length;
