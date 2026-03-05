@@ -84,17 +84,18 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           </div>
 
           {/* Info Requested Alert */}
-          {currentStatus === "info_requested" && infoRequested && (
-            <div className="rounded-lg p-4 border-l-4 border-amber-400 bg-amber-50">
-              <div className="flex items-start gap-2">
-                <AlertCircle size={15} className="text-amber-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-xs font-bold text-amber-800 mb-2">📋 Information Requested by Agency</div>
-                  <p className="text-sm text-amber-700 whitespace-pre-wrap">{infoRequested}</p>
-                </div>
-              </div>
-            </div>
-          )}
+           {currentStatus === "info_requested" && infoRequested && (
+             <div className="rounded-lg p-4 border-l-4 border-amber-500 bg-amber-50 border border-amber-200">
+               <div className="flex items-start gap-2">
+                 <AlertCircle size={16} className="text-amber-700 flex-shrink-0 mt-0.5" style={{ minWidth: "20px" }} />
+                 <div className="flex-1">
+                   <div className="text-xs font-bold text-amber-900 mb-2 uppercase tracking-wide">Action Required: Information Requested</div>
+                   <p className="text-sm text-amber-800 leading-relaxed whitespace-pre-wrap mb-3">{infoRequested}</p>
+                   <p className="text-xs text-amber-700 italic">Submit your response using the button below to keep your application on track.</p>
+                 </div>
+               </div>
+             </div>
+           )}
 
           {/* Why Required */}
           <div className="rounded-lg p-4 bg-amber-50 border border-amber-200">
