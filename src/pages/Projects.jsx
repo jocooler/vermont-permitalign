@@ -273,15 +273,63 @@ function ProjectForm({ onSave, onCancel }) {
   );
 }
 
+// ── Inline Task Form ──────────────────────────────────────────────────────────
+function InlineTaskForm({ projectId, onSaved, onCancel }) {
+  const [formData, setFormData] = useState({ title: "", description: "", task_type: "other", priority: "medium", due_date: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.title) return;
+    setLoading(true);
+    await base44.entities.Task.create({ ...formData, project_id: projectId, status: "pending" });
+    setLoading(false);
+    onSaved();
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="vt-card p-4 border-l-4 border-l-green-500 space-y-3">
+      <input autoFocus required value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} placeholder="Task title..." className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" style={{ borderColor: "var(--vt-gray-light)" }} />
+      <textarea value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full border rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-green-400" style={{ borderColor: "var(--vt-gray-light)" }} />
+      <div className="flex gap-2 flex-wrap">
+        <select value={formData.task_type} onChange={e => setFormData({ ...formData, task_type: e.target.value })} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: "var(--vt-gray-light)" }}>
+          <option value="other">General</option>
+          <option value="document_upload">Document Upload</option>
+          <option value="information_required">Info Required</option>
+          <option value="review">Review</option>
+        </select>
+        <select value={formData.priority} onChange={e => setFormData({ ...formData, priority: e.target.value })} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: "var(--vt-gray-light)" }}>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <input type="date" value={formData.due_date} onChange={e => setFormData({ ...formData, due_date: e.target.value })} className="border rounded px-2 py-1.5 text-xs" style={{ borderColor: "var(--vt-gray-light)" }} />
+      </div>
+      <div className="flex gap-2">
+        <button type="submit" disabled={loading} className="px-4 py-1.5 text-xs font-semibold rounded bg-green-700 text-white hover:bg-green-800 disabled:opacity-50">{loading ? "Saving…" : "Add Task"}</button>
+        <button type="button" onClick={onCancel} className="px-4 py-1.5 text-xs font-semibold rounded border" style={{ borderColor: "var(--vt-gray-light)", color: "var(--vt-gray)" }}>Cancel</button>
+      </div>
+    </form>
+  );
+}
+
 // ── Project Detail ────────────────────────────────────────────────────────────
 function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
   const { permits: allPermits } = usePermits();
   const [activePermit, setActivePermit] = useState(null);
+  const [activeTab, setActiveTab] = useState("permits");
+  const [tasks, setTasks] = useState([]);
+  const [showTaskForm, setShowTaskForm] = useState(false);
+
   const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
   const ipMap = Object.fromEntries((project.identified_permits || []).map(ip => [ip.permit_id, ip]));
-
   const approvedCount = (project.identified_permits || []).filter(ip => ip.status === "approved").length;
   const totalCount = (project.identified_permits || []).length;
+
+  const loadTasks = () => base44.entities.Task.filter({ project_id: project.id }, "-created_date", 100).then(setTasks);
+  useEffect(() => { loadTasks(); }, [project.id]);
+
+  const pendingTasks = tasks.filter(t => t.status !== "completed" && t.status !== "cancelled").length;
 
   return (
     <div>
@@ -299,55 +347,91 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
                 <span className="truncate">{[project.address, project.town].filter(Boolean).join(", ")}</span>
               </div>
             )}
-            {project.parcel_id && (
-              <div className="text-xs mt-1 text-green-300 font-mono">SPAN: {project.parcel_id}</div>
-            )}
+            {project.parcel_id && <div className="text-xs mt-1 text-green-300 font-mono">SPAN: {project.parcel_id}</div>}
             {project.description && <p className="mt-2 text-sm text-green-100 opacity-80 line-clamp-2">{project.description}</p>}
           </div>
           <div className="flex items-center gap-2 flex-shrink-0 flex-col">
-            <a href={`${createPageUrl("ProjectProfile")}?id=${project.id}`} className="px-3 py-1.5 text-xs font-semibold rounded bg-white hover:bg-green-50 transition-colors" style={{ color: "var(--vt-green-dark)" }}>
-              Profile
-            </a>
-            <div className="text-center bg-white/10 rounded-lg px-4 py-2">
-              <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{project.unit_count || "—"}</div>
-              <div className="text-xs text-green-200">units</div>
-            </div>
+            <a href={`${createPageUrl("ProjectProfile")}?id=${project.id}`} className="px-3 py-1.5 text-xs font-semibold rounded bg-white hover:bg-green-50 transition-colors" style={{ color: "var(--vt-green-dark)" }}>Profile</a>
             <div className="text-center bg-white/10 rounded-lg px-4 py-2">
               <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{approvedCount}/{totalCount}</div>
               <div className="text-xs text-green-200">permits done</div>
+            </div>
+            <div className="text-center bg-white/10 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{pendingTasks}</div>
+              <div className="text-xs text-green-200">open tasks</div>
             </div>
           </div>
         </div>
       </div>
 
-      {permits.length === 0 ? (
-        <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No permits identified yet.</div>
-      ) : (
+      {/* Tabs */}
+      <div className="flex border-b mb-6" style={{ borderColor: "var(--vt-gray-light)" }}>
+        <button
+          onClick={() => setActiveTab("permits")}
+          className={`px-5 py-2.5 text-sm font-semibold border-b-2 transition-colors -mb-px ${activeTab === "permits" ? "border-green-600 text-green-700" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+        >
+          Permits ({totalCount})
+        </button>
+        <button
+          onClick={() => setActiveTab("tasks")}
+          className={`px-5 py-2.5 text-sm font-semibold border-b-2 transition-colors -mb-px flex items-center gap-2 ${activeTab === "tasks" ? "border-green-600 text-green-700" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+        >
+          Tasks {pendingTasks > 0 && <span className="text-xs bg-amber-100 text-amber-700 rounded-full px-2 py-0.5">{pendingTasks}</span>}
+        </button>
+      </div>
+
+      {/* Permits Tab */}
+      {activeTab === "permits" && (
+        <>
+          {permits.length === 0 ? (
+            <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No permits identified yet.</div>
+          ) : (
+            <div>
+              {[1, 2, 3, 4].map(phase => {
+                const phasePermits = permits.filter(p => p.phase === phase);
+                if (!phasePermits.length) return null;
+                const cfg = PHASE_CONFIG[phase];
+                return (
+                  <div key={phase} className="mb-7">
+                    <div className={`rounded-lg px-4 py-3 mb-3 border-l-4 ${cfg.border}`} style={{ background: cfg.bg }}>
+                      <div className="font-bold text-sm" style={{ color: cfg.color }}>{cfg.label}</div>
+                      <div className="text-xs mt-0.5 opacity-70" style={{ color: cfg.color }}>{cfg.description}</div>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {phasePermits.map(p => (
+                        <PermitCard key={p.id} permit={p} status={ipMap[p.id]?.status || "not_started"} onClick={() => setActivePermit(p)} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+              <p className="text-xs mt-2" style={{ color: "var(--vt-gray-mid)" }}>Click any permit card to view details and update status.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Tasks Tab */}
+      {activeTab === "tasks" && (
         <div>
-          {[1, 2, 3, 4].map(phase => {
-            const phasePermits = permits.filter(p => p.phase === phase);
-            if (!phasePermits.length) return null;
-            const cfg = PHASE_CONFIG[phase];
-            return (
-              <div key={phase} className="mb-7">
-                <div className={`rounded-lg px-4 py-3 mb-3 border-l-4 ${cfg.border}`} style={{ background: cfg.bg }}>
-                  <div className="font-bold text-sm" style={{ color: cfg.color }}>{cfg.label}</div>
-                  <div className="text-xs mt-0.5 opacity-70" style={{ color: cfg.color }}>{cfg.description}</div>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {phasePermits.map(p => (
-                    <PermitCard
-                      key={p.id}
-                      permit={p}
-                      status={ipMap[p.id]?.status || "not_started"}
-                      onClick={() => setActivePermit(p)}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-          <p className="text-xs mt-2" style={{ color: "var(--vt-gray-mid)" }}>Click any permit card to view details and update status.</p>
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-sm text-slate-500">{tasks.length} task{tasks.length !== 1 ? "s" : ""} total</span>
+            <button onClick={() => setShowTaskForm(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-green-700 text-white hover:bg-green-800">
+              <Plus size={13} /> Add Task
+            </button>
+          </div>
+          {showTaskForm && (
+            <div className="mb-4">
+              <InlineTaskForm projectId={project.id} onSaved={() => { setShowTaskForm(false); loadTasks(); }} onCancel={() => setShowTaskForm(false)} />
+            </div>
+          )}
+          <div className="space-y-3">
+            {tasks.length === 0 && !showTaskForm ? (
+              <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No tasks yet. Add one above.</div>
+            ) : (
+              tasks.map(task => <TaskCard key={task.id} task={task} onUpdated={loadTasks} />)
+            )}
+          </div>
         </div>
       )}
 
