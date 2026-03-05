@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Clock, CheckCircle2, AlertTriangle, Filter, ChevronRight, MessageSquare, ArrowUpRight } from "lucide-react";
-import { PERMITS, STATUS_CONFIG, CATEGORY_CONFIG } from "../components/permits/PERMIT_DATA";
+import { STATUS_CONFIG } from "../components/permits/PERMIT_DATA";
+import { usePermits } from "../components/permits/usePermits";
 
 const ALL_STATUSES = ["submitted", "under_review", "info_requested", "approved", "denied"];
 
