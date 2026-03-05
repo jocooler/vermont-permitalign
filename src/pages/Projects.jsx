@@ -516,7 +516,9 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
                   if (isProfileA && !isProfileB) return -1;
                   if (!isProfileA && isProfileB) return 1;
 
-                  return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
+                  const priorityA = priorityOrder[a.priority] !== undefined ? priorityOrder[a.priority] : 999;
+                  const priorityB = priorityOrder[b.priority] !== undefined ? priorityOrder[b.priority] : 999;
+                  return priorityA - priorityB;
                 });
                 return sorted.map(task => <TaskCard key={task.id} task={task} onUpdated={loadTasks} />);
               })()
