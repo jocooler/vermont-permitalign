@@ -26,10 +26,12 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
   if (!permit) return null;
 
   const cat = CATEGORY_CONFIG[permit.category] || CATEGORY_CONFIG.core;
-  const currentStatus = ipData?.status || "not_started";
-  const st = STATUS_CONFIG[currentStatus] || STATUS_CONFIG.not_started;
-  const notes = ipData?.notes || "";
-  const infoRequested = ipData?.info_requested || "";
+   const currentStatus = ipData?.status || "not_started";
+   const st = STATUS_CONFIG[currentStatus] || STATUS_CONFIG.not_started;
+   const notes = ipData?.notes || "";
+   const infoRequested = ipData?.info_requested || "";
+
+   console.log("PermitDetailPanel ipData:", ipData, "infoRequested:", infoRequested);
 
   const categoryAccentColor = {
     core: "#16a34a",
