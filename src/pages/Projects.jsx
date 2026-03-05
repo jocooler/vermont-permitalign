@@ -316,18 +316,18 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
         <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No permits identified yet.</div>
       ) : (
         <div>
-          {["core", "likely", "conditional"].map(cat => {
-            const catPermits = permits.filter(p => p.category === cat);
-            if (!catPermits.length) return null;
-            const cfg = CATEGORY_CONFIG[cat];
+          {[1, 2, 3, 4].map(phase => {
+            const phasePermits = permits.filter(p => p.phase === phase);
+            if (!phasePermits.length) return null;
+            const cfg = PHASE_CONFIG[phase];
             return (
-              <div key={cat} className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className={cfg.className}>{cfg.label}</span>
-                  <span className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>— {catPermits.length} permit{catPermits.length !== 1 ? "s" : ""}</span>
+              <div key={phase} className="mb-7">
+                <div className={`rounded-lg px-4 py-3 mb-3 border-l-4 ${cfg.border}`} style={{ background: cfg.bg }}>
+                  <div className="font-bold text-sm" style={{ color: cfg.color }}>{cfg.label}</div>
+                  <div className="text-xs mt-0.5 opacity-70" style={{ color: cfg.color }}>{cfg.description}</div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {catPermits.map(p => (
+                  {phasePermits.map(p => (
                     <PermitCard
                       key={p.id}
                       permit={p}
