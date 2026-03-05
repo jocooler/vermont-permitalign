@@ -309,11 +309,11 @@ export default function ProjectProfile() {
               <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><User size={15} /> Applicant Information</h3>
               <div className="space-y-4">
                 {[
-                  { key: "applicant_name", label: "Full Name *", placeholder: "First and Last Name" },
-                  { key: "applicant_organization", label: "Organization / Company", placeholder: "Optional" },
-                  { key: "applicant_email", label: "Email Address *", placeholder: "you@example.com" },
-                  { key: "applicant_phone", label: "Phone Number", placeholder: "(802) 555-0100" },
-                  { key: "applicant_mailing_address", label: "Mailing Address", placeholder: "Street, City, State, ZIP" },
+                   { key: "applicant_name", label: "Full Name *", placeholder: "First and Last Name" },
+                   { key: "applicant_organization", label: "Organization / Company", placeholder: "Optional" },
+                   { key: "applicant_email", label: "Email Address *", placeholder: "you@example.com" },
+                   { key: "applicant_phone", label: "Phone Number", placeholder: "(802) 555-0100" },
+                   { key: "applicant_mailing_address", label: "Mailing Address", placeholder: "Street, City, State, ZIP" },
                 ].map(f => (
                   <div key={f.key}>
                     <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>{f.label}</label>
