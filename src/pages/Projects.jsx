@@ -416,15 +416,7 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
         <div>
           <div className="flex justify-between items-center mb-4">
             <span className="text-sm text-slate-500">{tasks.length} task{tasks.length !== 1 ? "s" : ""} total</span>
-            <button onClick={() => setShowTaskForm(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-green-700 text-white hover:bg-green-800">
-              <Plus size={13} /> Add Task
-            </button>
           </div>
-          {showTaskForm && (
-            <div className="mb-4">
-              <InlineTaskForm projectId={project.id} onSaved={() => { setShowTaskForm(false); loadTasks(); }} onCancel={() => setShowTaskForm(false)} />
-            </div>
-          )}
           <div className="space-y-3">
             {tasks.length === 0 && !showTaskForm ? (
               <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No tasks yet. Add one above.</div>
