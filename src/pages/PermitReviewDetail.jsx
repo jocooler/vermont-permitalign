@@ -8,6 +8,7 @@ import { STATUS_CONFIG } from "../components/permits/PERMIT_DATA";
 import { usePermits } from "../components/permits/usePermits";
 import ParcelPicker from "../components/permits/ParcelPicker";
 import { jsPDF } from "jspdf";
+import { PDFDocument } from "pdf-lib";
 
 // Permit-specific questions reference
 const PERMIT_SPECIFIC_FIELDS = {
@@ -259,47 +260,41 @@ export default function PermitReviewDetail() {
     const documents = parsedNotes?.uploaded_files || permitApp?.attached_documents || [];
     if (documents.length > 0) {
       addSection("Attached Documents");
-      
-      for (const docItem of documents) {
+      documents.forEach(docItem => {
         if (y > 265) { doc.addPage(); y = 20; }
-        
-        // Add document name
         doc.setFont(undefined, "bold");
         doc.text(`• ${docItem.name}`, 25, y);
         doc.setFont(undefined, "normal");
         y += 8;
-        
-        // Try to embed image files
-        if (docItem.url && (docItem.name.match(/\.(jpg|jpeg|png)$/i))) {
-          try {
-            const response = await fetch(docItem.url);
-            const blob = await response.blob();
-            const reader = new FileReader();
-            
-            reader.onload = () => {
-              if (y > 220) { doc.addPage(); y = 20; }
-              const imgData = reader.result;
-              const maxWidth = 170;
-              const maxHeight = 100;
-              doc.addImage(imgData, 'JPEG', 20, y, maxWidth, maxHeight);
-              y += maxHeight + 10;
-            };
-            reader.readAsDataURL(blob);
-          } catch (e) {
-            // Fallback: just list the document
-            doc.setFont(undefined, "italic");
-            doc.setTextColor(150, 150, 150);
-            doc.setFontSize(9);
-            doc.text(`(Image could not be embedded - see attached files)`, 25, y);
-            doc.setTextColor(40, 40, 40);
-            doc.setFontSize(11);
-            y += 5;
-          }
-        }
+      });
+    }
+
+    // Generate main PDF
+    const mainPdfBytes = doc.output('arraybuffer');
+    const mergedDoc = await PDFDocument.load(mainPdfBytes);
+
+    // Merge PDF attachments
+    const pdfDocuments = documents.filter(d => d.name.match(/\.pdf$/i));
+    for (const pdfDoc of pdfDocuments) {
+      try {
+        const response = await fetch(pdfDoc.url);
+        const pdfBytes = await response.arrayBuffer();
+        const attachedPdf = await PDFDocument.load(pdfBytes);
+        const pages = await mergedDoc.copyPages(attachedPdf, attachedPdf.getPageIndices());
+        pages.forEach(page => mergedDoc.addPage(page));
+      } catch (e) {
+        console.warn(`Could not merge PDF: ${pdfDoc.name}`, e);
       }
     }
 
-    doc.save(`permit-${selectedPermit.permit_id}-${project.name.replace(/\s+/g, "-")}.pdf`);
+    const mergedPdfBytes = await mergedDoc.save();
+    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `permit-${selectedPermit.permit_id}-${project.name.replace(/\s+/g, "-")}.pdf`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
