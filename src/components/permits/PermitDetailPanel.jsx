@@ -255,7 +255,7 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           onClose={() => setShowFeeModal(false)}
           onPaymentComplete={() => {
             setShowFeeModal(false);
-            onFeePaid();
+            onStatusChange(permit.id, "submitted");
           }}
         />
       )}
