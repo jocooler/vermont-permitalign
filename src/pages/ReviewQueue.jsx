@@ -7,6 +7,7 @@ import { usePermits } from "../components/permits/usePermits";
 const ALL_STATUSES = ["submitted", "under_review", "info_requested", "approved", "denied"];
 
 export default function ReviewQueue() {
+  const { permits: allPermits } = usePermits();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("all");
