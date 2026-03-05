@@ -36,6 +36,7 @@ export default function TasksPage() {
   });
 
   const priorityOrder = { high: 0, medium: 1, low: 2 };
+  const statusOrder = { pending: 0, in_progress: 1, cancelled: 2, completed: 3 };
 
   const filteredTasks = tasks
     .filter((task) => {
@@ -44,7 +45,11 @@ export default function TasksPage() {
       const projectMatch = filterProject === "all" || task.project_id === filterProject;
       return statusMatch && priorityMatch && projectMatch;
     })
-    .sort((a, b) => (priorityOrder[a.priority] ?? 999) - (priorityOrder[b.priority] ?? 999));
+    .sort((a, b) => {
+      const statusDiff = (statusOrder[a.status] ?? 999) - (statusOrder[b.status] ?? 999);
+      if (statusDiff !== 0) return statusDiff;
+      return (priorityOrder[a.priority] ?? 999) - (priorityOrder[b.priority] ?? 999);
+    });
 
   const stats = {
     total: tasks.length,
