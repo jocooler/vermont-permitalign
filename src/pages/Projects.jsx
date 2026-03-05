@@ -319,9 +319,10 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
   const [tasks, setTasks] = useState([]);
   const [showAddPermit, setShowAddPermit] = useState(false);
 
-  const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
   const [activeTab, setActiveTab] = useState("permits");
-  const [activePermit, setActivePermit] = useState(() => openPermitId ? permits.find(p => p.id === openPermitId) || null : null);
+
+  const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
+  const [activePermit, setActivePermit] = useState(() => openPermitId ? allPermits.find(p => p.id === openPermitId) || null : null);
   const ipMap = Object.fromEntries((project.identified_permits || []).map(ip => [ip.permit_id, ip]));
   const approvedCount = (project.identified_permits || []).filter(ip => ip.status === "approved").length;
   const totalCount = (project.identified_permits || []).length;
