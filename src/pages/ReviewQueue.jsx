@@ -64,7 +64,7 @@ export default function ReviewQueue() {
   };
 
   const permitMeta = {};
-  PERMITS.forEach(p => { permitMeta[p.id] = p; });
+  allPermits.forEach(p => { permitMeta[p.id] = p; });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
