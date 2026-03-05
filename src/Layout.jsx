@@ -81,21 +81,29 @@ export default function Layout({ children, currentPageName }) {
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map(({ name, page, Icon }) => {
               const isActive = currentPageName === page;
+              const activeClass = isStaff
+                ? "text-blue-700 bg-blue-50 border-b-2 border-blue-600"
+                : "text-green-700 bg-green-50 border-b-2 border-green-600";
+              const hoverClass = isStaff
+                ? "text-slate-600 hover:text-blue-700 hover:bg-blue-50 border-b-2 border-transparent"
+                : "text-slate-600 hover:text-green-700 hover:bg-green-50 border-b-2 border-transparent";
               return (
                 <Link
                   key={page}
                   to={createPageUrl(page)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium transition-all ${
-                    isActive
-                      ? "text-green-700 bg-green-50 border-b-2 border-green-600"
-                      : "text-slate-600 hover:text-green-700 hover:bg-green-50 border-b-2 border-transparent"
-                  }`}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium transition-all ${isActive ? activeClass : hoverClass}`}
                 >
                   <Icon size={15} />
                   {name}
                 </Link>
               );
             })}
+            <button
+              onClick={handleSwitchPortal}
+              className="flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all ml-2 border-l border-slate-200"
+            >
+              <ArrowLeftRight size={13} /> Switch Portal
+            </button>
           </div>
 
           {/* Mobile toggle */}
