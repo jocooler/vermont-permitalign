@@ -46,11 +46,10 @@ function ProjectForm({ onSave, onCancel }) {
     creating_lots: form.creating_lots,
   };
   const permits = determinePermits(conditions);
-  const byCategory = {
-    core: permits.filter(p => p.category === "core"),
-    likely: permits.filter(p => p.category === "likely"),
-    conditional: permits.filter(p => p.category === "conditional"),
-  };
+  const byPhase = [1, 2, 3, 4].map(phase => ({
+    phase,
+    permits: permits.filter(p => p.phase === phase),
+  })).filter(g => g.permits.length > 0);
 
   const handleSave = async () => {
     setSaving(true);
