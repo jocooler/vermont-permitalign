@@ -164,7 +164,7 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
               {currentStatus === "info_requested" ? "Submit Requested Information" : "Application"}
             </div>
             <button
-              onClick={() => setShowInfoModal(true)}
+              onClick={() => setShowIntakeForm(true)}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-colors"
               style={{
                 background: currentStatus === "info_requested" ? "#d97706" : "#16a34a",
@@ -177,6 +177,9 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
             </button>
             {(currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved") && (
               <p className="mt-2 text-xs text-center text-green-700">Application previously submitted for this permit.</p>
+            )}
+            {currentStatus === "info_requested" && (
+              <p className="mt-2 text-xs text-center text-amber-700">Upload documents and provide information requested by the agency above.</p>
             )}
           </div>
 
@@ -210,10 +213,15 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
         <PermitIntakeForm
           permit={permit}
           project={project}
+          isInfoRequest={currentStatus === "info_requested"}
           onClose={() => setShowIntakeForm(false)}
           onPaymentComplete={() => {
             setShowIntakeForm(false);
-            setShowFeeModal(true);
+            if (currentStatus !== "info_requested") {
+              setShowFeeModal(true);
+            } else {
+              onStatusChange(permit.id, "under_review");
+            }
           }}
           onFeePaid={() => {
             setShowFeeModal(false);
