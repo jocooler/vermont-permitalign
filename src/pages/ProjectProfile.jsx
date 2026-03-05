@@ -354,7 +354,7 @@ export default function ProjectProfile() {
 
             <div className="flex gap-3 pt-4 border-t">
               <button
-                onClick={() => { setIsEditing(false); setForm(profile || form); }}
+                onClick={() => { setIsEditing(false); setForm(profile || form); setProjectForm({ name: project?.name || "", description: project?.description || "", address: project?.address || "", town: project?.town || "", parcel_id: project?.parcel_id || "", unit_count: project?.unit_count || 4, disturbed_acres: project?.disturbed_acres || 0 }); }}
                 className="flex-1 px-4 py-2.5 rounded font-medium text-sm"
                 style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}
               >
