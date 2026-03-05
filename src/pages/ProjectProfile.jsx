@@ -24,7 +24,6 @@ export default function ProjectProfile() {
     applicant_email: "",
     applicant_phone: "",
     applicant_mailing_address: "",
-    project_description: "",
     anticipated_start_date: "",
     anticipated_end_date: "",
   });
@@ -177,12 +176,7 @@ export default function ProjectProfile() {
                   </div>
                 </div>
               </div>
-              {profile.project_description && (
-                <div className="mt-5 p-4 rounded-lg bg-slate-50 border border-slate-200">
-                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><Building2 size={12} /> Project Description</div>
-                  <p className="text-sm text-slate-700">{profile.project_description}</p>
-                </div>
-              )}
+
             </div>
           )}
         </>
