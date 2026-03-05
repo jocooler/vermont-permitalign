@@ -14,6 +14,7 @@ export default function ReviewQueue() {
   const [showCompleted, setShowCompleted] = useState(false);
   const [selected, setSelected] = useState(null);
   const [noteText, setNoteText] = useState("");
+  const [infoRequestedText, setInfoRequestedText] = useState("");
 
   useEffect(() => {
     base44.entities.Project.list("-updated_date", 50).then(p => { setProjects(p || []); setLoading(false); });
@@ -303,7 +304,7 @@ export default function ReviewQueue() {
                         key={`${project.id}-${ip.permit_id}`}
                         className="vt-card p-4 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
                         style={{ outline: isSelected ? "2px solid var(--vt-green)" : "none" }}
-                        onClick={() => { setSelected({ project, ip }); setNoteText(""); }}
+                        onClick={() => { setSelected({ project, ip }); setNoteText(""); setInfoRequestedText(ip.info_requested || ""); }}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate" style={{ color: "var(--vt-gray-dark)" }}>
@@ -374,8 +375,9 @@ export default function ReviewQueue() {
                     <div className="mb-5 p-3 rounded-lg border-l-4 border-amber-400 bg-amber-50">
                       <div className="text-xs font-bold text-amber-900 mb-2">📋 Information Requested (Required)</div>
                       <textarea
-                        value={selected.ip.info_requested || ""}
-                        onChange={(e) => handleInfoRequestedChange(e.target.value)}
+                        value={infoRequestedText}
+                        onChange={(e) => setInfoRequestedText(e.target.value)}
+                        onBlur={() => handleInfoRequestedChange(infoRequestedText)}
                         placeholder="Specify what information is needed from the applicant..."
                         className="w-full border rounded px-2 py-1.5 text-xs resize-none mb-2"
                         style={{ borderColor: "#fbbf24", background: "white" }}
