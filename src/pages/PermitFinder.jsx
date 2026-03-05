@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowRight, ArrowLeft, ExternalLink } from "lucide-react";
-import { PERMITS, CATEGORY_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
+import { CATEGORY_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
+import { usePermits } from "../components/permits/usePermits";
 import StepIndicator from "../components/permits/StepIndicator";
 import Toggle from "../components/permits/Toggle";
 
