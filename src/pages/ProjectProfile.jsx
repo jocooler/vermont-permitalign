@@ -27,6 +27,16 @@ export default function ProjectProfile() {
     anticipated_end_date: "",
   });
 
+  const [projectForm, setProjectForm] = useState({
+    name: "",
+    description: "",
+    address: "",
+    town: "",
+    parcel_id: "",
+    unit_count: 4,
+    disturbed_acres: 0,
+  });
+
   useEffect(() => {
     async function load() {
       if (!projectId) {
