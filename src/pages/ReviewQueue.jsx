@@ -427,7 +427,7 @@ export default function ReviewQueue() {
                       disabled={saveStatus === "saving"}
                       className="w-full py-2 text-sm font-semibold rounded transition-all"
                       style={{
-                        background: saveStatus === "saved" ? "#10b981" : saveStatus === "error" ? "#ef4444" : "var(--vt-green)",
+                        background: saveStatus === "saved" ? "#10b981" : saveStatus === "error" ? "#ef4444" : "#2d6a4f",
                         color: "white"
                       }}
                     >
