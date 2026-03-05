@@ -500,7 +500,15 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
             {tasks.length === 0 ? (
               <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No tasks yet.</div>
             ) : (
-              tasks.map(task => <TaskCard key={task.id} task={task} onUpdated={loadTasks} />)
+              (() => {
+                const priorityOrder = { high: 0, medium: 1, low: 2 };
+                const sorted = [...tasks].sort((a, b) => {
+                  if (a.status === "completed" && b.status !== "completed") return 1;
+                  if (a.status !== "completed" && b.status === "completed") return -1;
+                  return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
+                });
+                return sorted.map(task => <TaskCard key={task.id} task={task} onUpdated={loadTasks} />);
+              })()
             )}
           </div>
         </div>
