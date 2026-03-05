@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Plus, Filter, CheckCircle2, Clock, AlertCircle, FolderOpen } from "lucide-react";
+import { Filter, CheckCircle2, Clock, AlertCircle, FolderOpen } from "lucide-react";
 import TaskCard from "../components/tasks/TaskCard.jsx";
-import TaskForm from "../components/tasks/TaskForm.jsx";
 
 const STATUS_CONFIG = {
   pending: { label: "Pending", color: "#64748b", icon: Clock },
@@ -62,9 +61,9 @@ export default function TasksPage() {
             </h1>
             <p className="text-sm text-slate-500 mt-1">Manage your project tasks and requirements</p>
           </div>
-          <Button onClick={() => setShowForm(true)} className="gap-2 bg-green-700 hover:bg-green-800">
-            <Plus size={16} /> New Task
-          </Button>
+          <a href={createPageUrl("Projects")} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded bg-green-700 text-white hover:bg-green-800">
+            Go to Projects
+          </a>
         </div>
 
         {/* Stats */}
