@@ -17,6 +17,7 @@ export default function ReviewQueue() {
   const [infoRequestedText, setInfoRequestedText] = useState("");
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [saveStatus, setSaveStatus] = useState(null);
+  const [infoRequestSaved, setInfoRequestSaved] = useState(false);
 
   useEffect(() => {
     base44.entities.Project.list("-updated_date", 50).then(p => { setProjects(p || []); setLoading(false); });
@@ -116,6 +117,8 @@ export default function ReviewQueue() {
       project: { ...selected.project, identified_permits: updatedPermits }, 
       ip: { ...selected.ip, info_requested: newValue } 
     });
+    setInfoRequestSaved(true);
+    setTimeout(() => setInfoRequestSaved(false), 2000);
   };
 
   const handleDownloadPDF = (e, project, ip) => {
@@ -390,17 +393,17 @@ export default function ReviewQueue() {
                       <div className="text-xs font-bold text-amber-900 mb-2">📋 Information Requested (Required)</div>
                       <textarea
                         value={infoRequestedText}
-                        onChange={(e) => setInfoRequestedText(e.target.value)}
+                        onChange={(e) => { setInfoRequestedText(e.target.value); setInfoRequestSaved(false); }}
                         placeholder="Specify what information is needed from the applicant..."
                         className="w-full border rounded px-2 py-1.5 text-xs resize-none mb-2"
                         style={{ borderColor: "#fbbf24", background: "white" }}
                       />
                       <button
                         onClick={() => handleInfoRequestedChange(infoRequestedText)}
-                        className="text-xs font-semibold px-3 py-1 rounded transition-all"
-                        style={{ background: "#f59e0b", color: "white" }}
+                        className="text-xs font-semibold px-3 py-1 rounded transition-all flex items-center gap-1.5"
+                        style={{ background: infoRequestSaved ? "#10b981" : "#f59e0b", color: "white" }}
                       >
-                        Save Info Request
+                        {infoRequestSaved ? <><CheckCircle2 size={12} /> Saved</> : "Save Info Request"}
                       </button>
                       <p className="text-xs text-amber-700 mt-2">The applicant will see this information prominently in their permit view.</p>
                     </div>
@@ -441,11 +444,12 @@ export default function ReviewQueue() {
                     </div>
                   )}
 
-                  {permitMeta[selected.ip.permit_id] && (
+                  {permitMeta[selected.ip.permit_id] && selected.ip.submitted_date && (
                     <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
                       <div className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>
-                        <div className="mb-1"><span className="font-semibold">Agency: </span>{permitMeta[selected.ip.permit_id].agency}</div>
-                        <div><span className="font-semibold">SLA: </span>{permitMeta[selected.ip.permit_id].sla_days} business days</div>
+                        <div><span className="font-semibold">Expected Due Date: </span>
+                          {new Date(new Date(selected.ip.submitted_date).getTime() + (permitMeta[selected.ip.permit_id].sla_days * 24 * 60 * 60 * 1000)).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
                   )}
