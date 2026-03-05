@@ -97,11 +97,20 @@ export default function Settings() {
         <p className="text-sm mt-1 text-green-200">Manage permits and system configuration</p>
       </div>
 
-      <div className="mb-6 p-4 rounded-lg bg-amber-50 border border-amber-200">
-        <div className="flex gap-2">
-          <Info size={16} className="text-amber-600 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-amber-800">
-            <strong>Permit Management:</strong> Add, edit, or deactivate permits here. Each permit defines its agency, processing time, category, and required project phases. Changes apply system-wide to all new projects.
+      <div className="mb-6 space-y-4">
+        <div className="p-4 rounded-lg bg-amber-50 border border-amber-200">
+          <div className="flex gap-2">
+            <Info size={16} className="text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-amber-800">
+              <strong>Permit Management:</strong> Add, edit, or deactivate permits here. Each permit defines its agency, processing time, category, and required project phases. Changes apply system-wide to all new projects.
+            </div>
+          </div>
+        </div>
+        <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+          <div className="text-xs text-blue-900 space-y-2">
+            <div><strong>Phase:</strong> The project lifecycle stage when this permit is needed (1=Pre-App, 2=Pre-Const, 3=During Const, 4=Post-Const)</div>
+            <div><strong>SLA Days:</strong> Expected processing time in business days from submission to decision</div>
+            <div><strong>Category:</strong> Core=always needed, Likely=usually needed, Conditional=depends on project conditions</div>
           </div>
         </div>
       </div>

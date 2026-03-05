@@ -196,11 +196,21 @@ export default function ReviewQueue() {
       </div>
 
       {!selectedAgency && (
-        <div className="mb-6 p-4 rounded-lg bg-blue-50 border border-blue-200">
-          <div className="flex gap-2">
-            <Info size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
-            <div className="text-sm text-blue-800">
-              <strong>How to use the Review Queue:</strong> Click on an agency tile to see all submitted applications. Use status filters to organize your workflow. You can update statuses, request additional information, add notes, and download application PDFs.
+        <div className="mb-6 space-y-4">
+          <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+            <div className="flex gap-2">
+              <Info size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <strong>How to use the Review Queue:</strong> Click on an agency tile to see all submitted applications. Use status filters to organize your workflow. You can update statuses, request additional information, add notes, and download application PDFs.
+              </div>
+            </div>
+          </div>
+          <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200">
+            <div className="flex gap-2">
+              <Info size={16} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-emerald-800">
+                <strong>Key Definitions:</strong> <strong>Status</strong> = current stage in the permitting process. <strong>SLA</strong> = expected processing time in business days. <strong>Info Requested</strong> = applicant must submit additional information for review to continue.
+              </div>
             </div>
           </div>
         </div>

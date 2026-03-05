@@ -170,6 +170,24 @@ export default function PermitDashboard() {
         <p className="text-slate-500 mt-1 text-sm">Permit status across all active projects</p>
       </div>
 
+      {/* Orientation */}
+      <div className="mb-6 p-4 rounded-lg bg-slate-50 border border-slate-200">
+        <div className="flex gap-2 flex-wrap text-sm">
+          <div className="flex items-center gap-2">
+            <strong className="text-slate-700">Key Metrics:</strong>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded border border-slate-200 text-xs text-slate-700">
+            <span className="font-semibold">Not Started</span> — Never submitted
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded border border-slate-200 text-xs text-slate-700">
+            <span className="font-semibold">Pending Review</span> — Submitted, awaiting decision
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded border border-slate-200 text-xs text-slate-700">
+            <span className="font-semibold">Approved</span> — Decision made
+          </div>
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
         <div>
