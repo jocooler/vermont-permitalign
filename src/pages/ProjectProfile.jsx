@@ -51,6 +51,9 @@ export default function ProjectProfile() {
     setProfile(form);
     setIsEditing(false);
     setSaving(false);
+    if (backToProject) {
+      window.location.href = `${createPageUrl("Projects")}?project=${projectId}`;
+    }
   };
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
