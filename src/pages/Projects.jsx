@@ -390,7 +390,7 @@ export default function Projects() {
     const saved = await base44.entities.Project.create({ ...data, status: "draft" });
 
     // Auto-generate tasks for each identified permit
-    const permitLookup = Object.fromEntries(PERMITS.map(p => [p.id, p]));
+    const permitLookup = Object.fromEntries(allPermits.map(p => [p.id, p]));
     const taskPromises = (data.identified_permits || []).map(ip => {
       const permitData = permitLookup[ip.permit_id];
       const phase = permitData?.phase || 2;
