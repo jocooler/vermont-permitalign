@@ -654,6 +654,7 @@ export default function Projects() {
           onStatusChange={handleStatusChange}
           onNotesChange={handleNotesChange}
           onPermitAdded={(updated) => { setSelected(updated); setProjects(prev => prev.map(p => p.id === updated.id ? updated : p)); }}
+          openPermitId={openPermitId}
         />
       )}
     </div>
