@@ -102,21 +102,6 @@ export default function ReviewQueue() {
     }
   };
 
-  const handleInfoRequestedChange = async (newValue) => {
-    if (!selected) return;
-    const updatedPermits = selected.project.identified_permits.map(ip =>
-      ip.permit_id === selected.ip.permit_id ? { ...ip, info_requested: newValue } : ip
-    );
-    const updatedProject = { ...selected.project, identified_permits: updatedPermits };
-    const updatedIp = updatedPermits.find(ip => ip.permit_id === selected.ip.permit_id);
-    
-    await base44.entities.Project.update(selected.project.id, { identified_permits: updatedPermits });
-    setProjects(prev => prev.map(p => p.id === selected.project.id ? updatedProject : p));
-    setSelected({ project: updatedProject, ip: updatedIp });
-    setInfoRequestSaved(true);
-    setTimeout(() => setInfoRequestSaved(false), 2000);
-  };
-
   const handleDownloadPDF = (e, project, ip) => {
     e.stopPropagation();
     const doc = new jsPDF();
