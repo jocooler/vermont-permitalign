@@ -7,7 +7,6 @@ const APPLICANT_LINKS = [
   { name: "Dashboard", page: "Dashboard", Icon: Home },
   { name: "My Projects", page: "Projects", Icon: FolderOpen },
   { name: "Tasks", page: "Tasks", Icon: ClipboardList },
-  { name: "Permit Finder", page: "PermitFinder", Icon: ClipboardList },
 ];
 
 const STAFF_LINKS = [
