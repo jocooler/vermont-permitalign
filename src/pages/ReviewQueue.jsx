@@ -17,7 +17,6 @@ export default function ReviewQueue() {
   const [infoRequestedText, setInfoRequestedText] = useState("");
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [saveStatus, setSaveStatus] = useState(null);
-  const [infoRequestSaved, setInfoRequestSaved] = useState(false);
 
   useEffect(() => {
     base44.entities.Project.list("-updated_date", 50).then(p => { setProjects(p || []); setLoading(false); });
