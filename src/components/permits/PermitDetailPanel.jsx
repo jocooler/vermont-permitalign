@@ -231,6 +231,7 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           permit={permit}
           project={project}
           isInfoRequest={currentStatus === "info_requested"}
+          infoRequested={infoRequested}
           onClose={() => setShowIntakeForm(false)}
           onPaymentComplete={() => {
             setShowIntakeForm(false);
