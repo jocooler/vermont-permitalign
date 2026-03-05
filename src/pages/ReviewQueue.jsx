@@ -108,15 +108,12 @@ export default function ReviewQueue() {
     const updatedPermits = selected.project.identified_permits.map(ip =>
       ip.permit_id === selected.ip.permit_id ? { ...ip, info_requested: newValue } : ip
     );
+    const updatedProject = { ...selected.project, identified_permits: updatedPermits };
+    const updatedIp = updatedPermits.find(ip => ip.permit_id === selected.ip.permit_id);
+    
     await base44.entities.Project.update(selected.project.id, { identified_permits: updatedPermits });
-    setProjects(prev => prev.map(p => p.id === selected.project.id 
-      ? { ...p, identified_permits: updatedPermits } 
-      : p
-    ));
-    setSelected({ 
-      project: { ...selected.project, identified_permits: updatedPermits }, 
-      ip: { ...selected.ip, info_requested: newValue } 
-    });
+    setProjects(prev => prev.map(p => p.id === selected.project.id ? updatedProject : p));
+    setSelected({ project: updatedProject, ip: updatedIp });
     setInfoRequestSaved(true);
     setTimeout(() => setInfoRequestSaved(false), 2000);
   };
