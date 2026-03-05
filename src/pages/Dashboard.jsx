@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { FolderOpen, ClipboardList, ArrowRight, CheckCircle2, Clock, AlertCircle, Plus, Building2, XCircle, Home } from "lucide-react";
+import { FolderOpen, ClipboardList, ArrowRight, CheckCircle2, Clock, AlertCircle, Plus, Building2, XCircle, Home, BarChart3, FileText } from "lucide-react";
 
 const STATUS_LABEL = {
   draft: { label: "Draft", textColor: "text-slate-600", bgColor: "bg-slate-100" },
@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [recentProjects, setRecentProjects] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isStaff = localStorage.getItem("vt_portal_mode") === "staff";
 
   useEffect(() => {
     async function load() {
@@ -80,11 +81,13 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-green-900 mb-2">
             {user ? `Welcome back, ${user.full_name?.split(" ")[0]}` : "Permitting Dashboard"}
           </h1>
-          <p className="text-base text-slate-600">Track permit applications, start new projects, and navigate the Vermont permitting process.</p>
-        </div>
-        <Link to={createPageUrl("Projects") + "?new=1"} className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded bg-green-700 text-white hover:bg-green-800 transition-colors">
-          <Plus size={16} /> New Project
-        </Link>
+          <p className="text-base text-slate-600">{isStaff ? "Review permits, track project progress, and manage the permitting workflow." : "Track permit applications, start new projects, and navigate the Vermont permitting process."}</p>
+          </div>
+          {!isStaff && (
+          <Link to={createPageUrl("Projects") + "?new=1"} className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded bg-green-700 text-white hover:bg-green-800 transition-colors">
+            <Plus size={16} /> New Project
+          </Link>
+          )}
       </div>
 
       {/* Stats Grid */}
@@ -191,11 +194,15 @@ export default function Dashboard() {
           <div className="vt-card p-5">
             <h3 className="font-bold text-sm uppercase tracking-wide text-green-900 mb-4">Quick Actions</h3>
             <div className="space-y-2">
-              {[
+              {(isStaff ? [
+                { label: "Review Queue", page: "ReviewQueue", query: "", Icon: FileText, desc: "Pending applications", iconBg: "bg-amber-50", iconColor: "text-amber-700" },
+                { label: "Progress Dashboard", page: "PermitDashboard", query: "", Icon: BarChart3, desc: "Track all projects", iconBg: "bg-blue-50", iconColor: "text-blue-700" },
+                { label: "Performance Metrics", page: "PermitMetrics", query: "", Icon: CheckCircle2, desc: "System analytics", iconBg: "bg-emerald-50", iconColor: "text-emerald-700" },
+              ] : [
                 { label: "Start a New Project", page: "Projects", query: "?new=1", Icon: Plus, desc: "Create a project profile", iconBg: "bg-green-50", iconColor: "text-green-700" },
                 { label: "Find My Permits", page: "PermitFinder", query: "", Icon: ClipboardList, desc: "See which permits apply", iconBg: "bg-blue-50", iconColor: "text-blue-700" },
-                { label: "Review Queue", page: "ReviewQueue", query: "", Icon: CheckCircle2, desc: "Staff review dashboard", iconBg: "bg-amber-50", iconColor: "text-amber-700" },
-              ].map(({ label, page, query, Icon, desc, iconBg, iconColor }) => (
+                { label: "My Projects", page: "Projects", query: "", Icon: FolderOpen, desc: "View all your projects", iconBg: "bg-slate-50", iconColor: "text-slate-700" },
+              ]).map(({ label, page, query, Icon, desc, iconBg, iconColor }) => (
                 <Link key={page} to={createPageUrl(page) + query} className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-all group">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${iconBg}`}>
                     <Icon size={15} className={iconColor} />
