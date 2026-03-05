@@ -29,6 +29,7 @@ export default function ReviewQueue() {
         allItems.push({ project, ip });
       }
     });
+
   });
 
   // Build agency list with counts
