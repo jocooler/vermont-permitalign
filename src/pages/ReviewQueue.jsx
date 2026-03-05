@@ -15,6 +15,8 @@ export default function ReviewQueue() {
   const [selected, setSelected] = useState(null);
   const [noteText, setNoteText] = useState("");
   const [infoRequestedText, setInfoRequestedText] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [saveStatus, setSaveStatus] = useState(null);
 
   useEffect(() => {
     base44.entities.Project.list("-updated_date", 50).then(p => { setProjects(p || []); setLoading(false); });
@@ -74,18 +76,30 @@ export default function ReviewQueue() {
     }
   };
 
-  const handleAddNote = async () => {
-    if (!noteText.trim() || !selected) return;
-    const updated = {
-      ...selected.project,
-      identified_permits: selected.project.identified_permits.map(ip =>
-        ip.permit_id === selected.ip.permit_id ? { ...ip, reviewer_notes: noteText } : ip
-      )
-    };
-    await base44.entities.Project.update(selected.project.id, { identified_permits: updated.identified_permits });
-    setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
-    setSelected({ project: updated, ip: { ...selected.ip, reviewer_notes: noteText } });
-    setNoteText("");
+  const handleSaveAll = async () => {
+    if (!selected) return;
+    setSaveStatus("saving");
+    try {
+      const updated = {
+        ...selected.project,
+        identified_permits: selected.project.identified_permits.map(ip =>
+          ip.permit_id === selected.ip.permit_id 
+            ? { ...ip, status: selectedStatus, reviewer_notes: noteText, info_requested: infoRequestedText }
+            : ip
+        )
+      };
+      const hasSubmitted = updated.identified_permits.some(ip => ["submitted", "under_review", "info_requested", "approved", "denied"].includes(ip.status));
+      const projectUpdate = { identified_permits: updated.identified_permits };
+      if (hasSubmitted && selected.project.status === "draft") projectUpdate.status = "in_progress";
+      await base44.entities.Project.update(selected.project.id, projectUpdate);
+      setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
+      setSelected({ project: updated, ip: updated.identified_permits.find(ip => ip.permit_id === selected.ip.permit_id) });
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus(null), 2000);
+    } catch (error) {
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus(null), 2000);
+    }
   };
 
   const handleInfoRequestedChange = async (newValue) => {
@@ -304,7 +318,7 @@ export default function ReviewQueue() {
                         key={`${project.id}-${ip.permit_id}`}
                         className="vt-card p-4 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
                         style={{ outline: isSelected ? "2px solid var(--vt-green)" : "none" }}
-                        onClick={() => { setSelected({ project, ip }); setNoteText(""); setInfoRequestedText(ip.info_requested || ""); }}
+                        onClick={() => { setSelected({ project, ip }); setNoteText(ip.reviewer_notes || ""); setInfoRequestedText(ip.info_requested || ""); setSelectedStatus(ip.status); setSaveStatus(null); }}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate" style={{ color: "var(--vt-gray-dark)" }}>
@@ -351,11 +365,11 @@ export default function ReviewQueue() {
                   <div className="space-y-2 mb-5">
                     {["submitted","under_review","info_requested","approved","denied"].map(s => {
                       const cfg = STATUS_CONFIG[s];
-                      const active = selected.ip.status === s;
+                      const active = selectedStatus === s;
                       return (
                         <button
                           key={s}
-                          onClick={() => handleStatusChange(selected.project, selected.ip.permit_id, s)}
+                          onClick={() => setSelectedStatus(s)}
                           className="w-full text-left px-3 py-2 rounded text-xs font-medium transition-all flex items-center gap-2"
                           style={{
                             background: active ? cfg.bg : "transparent",
@@ -371,13 +385,12 @@ export default function ReviewQueue() {
                     })}
                   </div>
 
-                  {selected.ip.status === "info_requested" && (
+                  {selectedStatus === "info_requested" && (
                     <div className="mb-5 p-3 rounded-lg border-l-4 border-amber-400 bg-amber-50">
                       <div className="text-xs font-bold text-amber-900 mb-2">📋 Information Requested (Required)</div>
                       <textarea
                         value={infoRequestedText}
                         onChange={(e) => setInfoRequestedText(e.target.value)}
-                        onBlur={() => handleInfoRequestedChange(infoRequestedText)}
                         placeholder="Specify what information is needed from the applicant..."
                         className="w-full border rounded px-2 py-1.5 text-xs resize-none mb-2"
                         style={{ borderColor: "#fbbf24", background: "white" }}
@@ -388,26 +401,27 @@ export default function ReviewQueue() {
 
                   <div className="border-t pt-4" style={{ borderColor: "var(--vt-gray-light)" }}>
                     <label className="block text-xs font-semibold mb-2" style={{ color: "var(--vt-gray)" }}>Reviewer Notes</label>
-                    {selected.ip.reviewer_notes && (
-                      <div className="p-2.5 rounded text-xs mb-2" style={{ background: "var(--vt-gray-pale)", color: "var(--vt-gray)" }}>
-                        {selected.ip.reviewer_notes}
-                      </div>
-                    )}
                     <textarea
                       rows={3}
                       value={noteText}
                       onChange={e => setNoteText(e.target.value)}
                       placeholder="Add a note..."
-                      className="w-full border rounded px-3 py-2 text-xs resize-none mb-2"
+                      className="w-full border rounded px-3 py-2 text-xs resize-none"
                       style={{ borderColor: "var(--vt-gray-light)" }}
                     />
+                  </div>
+
+                  <div className="mt-5 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
                     <button
-                      onClick={handleAddNote}
-                      disabled={!noteText.trim()}
-                      className="w-full py-1.5 text-xs font-semibold rounded transition-all"
-                      style={{ background: noteText.trim() ? "var(--vt-green)" : "var(--vt-gray-light)", color: noteText.trim() ? "white" : "var(--vt-gray-mid)" }}
+                      onClick={handleSaveAll}
+                      disabled={saveStatus === "saving"}
+                      className="w-full py-2 text-sm font-semibold rounded transition-all"
+                      style={{
+                        background: saveStatus === "saved" ? "#10b981" : saveStatus === "error" ? "#ef4444" : "var(--vt-green)",
+                        color: "white"
+                      }}
                     >
-                      Save Note
+                      {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "✓ Saved" : saveStatus === "error" ? "Error Saving" : "Save Changes"}
                     </button>
                   </div>
 
