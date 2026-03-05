@@ -17,6 +17,7 @@ export default function PermitReviewDetail() {
 
   const { permits: allPermits } = usePermits();
   const [project, setProject] = useState(null);
+  const [permitApp, setPermitApp] = useState(null);
   const [loading, setLoading] = useState(true);
   const [noteText, setNoteText] = useState("");
   const [infoRequestedText, setInfoRequestedText] = useState("");
@@ -25,13 +26,20 @@ export default function PermitReviewDetail() {
 
   useEffect(() => {
     if (projectId) {
-      base44.entities.Project.list().then(projects => {
+      Promise.all([
+        base44.entities.Project.list(),
+        base44.entities.PermitApplication.filter({ project_id: projectId })
+      ]).then(([projects, apps]) => {
         const p = projects.find(pr => pr.id === projectId);
         setProject(p);
+        if (permitId && apps) {
+          const app = apps.find(a => a.permit_id === permitId);
+          setPermitApp(app || null);
+        }
         setLoading(false);
       });
     }
-  }, [projectId]);
+  }, [projectId, permitId]);
 
   const permitMeta = {};
   allPermits.forEach(p => { permitMeta[p.id] = p; });
@@ -107,10 +115,20 @@ export default function PermitReviewDetail() {
     let y = 60;
 
     const addField = (label, value) => {
+      if (y > 270) { doc.addPage(); y = 20; }
       doc.setFont(undefined, "bold");
       doc.text(`${label}:`, 20, y);
       doc.setFont(undefined, "normal");
       doc.text(value || "—", 70, y);
+      y += 9;
+    };
+
+    const addSection = (title) => {
+      if (y > 265) { doc.addPage(); y = 20; }
+      y += 4;
+      doc.setFont(undefined, "bold");
+      doc.text(title, 20, y);
+      doc.setFont(undefined, "normal");
       y += 9;
     };
 
@@ -119,6 +137,8 @@ export default function PermitReviewDetail() {
     addField("Town", project.town || "—");
     addField("Parcel ID", project.parcel_id || "—");
     addField("Project Type", project.project_type || "—");
+    if (project.latitude && project.longitude) addField("Coordinates", `${project.latitude.toFixed(5)}, ${project.longitude.toFixed(5)}`);
+    
     y += 4;
     addField("Permit", selectedPermit.permit_name);
     addField("Permit ID", selectedPermit.permit_id);
@@ -127,11 +147,7 @@ export default function PermitReviewDetail() {
     addField("Category", selectedPermit.category || "—");
     if (meta?.sla_days) addField("SLA", `${meta.sla_days} business days`);
 
-    y += 4;
-    doc.setFont(undefined, "bold");
-    doc.text("Applicant & Project Information", 20, y);
-    doc.setFont(undefined, "normal");
-    y += 9;
+    addSection("Applicant & Project Information");
 
     if (project.profile?.applicant_name) {
       addField("Applicant Name", project.profile.applicant_name);
@@ -145,20 +161,32 @@ export default function PermitReviewDetail() {
       addField("Phone", "—");
     }
 
-    if (project.description) {
-      addField("Project Description", project.description);
+    if (project.description) addField("Project Description", project.description);
+    if (project.profile?.anticipated_start_date) addField("Anticipated Start", project.profile.anticipated_start_date);
+    if (project.profile?.anticipated_end_date) addField("Anticipated End", project.profile.anticipated_end_date);
+
+    // Site Conditions
+    if (permitApp?.site_conditions) {
+      const sc = permitApp.site_conditions;
+      addSection("Site Conditions");
+      if (sc.near_wetlands != null) addField("Wetlands", sc.near_wetlands ? "Yes" : "No");
+      if (sc.in_floodplain != null) addField("In Floodplain", sc.in_floodplain ? "Yes" : "No");
+      if (sc.near_stream != null) addField("Near Stream", sc.near_stream ? "Yes" : "No");
+      if (sc.near_lake_or_pond != null) addField("Near Lake/Pond", sc.near_lake_or_pond ? "Yes" : "No");
+      if (sc.state_highway_access != null) addField("State Highway Access", sc.state_highway_access ? "Yes" : "No");
+      if (sc.elevation_feet != null) addField("Elevation", `${Math.round(sc.elevation_feet)} ft`);
     }
-    if (project.profile?.anticipated_start_date) {
-      addField("Anticipated Start", project.profile.anticipated_start_date);
-    }
-    if (project.profile?.anticipated_end_date) {
-      addField("Anticipated End", project.profile.anticipated_end_date);
+
+    // Attached Documents
+    if (permitApp?.attached_documents?.length > 0) {
+      addSection("Attached Documents");
+      permitApp.attached_documents.forEach(doc => {
+        addField("Document", doc.name);
+      });
     }
 
     if (noteText) {
-      y += 4;
-      doc.setFont(undefined, "bold"); doc.text("Reviewer Notes:", 20, y); y += 9;
-      doc.setFont(undefined, "normal");
+      addSection("Reviewer Notes");
       const lines = doc.splitTextToSize(noteText, 160);
       doc.text(lines, 20, y);
     }
@@ -290,6 +318,54 @@ export default function PermitReviewDetail() {
                     <div className="text-sm font-medium text-slate-900">{project.profile.applicant_phone}</div>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Site Conditions */}
+          {permitApp?.site_conditions && (
+            <div className="rounded-lg border border-slate-200 bg-white p-6">
+              <h3 className="font-bold text-lg mb-4" style={{ color: "var(--vt-green-dark)" }}>Site Conditions</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                {permitApp.site_conditions.near_wetlands != null && (
+                  <div><span className="text-slate-400">Wetlands:</span> <span className="font-medium">{permitApp.site_conditions.near_wetlands ? "Yes" : "No"}</span></div>
+                )}
+                {permitApp.site_conditions.in_floodplain != null && (
+                  <div><span className="text-slate-400">Floodplain:</span> <span className="font-medium">{permitApp.site_conditions.in_floodplain ? "Yes" : "No"}</span></div>
+                )}
+                {permitApp.site_conditions.near_stream != null && (
+                  <div><span className="text-slate-400">Near Stream:</span> <span className="font-medium">{permitApp.site_conditions.near_stream ? "Yes" : "No"}</span></div>
+                )}
+                {permitApp.site_conditions.near_lake_or_pond != null && (
+                  <div><span className="text-slate-400">Near Lake/Pond:</span> <span className="font-medium">{permitApp.site_conditions.near_lake_or_pond ? "Yes" : "No"}</span></div>
+                )}
+                {permitApp.site_conditions.state_highway_access != null && (
+                  <div><span className="text-slate-400">State Highway:</span> <span className="font-medium">{permitApp.site_conditions.state_highway_access ? "Yes" : "No"}</span></div>
+                )}
+                {permitApp.site_conditions.elevation_feet != null && (
+                  <div><span className="text-slate-400">Elevation:</span> <span className="font-medium">{Math.round(permitApp.site_conditions.elevation_feet)} ft</span></div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Attached Documents */}
+          {permitApp?.attached_documents?.length > 0 && (
+            <div className="rounded-lg border border-slate-200 bg-white p-6">
+              <h3 className="font-bold text-lg mb-4" style={{ color: "var(--vt-green-dark)" }}>Attached Documents</h3>
+              <div className="space-y-2">
+                {permitApp.attached_documents.map((doc, idx) => (
+                  <a
+                    key={idx}
+                    href={doc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+                  >
+                    <FileText size={16} style={{ color: "#2d6a4f" }} />
+                    <span className="text-sm font-medium text-slate-900">{doc.name}</span>
+                  </a>
+                ))}
               </div>
             </div>
           )}
