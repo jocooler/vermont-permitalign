@@ -54,6 +54,7 @@ import ProjectProfile from './pages/ProjectProfile';
 import Projects from './pages/Projects';
 import ReviewQueue from './pages/ReviewQueue';
 import Tasks from './pages/Tasks';
+import PermitMetrics from './pages/PermitMetrics';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "Projects": Projects,
     "ReviewQueue": ReviewQueue,
     "Tasks": Tasks,
+    "PermitMetrics": PermitMetrics,
 }
 
 export const pagesConfig = {
