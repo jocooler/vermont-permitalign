@@ -127,7 +127,7 @@ export default function PermitDashboard() {
 
       {/* Header */}
       <div className="mb-8">
-        <div className="text-xs font-bold uppercase tracking-widest text-green-600 mb-1">Vermont ANR</div>
+        <div className="text-xs font-bold uppercase tracking-widest text-green-600 mb-1">Vermont Permit Program</div>
         <h1 className="text-3xl font-bold text-green-900" style={{ fontFamily: "Georgia, serif" }}>
           Permit Progress Dashboard
         </h1>
