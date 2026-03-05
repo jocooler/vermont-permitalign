@@ -395,7 +395,14 @@ export default function ReviewQueue() {
                         className="w-full border rounded px-2 py-1.5 text-xs resize-none mb-2"
                         style={{ borderColor: "#fbbf24", background: "white" }}
                       />
-                      <p className="text-xs text-amber-700">The applicant will see this information prominently in their permit view.</p>
+                      <button
+                        onClick={() => handleInfoRequestedChange(infoRequestedText)}
+                        className="text-xs font-semibold px-3 py-1 rounded transition-all"
+                        style={{ background: "#f59e0b", color: "white" }}
+                      >
+                        Save Info Request
+                      </button>
+                      <p className="text-xs text-amber-700 mt-2">The applicant will see this information prominently in their permit view.</p>
                     </div>
                   )}
 
