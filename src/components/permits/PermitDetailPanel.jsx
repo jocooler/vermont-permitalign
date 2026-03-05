@@ -190,7 +190,7 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
               onMouseEnter={(e) => e.target.style.opacity = "0.9"}
               onMouseLeave={(e) => e.target.style.opacity = "1"}
             >
-              <ClipboardList size={15} /> {currentStatus === "info_requested" ? "Submit Response" : "Start / Complete Application"}
+              <ClipboardList size={15} /> {currentStatus === "info_requested" ? "Submit Response" : (currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved") ? "Update Application" : "Start / Complete Application"}
             </button>
             {(currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved") && (
               <p className="mt-2 text-xs text-center text-green-700">Application previously submitted for this permit.</p>
