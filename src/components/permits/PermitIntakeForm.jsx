@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, ArrowLeft, ArrowRight, CheckCircle2, Upload, FileText, Building2, User, Phone, Mail, Calendar, AlertCircle } from "lucide-react";
+import { X, ArrowLeft, ArrowRight, CheckCircle2, Upload, FileText, Building2, User, Phone, Mail, Calendar, AlertCircle, Clock, DollarSign, Info } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 // Per-permit specific questions beyond the universal fields
@@ -63,7 +63,27 @@ const PERMIT_SPECIFIC_FIELDS = {
   ],
 };
 
-const BASE_STEPS = ["Applicant Info", "Project Details", "Specific Questions", "Documents", "Review & Submit"];
+const BASE_STEPS = ["Overview", "Applicant Info", "Project Details", "Specific Questions", "Documents", "Review & Submit"];
+
+// Calculate permit fee
+function calculatePermitFee(permit, project) {
+  const baseFeatures = {
+    "1": 350,
+    "2": 300,
+    "5": 250,
+    "6.1": 275,
+    "6.2": 400,
+    "29": 500,
+    "32.3": 350,
+    "32": 200,
+    "47": Math.min(7.4 * (project?.unit_count || 0) * 1000 / 1000, 2000),
+    "49": 8 * (project?.unit_count ? project.unit_count * 2500 : 5000) / 1000,
+    "50": 150,
+    "54": 100,
+    "66": 250,
+  };
+  return baseFeatures[permit.id] || 250;
+}
 
 function FieldInput({ field, value, onChange }) {
   const base = "w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400";
@@ -139,9 +159,9 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
   const specificFields = PERMIT_SPECIFIC_FIELDS[permit.id] || [];
   const hasSpecificQuestions = specificFields.length > 0;
   
-  // Build dynamic steps based on permit content
+  // Build dynamic steps based on permit content (skip overview in the dynamic filter)
   const STEPS = BASE_STEPS.filter((_, i) => {
-    if (i === 2) return hasSpecificQuestions; // Hide "Specific Questions" if no fields
+    if (i === 3 && !hasSpecificQuestions) return false; // Hide "Specific Questions" if no fields
     return true;
   });
   
@@ -149,7 +169,7 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
   const getBaseStepIndex = (actualStep) => {
     let baseIndex = 0;
     for (let i = 0; i < BASE_STEPS.length; i++) {
-      if (i === 2 && !hasSpecificQuestions) continue;
+      if (i === 3 && !hasSpecificQuestions) continue;
       if (baseIndex === actualStep) return i;
       baseIndex++;
     }
@@ -157,6 +177,7 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
   };
   
   const baseStep = getBaseStepIndex(step);
+  const permitFee = calculatePermitFee(permit, project);
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -190,8 +211,8 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
     onPaymentComplete();
   };
 
-  const canAdvanceStep0 = applicant.name.trim() && applicant.email.trim();
-  const canAdvanceStep1 = projectInfo.site_address.trim() && projectInfo.town.trim();
+  const canAdvanceStep1 = applicant.name.trim() && applicant.email.trim();
+  const canAdvanceStep2 = projectInfo.site_address.trim() && projectInfo.town.trim();
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 overflow-y-auto py-6 px-4">
@@ -245,8 +266,83 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
         {/* Body */}
         <div className="px-6 py-5 flex-1">
 
-          {/* Step 0: Applicant Info */}
+          {/* Step 0: Overview */}
           {baseStep === 0 && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-bold text-green-900 mb-0.5">Permit Overview</h3>
+                <p className="text-sm text-slate-500">Learn about this permit before proceeding with your application.</p>
+              </div>
+
+              {/* Permit Summary */}
+              <div className="rounded-lg border border-green-200 bg-green-50 p-5">
+                <h4 className="text-sm font-bold text-green-900 mb-3">{permit.name}</h4>
+                <p className="text-sm text-green-800 mb-3">{permit.description}</p>
+                <div className="flex items-center gap-1.5 text-xs text-green-700">
+                  <Building2 size={13} />
+                  <span className="font-semibold">{permit.agency}</span>
+                </div>
+              </div>
+
+              {/* Key Details */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg border border-slate-200 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock size={14} className="text-blue-600" />
+                    <span className="text-xs font-bold uppercase tracking-wide text-slate-400">Processing Time</span>
+                  </div>
+                  <div className="text-lg font-bold text-slate-900">{permit.sla_days || "Varies"}</div>
+                  <p className="text-xs text-slate-500">business days typical</p>
+                </div>
+
+                <div className="rounded-lg border border-slate-200 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <DollarSign size={14} className="text-green-600" />
+                    <span className="text-xs font-bold uppercase tracking-wide text-slate-400">Application Fee</span>
+                  </div>
+                  <div className="text-lg font-bold text-slate-900">${permitFee.toFixed(2)}</div>
+                  <p className="text-xs text-slate-500">+ $15 processing fee</p>
+                </div>
+              </div>
+
+              {/* Why Required */}
+              <div className="rounded-lg p-4 bg-blue-50 border border-blue-200">
+                <div className="flex items-start gap-2">
+                  <Info size={14} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-blue-900 mb-1">Why this permit applies to your project</div>
+                    <p className="text-sm text-blue-800">{permit.why}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* About Section */}
+              <div className="rounded-lg p-4 bg-slate-50 border border-slate-200">
+                <h5 className="text-xs font-bold uppercase tracking-wide text-slate-600 mb-2">About This Permit</h5>
+                <p className="text-sm text-slate-700 leading-relaxed mb-3">{permit.description}</p>
+                {permit.info_sheet_url && (
+                  <a href={permit.info_sheet_url} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                    📄 View Official Information Sheet <ArrowRight size={12} />
+                  </a>
+                )}
+              </div>
+
+              {isInfoRequest && (
+                <div className="rounded-lg p-4 border-l-4 border-amber-500 bg-amber-50 border border-amber-200">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle size={14} className="text-amber-700 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-bold text-amber-900 mb-1">Information Request</div>
+                      <p className="text-sm text-amber-800">The agency has requested additional information. Provide your response below to keep your application on track.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 1: Applicant Info */}
+          {baseStep === 1 && (
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Applicant Information</h3>
@@ -279,8 +375,8 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
             </div>
           )}
 
-          {/* Step 1: Project Details */}
-          {baseStep === 1 && (
+          {/* Step 2: Project Details */}
+          {baseStep === 2 && (
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Project & Site Details</h3>
@@ -331,8 +427,8 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
             </div>
           )}
 
-          {/* Step 2: Permit-Specific Questions */}
-          {baseStep === 2 && (
+          {/* Step 3: Permit-Specific Questions */}
+          {baseStep === 3 && (
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Permit-Specific Questions</h3>
@@ -357,8 +453,8 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
             </div>
           )}
 
-          {/* Step 3: Document Uploads */}
-          {baseStep === 3 && (
+          {/* Step 4: Document Uploads */}
+          {baseStep === 4 && (
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Supporting Documents</h3>
@@ -415,8 +511,8 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
             </div>
           )}
 
-          {/* Step 4: Review & Submit */}
-          {baseStep === 4 && (
+          {/* Step 5: Review & Submit */}
+          {baseStep === 5 && (
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Review & Submit</h3>
@@ -470,7 +566,7 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
           {step < STEPS.length - 1 ? (
             <button
               onClick={() => setStep(s => s + 1)}
-              disabled={(step === 0 && !canAdvanceStep0) || (step === 1 && !canAdvanceStep1)}
+              disabled={(step === 1 && !canAdvanceStep1) || (step === 2 && !canAdvanceStep2)}
               className="flex items-center gap-2 px-5 py-2 rounded font-semibold text-sm bg-green-700 text-white hover:bg-green-800 disabled:opacity-40"
             >
               Next <ArrowRight size={14} />
