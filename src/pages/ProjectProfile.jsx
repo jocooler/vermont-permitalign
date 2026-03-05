@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { ArrowLeft, CheckCircle2, User, Building2, Calendar, Phone, Mail, MapPin, Info } from "lucide-react";
+import { ArrowLeft, CheckCircle2, User, Building2, Calendar, Phone, Mail, MapPin, Info, Map } from "lucide-react";
 import { createPageUrl } from "@/utils";
+import ParcelPicker from "../components/permits/ParcelPicker";
 
 export default function ProjectProfile() {
   const [searchParams] = useSearchParams();
@@ -15,6 +16,7 @@ export default function ProjectProfile() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showParcelMap, setShowParcelMap] = useState(false);
 
   const [form, setForm] = useState({
     applicant_name: "",
@@ -186,6 +188,17 @@ export default function ProjectProfile() {
         </>
       )}
 
+      {showParcelMap && (
+        <ParcelPicker
+          onClose={() => setShowParcelMap(false)}
+          onSelect={(span, town, addr, nearWetlands, floodplain, stream, lake, stateHighway, elevation) => {
+            setProjectField("parcel_id", span);
+            if (town && !projectForm.town) setProjectField("town", town);
+            if (addr && !projectForm.address) setProjectField("address", addr);
+          }}
+        />
+      )}
+
       {isEditing && (
         <div className="vt-card p-6 mb-6">
           <h2 className="text-lg font-bold text-green-900 mb-6">Update Project Profile</h2>
@@ -222,13 +235,23 @@ export default function ProjectProfile() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Parcel ID (SPAN)</label>
-                    <input
-                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
-                      style={{ borderColor: "var(--vt-gray-light)" }}
-                      value={projectForm.parcel_id}
-                      onChange={e => setProjectField("parcel_id", e.target.value)}
-                      placeholder="e.g. 273-086-10023"
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        className="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+                        style={{ borderColor: "var(--vt-gray-light)" }}
+                        value={projectForm.parcel_id}
+                        onChange={e => setProjectField("parcel_id", e.target.value)}
+                        placeholder="e.g. 273-086-10023"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowParcelMap(true)}
+                        className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded border whitespace-nowrap"
+                        style={{ borderColor: "var(--vt-green)", color: "var(--vt-green)", background: "var(--vt-green-pale)" }}
+                      >
+                        <Map size={13} /> Map
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div>
