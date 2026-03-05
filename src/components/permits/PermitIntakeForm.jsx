@@ -87,7 +87,19 @@ function FieldInput({ field, value, onChange }) {
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
-          className="flex-1 py-2 rounded border-2 text-sm font-semibold transition-all"
+          className="flex-1 py-2 rounded border-2 text-sm font-semibold transition-all cursor-pointer hover:shadow-sm"
+          onMouseEnter={e => {
+            if (value !== opt) {
+              e.currentTarget.style.borderColor = "var(--vt-green-light)";
+              e.currentTarget.style.background = "var(--vt-green-pale)";
+            }
+          }}
+          onMouseLeave={e => {
+            if (value !== opt) {
+              e.currentTarget.style.borderColor = "var(--vt-gray-light)";
+              e.currentTarget.style.background = "white";
+            }
+          }}
           style={{
             borderColor: value === opt ? "var(--vt-green)" : "var(--vt-gray-light)",
             background: value === opt ? "var(--vt-green-pale)" : "white",
