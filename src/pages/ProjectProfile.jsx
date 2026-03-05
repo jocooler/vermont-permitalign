@@ -290,7 +290,7 @@ export default function ProjectProfile() {
             </div>
 
             <div className="border-t pt-5">
-              <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><Building2 size={15} /> Project Details</h3>
+              <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><Calendar size={15} /> Project Timeline</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Project Description</label>
