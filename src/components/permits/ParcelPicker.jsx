@@ -209,7 +209,7 @@ function centroidOfRing(rings) {
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export default function ParcelPicker({ onClose, onSelect }) {
+export default function ParcelPicker({ onClose, onSelect, readOnly = false, initialAddress = null, initialTown = null, latitude = null, longitude = null }) {
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
   const parcelLayerRef = useRef(null);
@@ -251,10 +251,14 @@ export default function ParcelPicker({ onClose, onSelect }) {
     const L = window.L;
     const esriL = window.L.esri;
 
+    // Use provided coordinates if available (read-only mode), otherwise center on Vermont
+    const center = latitude && longitude ? [latitude, longitude] : [44.0, -72.7];
+    const zoom = latitude && longitude ? 14 : 8;
+
     const map = L.map(mapRef.current, {
-      center: [44.0, -72.7], // Center of Vermont
-      zoom: 8,
-      zoomControl: true,
+      center,
+      zoom,
+      zoomControl: !readOnly,
     });
 
     // Basemap
@@ -275,28 +279,32 @@ export default function ParcelPicker({ onClose, onSelect }) {
       }),
       onEachFeature: (feature, layer) => {
         layer.on("click", () => {
-          handleFeatureSelect(feature);
-          highlightParcel(feature);
+          if (!readOnly) {
+            handleFeatureSelect(feature);
+            highlightParcel(feature);
+          }
         });
         layer.on("mouseover", function () {
-          this.setStyle({ fillOpacity: 0.6, weight: 2.5 });
+          if (!readOnly) this.setStyle({ fillOpacity: 0.6, weight: 2.5 });
         });
         layer.on("mouseout", function () {
-          parcelLayer.resetStyle(this);
+          if (!readOnly) parcelLayer.resetStyle(this);
         });
       },
     }).addTo(map);
 
-    // Click on map tiles only — do a REST query
-    map.on("click", async (e) => {
-      const target = e.originalEvent.target;
-      const isMapSurface = target === map._container ||
-        target.classList.contains("leaflet-tile") ||
-        target.classList.contains("leaflet-tile-container") ||
-        target.closest?.(".leaflet-tile-pane");
-      if (!isMapSurface) return;
-      handleMapClick(e.latlng, map);
-    });
+    // Click on map tiles only — do a REST query (skip in read-only mode)
+    if (!readOnly) {
+      map.on("click", async (e) => {
+        const target = e.originalEvent.target;
+        const isMapSurface = target === map._container ||
+          target.classList.contains("leaflet-tile") ||
+          target.classList.contains("leaflet-tile-container") ||
+          target.closest?.(".leaflet-tile-pane");
+        if (!isMapSurface) return;
+        handleMapClick(e.latlng, map);
+      });
+    }
 
     leafletMapRef.current = map;
     parcelLayerRef.current = parcelLayer;
@@ -477,9 +485,10 @@ export default function ParcelPicker({ onClose, onSelect }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black/60" onClick={onClose}>
-      <div className="bg-white flex flex-col h-full" onClick={e => e.stopPropagation()}>
+    <div className={`${readOnly ? "w-full h-full" : "fixed inset-0 z-50"} flex flex-col ${readOnly ? "bg-white" : "bg-black/60"}`} onClick={readOnly ? undefined : onClose}>
+      <div className={`bg-white flex flex-col ${readOnly ? "h-full" : "h-full"}`} onClick={e => e.stopPropagation()}>
          {/* Header */}
+         {!readOnly && (
          <div className="flex items-center justify-between px-4 py-3 flex-shrink-0" style={{ background: "#1a3d2e" }}>
            <div>
              <div className="text-xs font-bold uppercase tracking-widest text-green-300">Vermont Parcel Finder</div>
@@ -489,8 +498,10 @@ export default function ParcelPicker({ onClose, onSelect }) {
              <X size={20} />
            </button>
          </div>
+         )}
 
         {/* Search Bar */}
+        {!readOnly && (
         <div className="flex-shrink-0 px-3 py-2 border-b bg-slate-50 flex gap-2 flex-wrap items-center">
           <div className="flex rounded border overflow-hidden text-xs font-semibold" style={{ borderColor: "#cbd5e1" }}>
             <button
@@ -523,9 +534,10 @@ export default function ParcelPicker({ onClose, onSelect }) {
               Search
             </button>
           </div>
-        </div>
+          </div>
+          )}
 
-        {/* Search Results Dropdown */}
+          {/* Search Results Dropdown */}
         {searchResults.length > 1 && (
           <div className="flex-shrink-0 border-b bg-white shadow-md max-h-40 overflow-y-auto">
             {searchResults.map((f, i) => {
@@ -578,6 +590,7 @@ export default function ParcelPicker({ onClose, onSelect }) {
         </div>
 
         {/* Selected Parcel Footer */}
+        {!readOnly && (
         <div className="flex-shrink-0 border-t bg-white px-4 py-3">
           {selectedParcel ? (
             <div className="flex items-center gap-3">
@@ -664,8 +677,9 @@ export default function ParcelPicker({ onClose, onSelect }) {
               No parcel selected — search above or click a parcel on the map
             </div>
           )}
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+          )}
+          </div>
+          </div>
+          );
+          }
