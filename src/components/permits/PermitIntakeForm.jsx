@@ -112,7 +112,7 @@ function FieldInput({ field, value, onChange }) {
   );
 }
 
-export default function PermitIntakeForm({ permit, project, isInfoRequest, onClose, onPaymentComplete, onFeePaid }) {
+export default function PermitIntakeForm({ permit, project, isInfoRequest, infoRequested, onClose, onPaymentComplete, onFeePaid }) {
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState(false);
