@@ -65,7 +65,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Main Navigation */}
-      <nav className="bg-white border-b-4 border-green-700 sticky top-0 z-50 shadow-sm">
+      <nav className={`bg-white sticky top-0 z-50 shadow-sm border-b-4 ${isStaff ? "border-blue-700" : "border-green-700"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
           <Link to={createPageUrl("Dashboard")} className="flex items-center gap-3 group">
             <div className="w-8 h-8 rounded bg-green-800 flex items-center justify-center">
