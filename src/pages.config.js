@@ -56,6 +56,7 @@ import ReviewQueue from './pages/ReviewQueue';
 import Tasks from './pages/Tasks';
 import PermitMetrics from './pages/PermitMetrics';
 import PortalSelect from './pages/PortalSelect';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "Tasks": Tasks,
     "PermitMetrics": PermitMetrics,
     "PortalSelect": PortalSelect,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

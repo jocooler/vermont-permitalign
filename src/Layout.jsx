@@ -14,6 +14,7 @@ const STAFF_LINKS = [
   { name: "Review Queue", page: "ReviewQueue", Icon: BarChart3 },
   { name: "Progress Dashboard", page: "PermitDashboard", Icon: BarChart3 },
   { name: "Performance Metrics", page: "PermitMetrics", Icon: BarChart3 },
+  { name: "Settings", page: "Settings", Icon: BarChart3 },
 ];
 
 const PORTAL_EXEMPT_PAGES = ["PortalSelect"];
