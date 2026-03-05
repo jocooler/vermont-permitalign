@@ -23,16 +23,28 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showIntakeForm, setShowIntakeForm] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
+  const [permitApp, setPermitApp] = useState(null);
+  const [loadingApp, setLoadingApp] = useState(true);
+
+  useEffect(() => {
+    if (project && permit) {
+      base44.entities.PermitApplication.filter({
+        project_id: project.id,
+        permit_id: permit.id
+      }).then(apps => {
+        setPermitApp(apps?.[0] || null);
+        setLoadingApp(false);
+      });
+    }
+  }, [project?.id, permit?.id]);
 
   if (!permit) return null;
 
   const cat = CATEGORY_CONFIG[permit.category] || CATEGORY_CONFIG.core;
-   const currentStatus = ipData?.status || "not_started";
-   const st = STATUS_CONFIG[currentStatus] || STATUS_CONFIG.not_started;
-   const notes = ipData?.notes || "";
-   const infoRequested = ipData?.info_requested || "";
-
-   console.log("PermitDetailPanel ipData:", ipData, "infoRequested:", infoRequested);
+  const currentStatus = ipData?.status || "not_started";
+  const st = STATUS_CONFIG[currentStatus] || STATUS_CONFIG.not_started;
+  const notes = ipData?.notes || "";
+  const infoRequested = permitApp?.info_requested || "";
 
   const categoryAccentColor = {
     core: "#16a34a",
