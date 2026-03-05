@@ -407,7 +407,7 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, onClo
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Review & Submit</h3>
-                <p className="text-sm text-slate-500">Review your application before submitting.</p>
+                <p className="text-sm text-slate-500">{isInfoRequest ? "Review your information response before submitting." : "Review your application before submitting."}</p>
               </div>
 
               <div className="rounded-lg border border-slate-200 divide-y divide-slate-100">
