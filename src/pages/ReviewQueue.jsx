@@ -91,7 +91,23 @@ export default function ReviewQueue() {
       const hasSubmitted = updated.identified_permits.some(ip => ["submitted", "under_review", "info_requested", "approved", "denied"].includes(ip.status));
       const projectUpdate = { identified_permits: updated.identified_permits };
       if (hasSubmitted && selected.project.status === "draft") projectUpdate.status = "in_progress";
+      
+      // Update Project
       await base44.entities.Project.update(selected.project.id, projectUpdate);
+      
+      // Also update PermitApplication if it exists
+      const permitApps = await base44.entities.PermitApplication.filter({
+        project_id: selected.project.id,
+        permit_id: selected.ip.permit_id
+      });
+      if (permitApps?.length > 0) {
+        await base44.entities.PermitApplication.update(permitApps[0].id, {
+          status: selectedStatus,
+          reviewer_notes: noteText,
+          info_requested: infoRequestedText
+        });
+      }
+      
       setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
       setSaveStatus("saved");
       setTimeout(() => {
