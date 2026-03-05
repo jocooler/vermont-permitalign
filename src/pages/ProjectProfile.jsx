@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { ArrowLeft, CheckCircle2, User, Building2, Calendar, Phone, Mail, MapPin } from "lucide-react";
+import { ArrowLeft, CheckCircle2, User, Building2, Calendar, Phone, Mail, MapPin, Info } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
 export default function ProjectProfile() {
