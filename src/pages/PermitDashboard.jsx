@@ -286,26 +286,41 @@ export default function PermitDashboard() {
           )}
         </div>
 
-        {/* Bar: Per-Project Breakdown */}
-        <div className="vt-card p-5 lg:col-span-3">
-          <h2 className="font-bold text-green-900 mb-4 text-sm uppercase tracking-wide">Permit Progress by Project</h2>
-          {projectBarData.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-8">No projects yet</p>
-          ) : (
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={projectBarData} barSize={10} margin={{ left: -10, right: 10, bottom: 30 }}>
-                <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#64748b" }} angle={-30} textAnchor="end" interval={0} />
-                <YAxis tick={{ fontSize: 10, fill: "#64748b" }} allowDecimals={false} />
-                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-                <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                <Bar dataKey="Approved" fill="#16a34a" stackId="a" radius={[0,0,0,0]} />
-                <Bar dataKey="In Review" fill="#f59e0b" stackId="a" />
-                <Bar dataKey="In Progress" fill="#3b82f6" stackId="a" />
-                <Bar dataKey="Not Started" fill="#e2e8f0" stackId="a" radius={[3,3,0,0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </div>
+        {/* Bar: Agency Approval Rate */}
+         <div className="vt-card p-5 lg:col-span-3">
+           <h2 className="font-bold text-green-900 mb-4 text-sm uppercase tracking-wide">Agency Approval Rate</h2>
+           {(() => {
+             const agencyStats = {};
+             allPermits.forEach(ip => {
+               if (!ip.agency) return;
+               if (!agencyStats[ip.agency]) {
+                 agencyStats[ip.agency] = { total: 0, approved: 0 };
+               }
+               agencyStats[ip.agency].total++;
+               if (ip.status === "approved") agencyStats[ip.agency].approved++;
+             });
+             const chartData = Object.entries(agencyStats)
+               .map(([agency, stats]) => ({
+                 name: agency.length > 20 ? agency.slice(0, 20) + "…" : agency,
+                 "Approval %": Math.round((stats.approved / stats.total) * 100),
+                 fullName: agency,
+               }))
+               .sort((a, b) => b["Approval %"] - a["Approval %"]);
+
+             return chartData.length === 0 ? (
+               <p className="text-sm text-slate-400 text-center py-8">No permit data yet</p>
+             ) : (
+               <ResponsiveContainer width="100%" height={240}>
+                 <BarChart data={chartData} margin={{ left: -10, right: 10, bottom: 30 }}>
+                   <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#64748b" }} angle={-30} textAnchor="end" interval={0} />
+                   <YAxis tick={{ fontSize: 10, fill: "#64748b" }} allowDecimals={false} domain={[0, 100]} />
+                   <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(value) => `${value}%`} />
+                   <Bar dataKey="Approval %" fill="#16a34a" radius={[3,3,0,0]} />
+                 </BarChart>
+               </ResponsiveContainer>
+             );
+           })()}
+         </div>
       </div>
 
       {/* Project Status Filter Cards */}
