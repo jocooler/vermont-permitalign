@@ -211,28 +211,16 @@ export default function ReviewQueue() {
                 </button>
               );
             })}
-            <div className="flex gap-2 ml-auto">
-              <button
-                onClick={() => setShowApproved(v => !v)}
-                className="text-xs font-medium px-3 py-1 rounded-full border transition-all"
-                style={showApproved
-                  ? { background: "#15803d", color: "white", borderColor: "transparent" }
-                  : { color: "var(--vt-gray-mid)", borderColor: "var(--vt-gray-light)", background: "white" }
-                }
-              >
-                {showApproved ? "✓ Approved" : "+ Show Approved"}
-              </button>
-              <button
-                onClick={() => setShowDenied(v => !v)}
-                className="text-xs font-medium px-3 py-1 rounded-full border transition-all"
-                style={showDenied
-                  ? { background: "#b91c1c", color: "white", borderColor: "transparent" }
-                  : { color: "var(--vt-gray-mid)", borderColor: "var(--vt-gray-light)", background: "white" }
-                }
-              >
-                {showDenied ? "✓ Denied" : "+ Show Denied"}
-              </button>
-            </div>
+            <button
+              onClick={() => setShowCompleted(v => !v)}
+              className="text-xs font-medium px-3 py-1 rounded-full border transition-all ml-auto"
+              style={showCompleted
+                ? { background: "var(--vt-gray)", color: "white", borderColor: "transparent" }
+                : { color: "var(--vt-gray-mid)", borderColor: "var(--vt-gray-light)", background: "white" }
+              }
+            >
+              {showCompleted ? "✓ Completed" : "+ Show Completed"}
+            </button>
           </div>
 
           <div className="flex gap-6">
