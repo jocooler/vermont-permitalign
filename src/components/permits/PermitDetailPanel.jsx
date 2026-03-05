@@ -78,6 +78,19 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
             <p className="mt-2 text-xs text-slate-400 italic">{STATUS_DESCRIPTIONS[currentStatus]}</p>
           </div>
 
+          {/* Info Requested Alert */}
+          {currentStatus === "info_requested" && ipData?.info_requested && (
+            <div className="rounded-lg p-4 border-l-4 border-amber-400 bg-amber-50">
+              <div className="flex items-start gap-2">
+                <AlertCircle size={15} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-xs font-bold text-amber-800 mb-2">Information Requested</div>
+                  <p className="text-sm text-amber-700 whitespace-pre-wrap">{ipData.info_requested}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Why Required */}
           <div className="rounded-lg p-4 bg-amber-50 border border-amber-200">
             <div className="flex items-start gap-2">
@@ -143,12 +156,20 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
 
           {/* Apply Button */}
           <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Application</div>
+            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
+              {currentStatus === "info_requested" ? "Submit Requested Information" : "Application"}
+            </div>
             <button
               onClick={() => setShowIntakeForm(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm bg-green-700 text-white hover:bg-green-800 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-colors"
+              style={{
+                background: currentStatus === "info_requested" ? "#d97706" : "#16a34a",
+                color: "white"
+              }}
+              onMouseEnter={(e) => e.target.style.opacity = "0.9"}
+              onMouseLeave={(e) => e.target.style.opacity = "1"}
             >
-              <ClipboardList size={15} /> Start / Complete Application
+              <ClipboardList size={15} /> {currentStatus === "info_requested" ? "Submit Response" : "Start / Complete Application"}
             </button>
             {(currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved") && (
               <p className="mt-2 text-xs text-center text-green-700">Application previously submitted for this permit.</p>
