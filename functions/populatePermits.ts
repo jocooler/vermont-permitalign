@@ -420,6 +420,20 @@ const PERMITS = [
     url: 'https://liquorcontrol.vermont.gov/licensing',
     fees: 'Variable by license type',
     trigger_key: 'liquor_license_beer_wine'
+  },
+  {
+    permit_key: 'agr-soil',
+    name: 'Agricultural Soils & Septic Suitability Review',
+    agency: 'DEC - Drinking Water & Groundwater Protection',
+    category: 'likely',
+    phase: 1,
+    sla_days: 45,
+    sheet: 'Agricultural Soils',
+    why: 'Required in rural areas to assess soil suitability for septic systems and development',
+    description: 'Agricultural soil testing and analysis for septic system design and rural development. Determines groundwater impact potential, soil permeability, and system feasibility. Common in rural Vermont development.',
+    url: 'https://dec.vermont.gov/water/ww-systems',
+    fees: 'Testing/analysis fees vary by scope ($500-$2,000)',
+    trigger_key: 'agricultural_soils_rural'
   }
 ];
 
