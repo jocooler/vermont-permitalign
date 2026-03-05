@@ -374,6 +374,7 @@ const STATUS_CFG = {
 };
 
 export default function Projects() {
+  const { permits: allPermits } = usePermits();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState(() => new URLSearchParams(window.location.search).get("new") ? "new" : "list");
