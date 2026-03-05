@@ -174,6 +174,100 @@ export default function ProjectProfile() {
             </div>
 
             <div>
+              <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><Building2 size={15} /> Project Details</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Project Name</label>
+                  <input
+                    className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+                    style={{ borderColor: "var(--vt-gray-light)" }}
+                    value={projectForm.name}
+                    onChange={e => setProject("name", e.target.value)}
+                    placeholder="Project name"
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Town / Municipality</label>
+                    <input
+                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+                      style={{ borderColor: "var(--vt-gray-light)" }}
+                      value={projectForm.town}
+                      onChange={e => setProject("town", e.target.value)}
+                      placeholder="Town or municipality"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Parcel ID (SPAN)</label>
+                    <input
+                      className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+                      style={{ borderColor: "var(--vt-gray-light)" }}
+                      value={projectForm.parcel_id}
+                      onChange={e => setProject("parcel_id", e.target.value)}
+                      placeholder="e.g. 273-086-10023"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Site Address</label>
+                  <input
+                    className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+                    style={{ borderColor: "var(--vt-gray-light)" }}
+                    value={projectForm.address}
+                    onChange={e => setProject("address", e.target.value)}
+                    placeholder="Street address"
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: "var(--vt-gray-dark)" }}>Number of residential units</label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="range"
+                        min={1}
+                        max={20}
+                        value={projectForm.unit_count}
+                        onChange={e => setProject("unit_count", Number(e.target.value))}
+                        className="flex-1"
+                        style={{ accentColor: "var(--vt-green)" }}
+                      />
+                      <div className="w-12 text-center font-bold text-sm rounded-lg py-1 flex-shrink-0" style={{ background: "var(--vt-green-pale)", color: "var(--vt-green-dark)" }}>{projectForm.unit_count}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: "var(--vt-gray-dark)" }}>Estimated acres disturbed</label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="range"
+                        min={0}
+                        max={5}
+                        step={0.25}
+                        value={projectForm.disturbed_acres}
+                        onChange={e => setProject("disturbed_acres", Number(e.target.value))}
+                        className="flex-1"
+                        style={{ accentColor: "var(--vt-green)" }}
+                      />
+                      <div className="w-12 text-center font-bold text-sm rounded-lg py-1 flex-shrink-0" style={{ background: "var(--vt-green-pale)", color: "var(--vt-green-dark)" }}>{projectForm.disturbed_acres}</div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Project Description</label>
+                  <textarea
+                    rows={3}
+                    className="w-full border rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-green-400"
+                    style={{ borderColor: "var(--vt-gray-light)" }}
+                    value={projectForm.description}
+                    onChange={e => setProject("description", e.target.value)}
+                    placeholder="Describe the project and proposed activities..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t pt-5"></div>
+
+            <div>
               <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><User size={15} /> Applicant Information</h3>
               <div className="space-y-4">
                 {[
