@@ -60,7 +60,7 @@ export default function Layout({ children, currentPageName }) {
               {isStaff ? "Staff Portal" : "Applicant Portal"}
             </span>
           )}
-          <span className="opacity-70 hidden sm:block">Vermont Agency of Natural Resources</span>
+          <span className="opacity-70 hidden sm:block">Vermont Permit Program</span>
         </div>
       </div>
 
@@ -73,7 +73,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
             <div>
               <div className="text-xs font-semibold uppercase tracking-widest text-green-800 leading-none">Vermont</div>
-              <div className="font-bold text-sm leading-tight text-green-900" style={{ fontFamily: "Georgia, serif" }}>Permitting System</div>
+              <div className="font-bold text-sm leading-tight text-green-900" style={{ fontFamily: "Georgia, serif" }}>Permit Program</div>
             </div>
           </Link>
 
@@ -146,8 +146,8 @@ export default function Layout({ children, currentPageName }) {
       <footer className="bg-green-950 text-white py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-start gap-4">
           <div>
-            <div className="font-bold mb-1" style={{ fontFamily: "Georgia, serif" }}>Vermont Permitting System - DRAFT</div>
-            <div className="text-xs opacity-60">Agency of Natural Resources · Department of Environmental Conservation</div>
+            <div className="font-bold mb-1" style={{ fontFamily: "Georgia, serif" }}>Vermont Permit Program - DRAFT</div>
+            <div className="text-xs opacity-60">Vermont Permit Program</div>
           </div>
           <div className="text-xs opacity-50">Version 0.1 Draft · For internal use and testing only</div>
         </div>

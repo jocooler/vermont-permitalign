@@ -36,10 +36,10 @@ export default function PortalSelect() {
           </div>
           <div>
             <div className="text-xs font-bold uppercase tracking-widest text-green-300">Vermont</div>
-            <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>Permitting System</div>
-          </div>
-        </div>
-        <p className="text-green-300 text-sm mb-12 opacity-80">Agency of Natural Resources · Department of Environmental Conservation</p>
+            <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>Permit Program</div>
+            </div>
+            </div>
+            <p className="text-green-300 text-sm mb-12 opacity-80">Vermont Permit Program</p>
 
         <h2 className="text-white text-lg font-semibold mb-8 text-center opacity-90">Select your portal to continue</h2>
 
