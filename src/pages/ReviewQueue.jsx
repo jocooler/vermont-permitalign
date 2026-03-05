@@ -425,6 +425,15 @@ export default function ReviewQueue() {
                     </button>
                   </div>
 
+                  {selected.ip.info_requested && (
+                    <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
+                      <div className="text-xs font-semibold mb-2" style={{ color: "var(--vt-gray-dark)" }}>Additional Information Requested</div>
+                      <div className="text-xs p-2.5 rounded" style={{ background: "var(--vt-gray-pale)", color: "var(--vt-gray)" }}>
+                        {selected.ip.info_requested}
+                      </div>
+                    </div>
+                  )}
+
                   {permitMeta[selected.ip.permit_id] && (
                     <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
                       <div className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>
