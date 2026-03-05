@@ -51,6 +51,18 @@ export default function ProjectProfile() {
         setProfile(p.profile);
         setForm(p.profile);
       }
+      
+      // Load project details
+      setProjectForm({
+        name: p?.name || "",
+        description: p?.description || "",
+        address: p?.address || "",
+        town: p?.town || "",
+        parcel_id: p?.parcel_id || "",
+        unit_count: p?.unit_count || 4,
+        disturbed_acres: p?.disturbed_acres || 0,
+      });
+      
       setLoading(false);
     }
     load();
