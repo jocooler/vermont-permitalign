@@ -112,7 +112,7 @@ function FieldInput({ field, value, onChange }) {
   );
 }
 
-export default function PermitIntakeForm({ permit, project, onClose, onPaymentComplete, onFeePaid }) {
+export default function PermitIntakeForm({ permit, project, isInfoRequest, onClose, onPaymentComplete, onFeePaid }) {
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState(false);
@@ -188,7 +188,6 @@ export default function PermitIntakeForm({ permit, project, onClose, onPaymentCo
       }),
     });
     setSaving(false);
-    // Proceed to payment
     onPaymentComplete();
   };
 
@@ -469,7 +468,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onPaymentCo
               disabled={saving}
               className="flex items-center gap-2 px-6 py-2 rounded font-semibold text-sm bg-green-700 text-white hover:bg-green-800 disabled:opacity-60"
             >
-              {saving ? "Saving…" : <><CheckCircle2 size={14} /> Proceed to Payment</>}
+              {saving ? "Saving…" : isInfoRequest ? <><CheckCircle2 size={14} /> Submit Information</> : <><CheckCircle2 size={14} /> Proceed to Payment</>}
             </button>
           )}
         </div>
