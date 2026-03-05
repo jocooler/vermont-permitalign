@@ -50,13 +50,13 @@
 import Dashboard from './pages/Dashboard';
 import PermitDashboard from './pages/PermitDashboard';
 import PermitFinder from './pages/PermitFinder';
+import PermitMetrics from './pages/PermitMetrics';
+import PortalSelect from './pages/PortalSelect';
 import ProjectProfile from './pages/ProjectProfile';
 import Projects from './pages/Projects';
 import ReviewQueue from './pages/ReviewQueue';
-import Tasks from './pages/Tasks';
-import PermitMetrics from './pages/PermitMetrics';
-import PortalSelect from './pages/PortalSelect';
 import Settings from './pages/Settings';
+import Tasks from './pages/Tasks';
 import __Layout from './Layout.jsx';
 
 
@@ -64,13 +64,13 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "PermitDashboard": PermitDashboard,
     "PermitFinder": PermitFinder,
+    "PermitMetrics": PermitMetrics,
+    "PortalSelect": PortalSelect,
     "ProjectProfile": ProjectProfile,
     "Projects": Projects,
     "ReviewQueue": ReviewQueue,
-    "Tasks": Tasks,
-    "PermitMetrics": PermitMetrics,
-    "PortalSelect": PortalSelect,
     "Settings": Settings,
+    "Tasks": Tasks,
 }
 
 export const pagesConfig = {

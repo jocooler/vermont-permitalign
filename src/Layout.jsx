@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useState, useEffect } from "react";
-import { Menu, X, Mountain, ChevronRight, Home, FolderOpen, ClipboardList, BarChart3, ArrowLeftRight } from "lucide-react";
+import { Menu, X, Mountain, ChevronRight, Home, FolderOpen, ClipboardList, BarChart3, ArrowLeftRight, Settings, TrendingUp } from "lucide-react";
 
 const APPLICANT_LINKS = [
   { name: "Dashboard", page: "Dashboard", Icon: Home },
@@ -11,10 +11,10 @@ const APPLICANT_LINKS = [
 
 const STAFF_LINKS = [
   { name: "Dashboard", page: "Dashboard", Icon: Home },
-  { name: "Review Queue", page: "ReviewQueue", Icon: BarChart3 },
+  { name: "Review Queue", page: "ReviewQueue", Icon: ClipboardList },
   { name: "Progress Dashboard", page: "PermitDashboard", Icon: BarChart3 },
-  { name: "Performance Metrics", page: "PermitMetrics", Icon: BarChart3 },
-  { name: "Settings", page: "Settings", Icon: BarChart3 },
+  { name: "Performance Metrics", page: "PermitMetrics", Icon: TrendingUp },
+  { name: "Settings", page: "Settings", Icon: Settings },
 ];
 
 const PORTAL_EXEMPT_PAGES = ["PortalSelect"];
