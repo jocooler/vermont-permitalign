@@ -35,12 +35,16 @@ export default function TasksPage() {
     queryFn: () => base44.entities.Task.list("-due_date", 200),
   });
 
-  const filteredTasks = tasks.filter((task) => {
-    const statusMatch = filterStatus === "all" || task.status === filterStatus;
-    const priorityMatch = filterPriority === "all" || task.priority === filterPriority;
-    const projectMatch = filterProject === "all" || task.project_id === filterProject;
-    return statusMatch && priorityMatch && projectMatch;
-  });
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
+
+  const filteredTasks = tasks
+    .filter((task) => {
+      const statusMatch = filterStatus === "all" || task.status === filterStatus;
+      const priorityMatch = filterPriority === "all" || task.priority === filterPriority;
+      const projectMatch = filterProject === "all" || task.project_id === filterProject;
+      return statusMatch && priorityMatch && projectMatch;
+    })
+    .sort((a, b) => (priorityOrder[a.priority] ?? 999) - (priorityOrder[b.priority] ?? 999));
 
   const stats = {
     total: tasks.length,
