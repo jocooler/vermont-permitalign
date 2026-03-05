@@ -49,12 +49,19 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Top Government Bar */}
-      <div className="bg-green-950 text-white text-xs py-1.5 px-4 flex items-center justify-between">
+      <div className={`text-white text-xs py-1.5 px-4 flex items-center justify-between ${isStaff ? "bg-blue-950" : "bg-green-950"}`}>
         <div className="flex items-center gap-2">
           <Mountain size={13} className="opacity-80" />
           <span className="font-semibold tracking-wide uppercase opacity-90">An Official Vermont Government Website</span>
         </div>
-        <span className="opacity-70 hidden sm:block">Vermont Agency of Natural Resources</span>
+        <div className="flex items-center gap-3">
+          {portalMode && (
+            <span className={`font-bold uppercase tracking-widest px-2 py-0.5 rounded text-xs ${isStaff ? "bg-blue-700 text-blue-100" : "bg-green-700 text-green-100"}`}>
+              {isStaff ? "Staff Portal" : "Applicant Portal"}
+            </span>
+          )}
+          <span className="opacity-70 hidden sm:block">Vermont Agency of Natural Resources</span>
+        </div>
       </div>
 
       {/* Main Navigation */}
