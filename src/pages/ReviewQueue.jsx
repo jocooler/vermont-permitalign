@@ -11,6 +11,7 @@ export default function ReviewQueue() {
   const [loading, setLoading] = useState(true);
   const [selectedAgency, setSelectedAgency] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [showApproved, setShowApproved] = useState(false);
   const [selected, setSelected] = useState(null);
   const [noteText, setNoteText] = useState("");
 
