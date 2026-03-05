@@ -582,7 +582,7 @@ export default function Projects() {
     // Auto-generate tasks for each identified permit
     const permitLookup = Object.fromEntries((allPermits || []).map(p => [p.id, p]));
 
-    const phaseToP = { 1: "high", 2: "high", 3: "medium", 4: "low" };
+    const phaseToP = { 1: "high", 2: "high", 3: "low", 4: "low" };
 
     // Top-priority task: complete project profile
     const profileTask = base44.entities.Task.create({
