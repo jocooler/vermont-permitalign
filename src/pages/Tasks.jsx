@@ -46,12 +46,19 @@ export default function TasksPage() {
       return statusMatch && priorityMatch && projectMatch;
     })
     .sort((a, b) => {
+      // Sort Priority:
+      // 1. Completed tasks always go to bottom (regardless of type or priority)
+      // 2. Project Profile tasks go near top (if not completed)
+      // 3. Then sort by priority (high → medium → low)
+      
+      if (a.status === "completed" && b.status !== "completed") return 1;
+      if (a.status !== "completed" && b.status === "completed") return -1;
+      
       const isProfileA = a.title === "Complete Project Profile";
       const isProfileB = b.title === "Complete Project Profile";
       if (isProfileA && !isProfileB) return -1;
       if (!isProfileA && isProfileB) return 1;
-      const statusDiff = (statusOrder[a.status] ?? 999) - (statusOrder[b.status] ?? 999);
-      if (statusDiff !== 0) return statusDiff;
+      
       return (priorityOrder[a.priority] ?? 999) - (priorityOrder[b.priority] ?? 999);
     });
 
