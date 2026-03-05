@@ -231,22 +231,23 @@ function ProjectForm({ onSave, onCancel }) {
             <div className="vt-card p-5 mb-4 text-sm text-center" style={{ color: "var(--vt-gray-mid)" }}>No permits identified based on current conditions.</div>
           )}
 
-          {[
-            { key: "core", title: "Core Permits", permits: byCategory.core, accent: "border-l-4 border-green-500", titleColor: "text-green-800" },
-            { key: "likely", title: "Likely Required", permits: byCategory.likely, accent: "border-l-4 border-amber-400", titleColor: "text-amber-800" },
-            { key: "conditional", title: "Conditional", permits: byCategory.conditional, accent: "border-l-4 border-indigo-400", titleColor: "text-indigo-800" },
-          ].map(({ key, title, permits: catPermits, accent, titleColor }) => catPermits.length > 0 && (
-            <div key={key} className={`vt-card p-4 mb-3 ${accent}`}>
-              <div className={`text-xs font-bold uppercase tracking-wide mb-2 ${titleColor}`}>{title} ({catPermits.length})</div>
-              <div className="flex flex-wrap gap-2">
-                {catPermits.map(p => (
-                  <span key={p.id} className="text-xs bg-white border rounded-full px-2.5 py-0.5 font-medium" style={{ color: "var(--vt-gray-dark)", borderColor: "var(--vt-gray-light)" }}>
-                    {p.sheet} {p.name}
-                  </span>
-                ))}
+          {[1, 2, 3, 4].map(phase => {
+            const phasePermits = permits.filter(p => p.phase === phase);
+            if (!phasePermits.length) return null;
+            const cfg = PHASE_CONFIG[phase];
+            return (
+              <div key={phase} className={`vt-card p-4 mb-3 border-l-4 ${cfg.border}`}>
+                <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: cfg.color }}>{cfg.label} ({phasePermits.length})</div>
+                <div className="flex flex-wrap gap-2">
+                  {phasePermits.map(p => (
+                    <span key={p.id} className="text-xs bg-white border rounded-full px-2.5 py-0.5 font-medium" style={{ color: "var(--vt-gray-dark)", borderColor: "var(--vt-gray-light)" }}>
+                      {p.sheet} {p.name}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           <div className="mt-5 flex justify-between">
             <button onClick={() => setStep(1)} className="flex items-center gap-2 px-4 py-2 rounded font-medium text-sm" style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}>
