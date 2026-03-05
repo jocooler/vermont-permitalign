@@ -70,7 +70,18 @@ export default function ProjectProfile() {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.entities.Project.update(projectId, { profile: form });
+    const updateData = {
+      profile: form,
+      name: projectForm.name,
+      description: projectForm.description,
+      address: projectForm.address,
+      town: projectForm.town,
+      parcel_id: projectForm.parcel_id,
+      unit_count: Number(projectForm.unit_count),
+      disturbed_acres: Number(projectForm.disturbed_acres),
+    };
+    await base44.entities.Project.update(projectId, updateData);
+    setProject(prev => prev ? { ...prev, ...updateData } : null);
     setProfile(form);
     setIsEditing(false);
     setSaving(false);
