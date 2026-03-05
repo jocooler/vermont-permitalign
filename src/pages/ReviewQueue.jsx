@@ -87,6 +87,22 @@ export default function ReviewQueue() {
     setNoteText("");
   };
 
+  const handleInfoRequestedChange = async (newValue) => {
+    if (!selected) return;
+    const updatedPermits = selected.project.identified_permits.map(ip =>
+      ip.permit_id === selected.ip.permit_id ? { ...ip, info_requested: newValue } : ip
+    );
+    await base44.entities.Project.update(selected.project.id, { identified_permits: updatedPermits });
+    setProjects(prev => prev.map(p => p.id === selected.project.id 
+      ? { ...p, identified_permits: updatedPermits } 
+      : p
+    ));
+    setSelected({ 
+      project: { ...selected.project, identified_permits: updatedPermits }, 
+      ip: { ...selected.ip, info_requested: newValue } 
+    });
+  };
+
   const handleDownloadPDF = (e, project, ip) => {
     e.stopPropagation();
     const doc = new jsPDF();
@@ -311,6 +327,20 @@ export default function ReviewQueue() {
                       );
                     })}
                   </div>
+
+                  {selected.ip.status === "info_requested" && (
+                    <div className="mb-5 p-3 rounded-lg border-l-4 border-amber-400 bg-amber-50">
+                      <div className="text-xs font-bold text-amber-900 mb-2">📋 Information Requested (Required)</div>
+                      <textarea
+                        value={selected.ip.info_requested || ""}
+                        onChange={(e) => handleInfoRequestedChange(e.target.value)}
+                        placeholder="Specify what information is needed from the applicant..."
+                        className="w-full border rounded px-2 py-1.5 text-xs resize-none mb-2"
+                        style={{ borderColor: "#fbbf24", background: "white" }}
+                      />
+                      <p className="text-xs text-amber-700">The applicant will see this information prominently in their permit view.</p>
+                    </div>
+                  )}
 
                   <div className="border-t pt-4" style={{ borderColor: "var(--vt-gray-light)" }}>
                     <label className="block text-xs font-semibold mb-2" style={{ color: "var(--vt-gray)" }}>Reviewer Notes</label>
