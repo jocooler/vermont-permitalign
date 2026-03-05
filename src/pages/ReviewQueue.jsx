@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Clock, CheckCircle2, AlertTriangle, ChevronRight, MessageSquare, ArrowUpRight, Download, Building2 } from "lucide-react";
+import { Clock, CheckCircle2, AlertTriangle, ChevronRight, MessageSquare, ArrowUpRight, Download, Building2, Info } from "lucide-react";
 import { STATUS_CONFIG } from "../components/permits/PERMIT_DATA";
 import { usePermits } from "../components/permits/usePermits";
 import { jsPDF } from "jspdf";

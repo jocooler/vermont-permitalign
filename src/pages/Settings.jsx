@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, Edit2, ArrowLeft, Save, X, Check } from "lucide-react";
+import { Plus, Trash2, Edit2, ArrowLeft, Save, X, Check, Info } from "lucide-react";
+import HelpIcon from "../components/HelpIcon";
 
 const CATEGORIES = ["core", "likely", "conditional"];
 const PHASES = [1, 2, 3, 4];
