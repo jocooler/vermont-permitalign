@@ -8,6 +8,7 @@ export default function ProjectProfile() {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get("id");
   const backToProject = searchParams.get("back") === "project";
+  const isStaff = localStorage.getItem("vt_portal_mode") === "staff";
   
   const [project, setProject] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -80,8 +81,8 @@ export default function ProjectProfile() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <a href={createPageUrl("Projects")} className="flex items-center gap-1.5 text-sm font-medium mb-6 hover:opacity-70 transition-opacity" style={{ color: "var(--vt-green)" }}>
-        <ArrowLeft size={15} /> Back to Projects
+      <a href={isStaff ? "javascript:history.back()" : createPageUrl("Projects")} className="flex items-center gap-1.5 text-sm font-medium mb-6 hover:opacity-70 transition-opacity" style={{ color: "var(--vt-green)" }}>
+        <ArrowLeft size={15} /> {isStaff ? "Back" : "Back to Projects"}
       </a>
 
       <div className="rounded-xl mb-6 p-6" style={{ background: "linear-gradient(135deg, #1a3d2e 0%, #2d6a4f 100%)" }}>
@@ -91,7 +92,7 @@ export default function ProjectProfile() {
             <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{project.name}</h1>
             {project.address && <p className="text-sm text-green-200 mt-1 flex items-center gap-1.5"><MapPin size={13} />{project.address}, {project.town}</p>}
           </div>
-          {!isEditing && (
+          {!isEditing && !isStaff && (
             <button onClick={() => setIsEditing(true)} className="text-sm font-semibold px-4 py-2 rounded bg-white hover:bg-green-50 transition-colors" style={{ color: "var(--vt-green-dark)" }}>
               Edit Profile
             </button>
@@ -222,7 +223,7 @@ export default function ProjectProfile() {
         </div>
       )}
 
-      {profile && !isEditing && (
+      {profile && !isEditing && !isStaff && (
         <div className="rounded-lg border border-green-200 bg-green-50 p-5">
           <p className="text-sm text-green-800">
             <strong>✓ Profile complete.</strong> This information will auto-fill when you start new permit applications.
