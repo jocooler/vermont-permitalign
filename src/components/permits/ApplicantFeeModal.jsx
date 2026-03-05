@@ -22,11 +22,6 @@ export default function ApplicantFeeModal({ permit, project, onClose, onPaymentC
   const total = fee + 15; // $15 processing fee
 
   const handlePayment = async () => {
-    if (!cardInfo.number || !cardInfo.expiry || !cardInfo.cvc) {
-      alert("Please fill in all payment details");
-      return;
-    }
-
     setProcessing(true);
     
     // Simulate payment processing
@@ -106,51 +101,8 @@ export default function ApplicantFeeModal({ permit, project, onClose, onPaymentC
             </button>
           </div>
 
-          <div className="space-y-4 mb-6">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Card Number</label>
-              <input
-                type="text"
-                placeholder="4532 1234 5678 9010"
-                maxLength="19"
-                value={cardInfo.number}
-                onChange={e => {
-                  let val = e.target.value.replace(/\s/g, "");
-                  val = val.replace(/(\d{4})/g, "$1 ").trim();
-                  setCardInfo({ ...cardInfo, number: val });
-                }}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Expiry Date</label>
-                <input
-                  type="text"
-                  placeholder="MM/YY"
-                  maxLength="5"
-                  value={cardInfo.expiry}
-                  onChange={e => {
-                    let val = e.target.value.replace(/\D/g, "");
-                    if (val.length >= 2) val = val.slice(0, 2) + "/" + val.slice(2, 4);
-                    setCardInfo({ ...cardInfo, expiry: val });
-                  }}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">CVC</label>
-                <input
-                  type="text"
-                  placeholder="123"
-                  maxLength="3"
-                  value={cardInfo.cvc}
-                  onChange={e => setCardInfo({ ...cardInfo, cvc: e.target.value.replace(/\D/g, "") })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                />
-              </div>
-            </div>
+          <div className="bg-slate-50 rounded-lg p-4 mb-6">
+            <p className="text-sm text-slate-600">Demo mode: Payment details are disabled. Click "Pay" to continue.</p>
           </div>
 
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-6">
