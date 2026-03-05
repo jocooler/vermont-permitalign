@@ -471,14 +471,22 @@ export default function Projects() {
   const [view, setView] = useState(() => new URLSearchParams(window.location.search).get("new") ? "new" : "list");
   const [selected, setSelected] = useState(null);
 
+  const [openPermitId, setOpenPermitId] = useState(null);
+
   useEffect(() => {
-    const returnProjectId = new URLSearchParams(window.location.search).get("project");
+    const params = new URLSearchParams(window.location.search);
+    const returnProjectId = params.get("project");
+    const returnPermitId = params.get("permit");
     base44.entities.Project.list("-created_date").then(p => {
       setProjects(p || []);
       setLoading(false);
       if (returnProjectId) {
         const found = (p || []).find(proj => proj.id === returnProjectId);
-        if (found) { setSelected(found); setView("detail"); }
+        if (found) {
+          setSelected(found);
+          setView("detail");
+          if (returnPermitId) setOpenPermitId(returnPermitId);
+        }
       }
     });
   }, []);
