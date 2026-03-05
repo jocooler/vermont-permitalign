@@ -195,6 +195,17 @@ export default function ReviewQueue() {
         <p className="text-sm mt-1" style={{ color: "var(--vt-gray-mid)" }}>Select your agency to view active permit applications.</p>
       </div>
 
+      {!selectedAgency && (
+        <div className="mb-6 p-4 rounded-lg bg-blue-50 border border-blue-200">
+          <div className="flex gap-2">
+            <Info size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-800">
+              <strong>How to use the Review Queue:</strong> Click on an agency tile to see all submitted applications. Use status filters to organize your workflow. You can update statuses, request additional information, add notes, and download application PDFs.
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Agency Tiles */}
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">

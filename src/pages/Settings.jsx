@@ -96,6 +96,15 @@ export default function Settings() {
         <p className="text-sm mt-1 text-green-200">Manage permits and system configuration</p>
       </div>
 
+      <div className="mb-6 p-4 rounded-lg bg-amber-50 border border-amber-200">
+        <div className="flex gap-2">
+          <Info size={16} className="text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-amber-800">
+            <strong>Permit Management:</strong> Add, edit, or deactivate permits here. Each permit defines its agency, processing time, category, and required project phases. Changes apply system-wide to all new projects.
+          </div>
+        </div>
+      </div>
+
       {showForm ? (
         <PermitForm
           permit={editingId ? permits.find(p => p.id === editingId) : null}
@@ -197,7 +206,10 @@ function PermitForm({ permit, formData, setFormData, onSave, onCancel, saving })
       <div className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Permit Key *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Permit Key *
+              <HelpIcon text="Unique identifier for this permit (e.g., '1', '47', '6.1'). Use consistent naming." width="w-40" />
+            </label>
             <input
               type="text"
               value={formData.permit_key}
@@ -208,7 +220,10 @@ function PermitForm({ permit, formData, setFormData, onSave, onCancel, saving })
             />
           </div>
           <div className="col-span-2">
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Name *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Name *
+              <HelpIcon text="Full, descriptive name of the permit that applicants will see." width="w-44" />
+            </label>
             <input
               type="text"
               value={formData.name}
@@ -222,7 +237,10 @@ function PermitForm({ permit, formData, setFormData, onSave, onCancel, saving })
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Agency *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Agency *
+              <HelpIcon text="Name of the agency that reviews this permit (e.g., 'DEC', 'DEC')." width="w-40" />
+            </label>
             <input
               type="text"
               value={formData.agency}
@@ -233,7 +251,10 @@ function PermitForm({ permit, formData, setFormData, onSave, onCancel, saving })
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Category
+              <HelpIcon text="Core = always required. Likely = usually required. Conditional = depends on project details." width="w-52" />
+            </label>
             <select
               value={formData.category}
               onChange={e => setFormData({ ...formData, category: e.target.value })}
@@ -249,7 +270,10 @@ function PermitForm({ permit, formData, setFormData, onSave, onCancel, saving })
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Phase</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Phase
+              <HelpIcon text="1=Pre-App, 2=Pre-Const, 3=During Const, 4=Post-Const. Determines when applicant needs to apply." width="w-48" />
+            </label>
             <select
               value={formData.phase}
               onChange={e => setFormData({ ...formData, phase: parseInt(e.target.value) })}
@@ -262,7 +286,10 @@ function PermitForm({ permit, formData, setFormData, onSave, onCancel, saving })
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">SLA Days</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              SLA Days
+              <HelpIcon text="Expected processing time in business days for this permit." width="w-40" />
+            </label>
             <input
               type="number"
               value={formData.sla_days}
