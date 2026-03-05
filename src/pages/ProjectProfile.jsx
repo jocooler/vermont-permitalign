@@ -338,18 +338,6 @@ export default function ProjectProfile() {
             <div className="border-t pt-5">
               <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><Calendar size={15} /> Project Timeline</h3>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Project Description</label>
-                  <textarea
-                    rows={3}
-                    className="w-full border rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-green-400"
-                    style={{ borderColor: "var(--vt-gray-light)" }}
-                    value={form.project_description}
-                    onChange={e => set("project_description", e.target.value)}
-                    placeholder="Describe the proposed work..."
-                  />
-                </div>
-
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold mb-1" style={{ color: "var(--vt-gray)" }}>Anticipated Start Date</label>
