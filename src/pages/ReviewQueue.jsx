@@ -436,9 +436,25 @@ export default function ReviewQueue() {
                         {selected.ip.info_requested}
                       </div>
                     </div>
-                  )}
+                    )}
 
-                  {permitMeta[selected.ip.permit_id] && selected.ip.submitted_date && (
+                    {selected.ip.location && (
+                    <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
+                      <div className="text-xs font-semibold mb-2" style={{ color: "var(--vt-gray-dark)" }}>Location</div>
+                      <div className="space-y-1 text-xs" style={{ color: "var(--vt-gray)" }}>
+                        {selected.ip.location.address && <div>{selected.ip.location.address}</div>}
+                        {selected.ip.location.town && <div>{selected.ip.location.town}</div>}
+                        {selected.ip.location.span && <div className="font-mono">SPAN: {selected.ip.location.span}</div>}
+                        {selected.ip.location.latitude && selected.ip.location.longitude && (
+                          <div className="text-xs text-slate-400">
+                            {selected.ip.location.latitude.toFixed(5)}, {selected.ip.location.longitude.toFixed(5)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    )}
+
+                    {permitMeta[selected.ip.permit_id] && selected.ip.submitted_date && (
                     <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
                       <div className="text-xs" style={{ color: "var(--vt-gray-mid)" }}>
                         <div><span className="font-semibold">Expected Due Date: </span>
@@ -446,7 +462,7 @@ export default function ReviewQueue() {
                         </div>
                       </div>
                     </div>
-                  )}
+                    )}
 
                   <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
                     <button
