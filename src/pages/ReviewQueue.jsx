@@ -196,7 +196,7 @@ export default function ReviewQueue() {
         <>
           {/* Status filter pills */}
           <div className="flex items-center gap-3 flex-wrap mb-4">
-            {["all", "submitted", "under_review", "info_requested", "denied"].map(s => {
+            {["all", "submitted", "under_review", "info_requested"].map(s => {
               const cfg = STATUS_CONFIG[s];
               const count = s === "all" ? agencyItems.length : (statusCounts[s] || 0);
               return (
