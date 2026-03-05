@@ -120,13 +120,19 @@ export default function Layout({ children, currentPageName }) {
                 key={page}
                 to={createPageUrl(page)}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium text-slate-700 hover:bg-green-50"
+                className={`flex items-center gap-2 px-3 py-3 rounded text-sm font-medium text-slate-700 ${isStaff ? "hover:bg-blue-50" : "hover:bg-green-50"}`}
               >
                 <Icon size={16} />
                 {name}
                 <ChevronRight size={14} className="ml-auto opacity-40" />
               </Link>
             ))}
+            <button
+              onClick={handleSwitchPortal}
+              className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium text-slate-500 hover:bg-slate-50 w-full mt-1 border-t"
+            >
+              <ArrowLeftRight size={16} /> Switch Portal
+            </button>
           </div>
         )}
       </nav>
