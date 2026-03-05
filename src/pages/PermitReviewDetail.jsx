@@ -152,7 +152,7 @@ export default function PermitReviewDetail() {
     }
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     const doc = new jsPDF();
     const meta = permitMeta[selectedPermit.permit_id];
 
@@ -249,19 +249,54 @@ export default function PermitReviewDetail() {
       });
     }
 
-    // Attached Documents
-    const documents = parsedNotes?.uploaded_files || permitApp?.attached_documents || [];
-    if (documents.length > 0) {
-      addSection("Attached Documents");
-      documents.forEach(doc => {
-        addField("Document", doc.name);
-      });
-    }
-
     if (noteText) {
       addSection("Reviewer Notes");
       const lines = doc.splitTextToSize(noteText, 160);
       doc.text(lines, 20, y);
+    }
+
+    // Attached Documents Section
+    const documents = parsedNotes?.uploaded_files || permitApp?.attached_documents || [];
+    if (documents.length > 0) {
+      addSection("Attached Documents");
+      
+      for (const docItem of documents) {
+        if (y > 265) { doc.addPage(); y = 20; }
+        
+        // Add document name
+        doc.setFont(undefined, "bold");
+        doc.text(`• ${docItem.name}`, 25, y);
+        doc.setFont(undefined, "normal");
+        y += 8;
+        
+        // Try to embed image files
+        if (docItem.url && (docItem.name.match(/\.(jpg|jpeg|png)$/i))) {
+          try {
+            const response = await fetch(docItem.url);
+            const blob = await response.blob();
+            const reader = new FileReader();
+            
+            reader.onload = () => {
+              if (y > 220) { doc.addPage(); y = 20; }
+              const imgData = reader.result;
+              const maxWidth = 170;
+              const maxHeight = 100;
+              doc.addImage(imgData, 'JPEG', 20, y, maxWidth, maxHeight);
+              y += maxHeight + 10;
+            };
+            reader.readAsDataURL(blob);
+          } catch (e) {
+            // Fallback: just list the document
+            doc.setFont(undefined, "italic");
+            doc.setTextColor(150, 150, 150);
+            doc.setFontSize(9);
+            doc.text(`(Image could not be embedded - see attached files)`, 25, y);
+            doc.setTextColor(40, 40, 40);
+            doc.setFontSize(11);
+            y += 5;
+          }
+        }
+      }
     }
 
     doc.save(`permit-${selectedPermit.permit_id}-${project.name.replace(/\s+/g, "-")}.pdf`);
