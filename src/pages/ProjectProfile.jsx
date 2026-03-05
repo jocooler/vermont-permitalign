@@ -134,33 +134,56 @@ export default function ProjectProfile() {
         </div>
       </div>
 
-      {profile && !isEditing && (
-        <div className="vt-card p-6 mb-6">
-          <div className="grid sm:grid-cols-2 gap-6">
+      {!isEditing && (
+        <>
+          <div className="vt-card p-6 mb-6">
             <div>
-              <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><User size={12} /> Applicant</div>
-              <div className="space-y-2 text-sm">
-                <div><span className="text-slate-400">Name:</span> <span className="text-slate-800 font-medium">{profile.applicant_name}</span></div>
-                {profile.applicant_email && <div><span className="text-slate-400">Email:</span> <span className="text-slate-800 font-medium">{profile.applicant_email}</span></div>}
-                {profile.applicant_phone && <div><span className="text-slate-400">Phone:</span> <span className="text-slate-800 font-medium">{profile.applicant_phone}</span></div>}
-                {profile.applicant_organization && <div><span className="text-slate-400">Organization:</span> <span className="text-slate-800 font-medium">{profile.applicant_organization}</span></div>}
+              <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3 flex items-center gap-1.5"><Building2 size={12} /> Project Details</div>
+              <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                {project.town && <div><span className="text-slate-400">Town:</span> <span className="text-slate-800 font-medium">{project.town}</span></div>}
+                {project.parcel_id && <div><span className="text-slate-400">SPAN:</span> <span className="text-slate-800 font-medium font-mono">{project.parcel_id}</span></div>}
+                {project.address && <div className="sm:col-span-2"><span className="text-slate-400">Address:</span> <span className="text-slate-800 font-medium">{project.address}</span></div>}
+                {project.unit_count > 0 && <div><span className="text-slate-400">Units:</span> <span className="text-slate-800 font-medium">{project.unit_count}</span></div>}
+                {project.disturbed_acres > 0 && <div><span className="text-slate-400">Disturbed Acres:</span> <span className="text-slate-800 font-medium">{project.disturbed_acres}</span></div>}
               </div>
-            </div>
-            <div>
-              <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><Calendar size={12} /> Timeline</div>
-              <div className="space-y-2 text-sm">
-                {profile.anticipated_start_date && <div><span className="text-slate-400">Start:</span> <span className="text-slate-800 font-medium">{profile.anticipated_start_date}</span></div>}
-                {profile.anticipated_end_date && <div><span className="text-slate-400">End:</span> <span className="text-slate-800 font-medium">{profile.anticipated_end_date}</span></div>}
-              </div>
+              {project.description && (
+                <div className="mt-4 pt-4 border-t">
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Description</div>
+                  <p className="text-sm text-slate-700">{project.description}</p>
+                </div>
+              )}
             </div>
           </div>
-          {profile.project_description && (
-            <div className="mt-5 p-4 rounded-lg bg-slate-50 border border-slate-200">
-              <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><Building2 size={12} /> Project Description</div>
-              <p className="text-sm text-slate-700">{profile.project_description}</p>
+
+          {profile && (
+            <div className="vt-card p-6 mb-6">
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><User size={12} /> Applicant</div>
+                  <div className="space-y-2 text-sm">
+                    <div><span className="text-slate-400">Name:</span> <span className="text-slate-800 font-medium">{profile.applicant_name}</span></div>
+                    {profile.applicant_email && <div><span className="text-slate-400">Email:</span> <span className="text-slate-800 font-medium">{profile.applicant_email}</span></div>}
+                    {profile.applicant_phone && <div><span className="text-slate-400">Phone:</span> <span className="text-slate-800 font-medium">{profile.applicant_phone}</span></div>}
+                    {profile.applicant_organization && <div><span className="text-slate-400">Organization:</span> <span className="text-slate-800 font-medium">{profile.applicant_organization}</span></div>}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><Calendar size={12} /> Timeline</div>
+                  <div className="space-y-2 text-sm">
+                    {profile.anticipated_start_date && <div><span className="text-slate-400">Start:</span> <span className="text-slate-800 font-medium">{profile.anticipated_start_date}</span></div>}
+                    {profile.anticipated_end_date && <div><span className="text-slate-400">End:</span> <span className="text-slate-800 font-medium">{profile.anticipated_end_date}</span></div>}
+                  </div>
+                </div>
+              </div>
+              {profile.project_description && (
+                <div className="mt-5 p-4 rounded-lg bg-slate-50 border border-slate-200">
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1.5"><Building2 size={12} /> Project Description</div>
+                  <p className="text-sm text-slate-700">{profile.project_description}</p>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </>
       )}
 
       {isEditing && (
