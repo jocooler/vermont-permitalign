@@ -314,7 +314,7 @@ function InlineTaskForm({ projectId, onSaved, onCancel }) {
 }
 
 // ── Project Detail ────────────────────────────────────────────────────────────
-function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
+function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded }) {
   const { permits: allPermits } = usePermits();
   const [activePermit, setActivePermit] = useState(null);
   const [activeTab, setActiveTab] = useState("tasks");
@@ -640,6 +640,7 @@ export default function Projects() {
           onBack={() => setView("list")}
           onStatusChange={handleStatusChange}
           onNotesChange={handleNotesChange}
+          onPermitAdded={(updated) => { setSelected(updated); setProjects(prev => prev.map(p => p.id === updated.id ? updated : p)); }}
         />
       )}
     </div>
