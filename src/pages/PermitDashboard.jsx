@@ -41,7 +41,7 @@ export default function PermitDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeProjectStatus, setActiveProjectStatus] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [filters, setFilters] = useState({ agency: "", projectType: "", town: "", county: "" });
+  const [filters, setFilters] = useState({ department: "", projectType: "", town: "", county: "" });
 
   useEffect(() => {
     base44.entities.Project.list("-created_date").then(p => {
@@ -51,14 +51,14 @@ export default function PermitDashboard() {
   }, []);
 
   // Get unique values for filter dropdowns
-  const uniqueAgencies = useMemo(() => {
-    const agencies = new Set();
+  const uniqueDepartments = useMemo(() => {
+    const departments = new Set();
     projects.forEach(p => {
       (p.identified_permits || []).forEach(ip => {
-        if (ip.agency) agencies.add(ip.agency);
+        if (ip.department) departments.add(ip.department);
       });
     });
-    return Array.from(agencies).sort();
+    return Array.from(departments).sort();
   }, [projects]);
 
   const uniqueTowns = useMemo(() => {
@@ -76,9 +76,9 @@ export default function PermitDashboard() {
     return projects.filter(p => {
       if (filters.projectType && p.project_type !== filters.projectType) return false;
       if (filters.town && p.town !== filters.town) return false;
-      if (filters.agency) {
-        const hasAgency = (p.identified_permits || []).some(ip => ip.agency === filters.agency);
-        if (!hasAgency) return false;
+      if (filters.department) {
+        const hasDepartment = (p.identified_permits || []).some(ip => ip.department === filters.department);
+        if (!hasDepartment) return false;
       }
       return true;
     });
@@ -202,16 +202,16 @@ export default function PermitDashboard() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold mb-1.5 text-slate-600">Agency</label>
+          <label className="block text-xs font-semibold mb-1.5 text-slate-600">Department</label>
           <select
-            value={filters.agency}
-            onChange={e => setFilters(f => ({ ...f, agency: e.target.value }))}
+            value={filters.department}
+            onChange={e => setFilters(f => ({ ...f, department: e.target.value }))}
             className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
             style={{ borderColor: "var(--vt-gray-light)" }}
           >
-            <option value="">All Agencies</option>
-            {uniqueAgencies.map(agency => (
-              <option key={agency} value={agency}>{agency}</option>
+            <option value="">All Departments</option>
+            {uniqueDepartments.map(department => (
+              <option key={department} value={department}>{department}</option>
             ))}
           </select>
         </div>
@@ -219,7 +219,7 @@ export default function PermitDashboard() {
         <div>
           <label className="block text-xs font-semibold mb-1.5 text-slate-600">Clear Filters</label>
           <button
-            onClick={() => setFilters({ agency: "", projectType: "", town: "", county: "" })}
+            onClick={() => setFilters({ department: "", projectType: "", town: "", county: "" })}
             className="w-full border rounded px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
             style={{ borderColor: "var(--vt-gray-light)" }}
           >
@@ -286,27 +286,27 @@ export default function PermitDashboard() {
           )}
         </div>
 
-        {/* Bar: Agency Approval Rate */}
+        {/* Bar: Department Approval Rate */}
         <div className="vt-card p-5 lg:col-span-3">
-          <h2 className="font-bold text-green-900 mb-4 text-sm uppercase tracking-wide">Agency Approval Rate</h2>
+          <h2 className="font-bold text-green-900 mb-4 text-sm uppercase tracking-wide">Department Approval Rate</h2>
           {totalPermits === 0 ? (
             <p className="text-sm text-slate-400 text-center py-8">No permit data yet</p>
           ) : (
             (() => {
-              const agencyStats = {};
+              const deptStats = {};
               allPermits.forEach(ip => {
-                if (!ip.agency) return;
-                if (!agencyStats[ip.agency]) {
-                  agencyStats[ip.agency] = { total: 0, approved: 0 };
+                if (!ip.department) return;
+                if (!deptStats[ip.department]) {
+                  deptStats[ip.department] = { total: 0, approved: 0 };
                 }
-                agencyStats[ip.agency].total++;
-                if (ip.status === "approved") agencyStats[ip.agency].approved++;
+                deptStats[ip.department].total++;
+                if (ip.status === "approved") deptStats[ip.department].approved++;
               });
-              const chartData = Object.entries(agencyStats)
-                .map(([agency, stats]) => ({
-                  name: agency.length > 20 ? agency.slice(0, 20) + "…" : agency,
+              const chartData = Object.entries(deptStats)
+                .map(([dept, stats]) => ({
+                  name: dept.length > 20 ? dept.slice(0, 20) + "…" : dept,
                   "Approval %": Math.round((stats.approved / stats.total) * 100),
-                  fullName: agency,
+                  fullName: dept,
                 }))
                 .sort((a, b) => b["Approval %"] - a["Approval %"]);
 
