@@ -93,9 +93,11 @@ export default function ReviewQueue() {
       if (hasSubmitted && selected.project.status === "draft") projectUpdate.status = "in_progress";
       await base44.entities.Project.update(selected.project.id, projectUpdate);
       setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
-      setSelected({ project: updated, ip: updated.identified_permits.find(ip => ip.permit_id === selected.ip.permit_id) });
       setSaveStatus("saved");
-      setTimeout(() => setSaveStatus(null), 2000);
+      setTimeout(() => {
+        setSaveStatus(null);
+        setSelected(null);
+      }, 2000);
     } catch (error) {
       setSaveStatus("error");
       setTimeout(() => setSaveStatus(null), 2000);
