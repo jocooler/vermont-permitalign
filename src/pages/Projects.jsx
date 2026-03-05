@@ -47,7 +47,7 @@ function ProjectForm({ onSave, onCancel }) {
     disturbed_acres: Number(form.disturbed_acres),
     creating_lots: form.creating_lots,
   };
-  const permits = determinePermits(conditions);
+  const permits = determinePermits(allPermits, conditions);
   const byPhase = [1, 2, 3, 4].map(phase => ({
     phase,
     permits: permits.filter(p => p.phase === phase),
