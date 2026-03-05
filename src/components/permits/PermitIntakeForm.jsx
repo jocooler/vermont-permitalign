@@ -366,6 +366,18 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, infoR
                 <p className="text-sm text-slate-500">{isInfoRequest ? "Upload documents and files responding to the agency's information request." : "Upload any plans, surveys, reports, or forms required for this permit."}</p>
               </div>
 
+              {isInfoRequest && infoRequested && (
+                <div className="rounded-lg p-4 border-l-4 border-amber-500 bg-amber-50 border border-amber-200">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle size={16} className="text-amber-700 flex-shrink-0 mt-0.5" style={{ minWidth: "20px" }} />
+                    <div className="flex-1">
+                      <div className="text-xs font-bold text-amber-900 mb-2 uppercase tracking-wide">Information Requested</div>
+                      <p className="text-sm text-amber-800 leading-relaxed whitespace-pre-wrap">{infoRequested}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="rounded-lg border-2 border-dashed border-slate-300 p-6 text-center hover:border-green-400 transition-colors">
                 <Upload size={28} className="mx-auto mb-2 text-slate-400" />
                 <p className="text-sm font-medium text-slate-600 mb-1">Drag & drop or click to upload</p>
