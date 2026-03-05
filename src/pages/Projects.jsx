@@ -503,6 +503,10 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
               (() => {
                 const priorityOrder = { high: 0, medium: 1, low: 2 };
                 const sorted = [...tasks].sort((a, b) => {
+                  const isProfileA = a.title === "Complete Project Profile";
+                  const isProfileB = b.title === "Complete Project Profile";
+                  if (isProfileA && !isProfileB) return -1;
+                  if (!isProfileA && isProfileB) return 1;
                   if (a.status === "completed" && b.status !== "completed") return 1;
                   if (a.status !== "completed" && b.status === "completed") return -1;
                   return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
