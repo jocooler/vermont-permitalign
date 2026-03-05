@@ -314,10 +314,13 @@ function InlineTaskForm({ projectId, onSaved, onCancel }) {
 }
 
 // ── Project Detail ────────────────────────────────────────────────────────────
-function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded }) {
+function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded, openPermitId }) {
   const { permits: allPermits } = usePermits();
-  const [activePermit, setActivePermit] = useState(null);
   const [activeTab, setActiveTab] = useState("permits");
+
+  const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
+  const initialPermit = openPermitId ? permits.find(p => p.id === openPermitId) || null : null;
+  const [activePermit, setActivePermit] = useState(initialPermit);
   const [tasks, setTasks] = useState([]);
   const [showAddPermit, setShowAddPermit] = useState(false);
 
