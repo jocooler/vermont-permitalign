@@ -209,6 +209,16 @@ export default function ReviewQueue() {
                 </button>
               );
             })}
+            <button
+              onClick={() => setShowApproved(v => !v)}
+              className="text-xs font-medium px-3 py-1 rounded-full border transition-all ml-auto"
+              style={showApproved
+                ? { background: "#15803d", color: "white", borderColor: "transparent" }
+                : { color: "var(--vt-gray-mid)", borderColor: "var(--vt-gray-light)", background: "white" }
+              }
+            >
+              {showApproved ? "✓ Approved" : "+ Show Approved"}
+            </button>
           </div>
 
           <div className="flex gap-6">
