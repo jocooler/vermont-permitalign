@@ -34,9 +34,10 @@ export default function ReviewQueue() {
 
   });
 
-  // Build agency list with counts
+  // Build agency list with counts (exclude approved/denied from counts)
   const agencyCounts = {};
   allItems.forEach(({ ip }) => {
+    if (ip.status === "approved" || ip.status === "denied") return;
     const agency = permitMeta[ip.permit_id]?.agency || ip.agency || "Unknown";
     agencyCounts[agency] = (agencyCounts[agency] || 0) + 1;
   });
