@@ -9,8 +9,8 @@ import PermitDetailPanel from "../components/permits/PermitDetailPanel";
 import StepIndicator from "../components/permits/StepIndicator";
 import SiteConditions from "../components/permits/SiteConditions";
 import ParcelPicker from "../components/permits/ParcelPicker";
+import AddPermitModal from "../components/permits/AddPermitModal";
 import TaskCard from "../components/tasks/TaskCard.jsx";
-import TaskEditForm from "../components/tasks/TaskEditForm.jsx";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
