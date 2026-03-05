@@ -19,7 +19,6 @@ const PRIORITY_CONFIG = {
 };
 
 export default function TasksPage() {
-  const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPriority, setFilterPriority] = useState("all");
   const [filterProject, setFilterProject] = useState("all");
@@ -149,15 +148,7 @@ export default function TasksPage() {
         </div>
       </div>
 
-      {showForm && (
-        <TaskForm
-          onClose={() => setShowForm(false)}
-          onSaved={() => {
-            setShowForm(false);
-            refetch();
-          }}
-        />
-      )}
+
     </div>
   );
 }
