@@ -199,6 +199,18 @@ export default function ReviewQueue() {
       doc.text(lines, 20, y);
     }
 
+    if (ip.documents && ip.documents.length > 0) {
+      y += 4;
+      doc.setFont(undefined, "bold"); doc.text("Attached Documents:", 20, y); y += 9;
+      doc.setFont(undefined, "normal");
+      ip.documents.forEach(doc_item => {
+        const docTitle = doc_item.title || doc_item.name || "Unnamed Document";
+        doc.text(`• ${docTitle}`, 25, y);
+        y += 6;
+        if (y > 270) { doc.addPage(); y = 20; }
+      });
+    }
+
     doc.save(`permit-${ip.permit_id}-${project.name.replace(/\s+/g, "-")}.pdf`);
   };
 
