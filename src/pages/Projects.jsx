@@ -392,7 +392,20 @@ export default function Projects() {
 
     // Auto-generate tasks for each identified permit
     const permitLookup = Object.fromEntries((allPermits || []).map(p => [p.id, p]));
-    const taskPromises = (data.identified_permits || []).map(ip => {
+
+    const phaseToP = { 1: "high", 2: "high", 3: "medium", 4: "low" };
+
+    // Top-priority task: complete project profile
+    const profileTask = base44.entities.Task.create({
+      project_id: saved.id,
+      title: "Complete Project Profile",
+      description: "Fill in applicant contact details, project description, and anticipated start/end dates. This information will be pre-filled on permit applications.",
+      task_type: "information_required",
+      status: "pending",
+      priority: "high",
+    });
+
+    const permitTaskPromises = (data.identified_permits || []).map(ip => {
       const permitData = permitLookup[ip.permit_id];
       const phase = permitData?.phase || 2;
       const phaseLabel = PHASE_CONFIG[phase]?.label || `Phase ${phase}`;
@@ -403,10 +416,11 @@ export default function Projects() {
         description: ip.why_required || "",
         task_type: "information_required",
         status: "pending",
-        priority: ip.category === "core" ? "high" : ip.category === "likely" ? "medium" : "low",
+        priority: phaseToP[phase] || "medium",
       });
     });
-    await Promise.all(taskPromises);
+
+    await Promise.all([profileTask, ...permitTaskPromises]);
 
     setProjects(prev => [saved, ...prev]);
     setSelected(saved);
