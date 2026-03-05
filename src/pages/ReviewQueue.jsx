@@ -46,7 +46,9 @@ export default function ReviewQueue() {
   const agencyItems = selectedAgency
     ? allItems.filter(({ ip }) => (permitMeta[ip.permit_id]?.agency || ip.agency || "Unknown") === selectedAgency)
     : [];
-  const baseItems = showApproved ? agencyItems : agencyItems.filter(i => i.ip.status !== "approved");
+  const baseItems = agencyItems
+    .filter(i => showApproved || i.ip.status !== "approved")
+    .filter(i => showDenied || i.ip.status !== "denied");
   const filtered = filterStatus === "all" ? baseItems : baseItems.filter(i => i.ip.status === filterStatus);
 
   const statusCounts = {};
