@@ -317,7 +317,7 @@ function InlineTaskForm({ projectId, onSaved, onCancel }) {
 function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded }) {
   const { permits: allPermits } = usePermits();
   const [activePermit, setActivePermit] = useState(null);
-  const [activeTab, setActiveTab] = useState("tasks");
+  const [activeTab, setActiveTab] = useState("permits");
   const [tasks, setTasks] = useState([]);
   const [showAddPermit, setShowAddPermit] = useState(false);
 
