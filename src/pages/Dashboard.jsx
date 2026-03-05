@@ -122,7 +122,7 @@ export default function Dashboard() {
                   const pct = Math.round((count / stats.total) * 100);
                   return (
                     <div key={status} className="flex items-center gap-3">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full w-28 text-center flex-shrink-0 ${cfg.textColor} ${cfg.bgColor}`}>{cfg.label}</span>
+                      <span className={`text-xs font-semibold px-3 py-1 rounded-full w-28 text-center flex-shrink-0 ${cfg.textColor} ${cfg.bgColor}`}>{cfg.label}</span>
                       <div className="flex-1 h-2 rounded-full bg-slate-100">
                         <div className={`h-2 rounded-full transition-all ${barColor}`} style={{ width: `${pct}%` }} />
                       </div>
@@ -178,7 +178,7 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${s.textColor} ${s.bgColor}`}>{s.label}</span>
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${s.textColor} ${s.bgColor}`}>{s.label}</span>
                         <ArrowRight size={14} className="text-slate-400" />
                       </div>
                     </Link>

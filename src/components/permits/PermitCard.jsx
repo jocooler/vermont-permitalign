@@ -31,10 +31,10 @@ export default function PermitCard({ permit, status, onClick }) {
       <p className="text-xs leading-relaxed" style={{ color: "var(--vt-gray)" }}>{permit.why}</p>
 
       <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "var(--vt-gray-light)" }}>
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-semibold" style={{ background: st.bg, color: st.color }}>
-          <div className="w-1.5 h-1.5 rounded-full" style={{ background: st.color }} />
-          {st.label}
-        </div>
+         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: st.bg, color: st.color }}>
+           <div className="w-1.5 h-1.5 rounded-full" style={{ background: st.color }} />
+           {st.label}
+         </div>
         <div className="flex items-center gap-1.5">
           {permit.info_sheet_url && (
             <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">

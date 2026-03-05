@@ -469,7 +469,7 @@ export default function PermitDashboard() {
                     </div>
                   )}
 
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0" style={{ color: s.color, background: s.bg }}>
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0" style={{ color: s.color, background: s.bg }}>
                     {s.label}
                   </span>
                   <ChevronRight size={14} className="text-slate-300 flex-shrink-0" />
