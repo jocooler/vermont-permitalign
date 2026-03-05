@@ -20,6 +20,7 @@ const FORM_STEPS = [
 
 // ── Project Creation Form ─────────────────────────────────────────────────────
 function ProjectForm({ onSave, onCancel }) {
+  const { permits: allPermits, loading: permitsLoading } = usePermits();
   const [step, setStep] = useState(0);
   const [showParcelMap, setShowParcelMap] = useState(false);
   const [saving, setSaving] = useState(false);
