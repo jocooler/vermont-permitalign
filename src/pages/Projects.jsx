@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Plus, ArrowLeft, ArrowRight, MapPin, Building2, CheckCircle2, ChevronRight, Info, Map } from "lucide-react";
+import { Plus, ArrowLeft, ArrowRight, MapPin, Building2, CheckCircle2, ChevronRight, Info, Map, ClipboardList, Clock, AlertCircle, Trash2, Edit2 } from "lucide-react";
 import { STATUS_CONFIG, CATEGORY_CONFIG, PHASE_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
 import { usePermits } from "../components/permits/usePermits";
 import PermitCard from "../components/permits/PermitCard";
@@ -9,6 +9,8 @@ import PermitDetailPanel from "../components/permits/PermitDetailPanel";
 import StepIndicator from "../components/permits/StepIndicator";
 import SiteConditions from "../components/permits/SiteConditions";
 import ParcelPicker from "../components/permits/ParcelPicker";
+import TaskCard from "../components/tasks/TaskCard.jsx";
+import TaskEditForm from "../components/tasks/TaskEditForm.jsx";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
