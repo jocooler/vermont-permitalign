@@ -1,13 +1,74 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { X, ArrowLeft, MapPin, Clock, Building2, AlertCircle, FileText, CheckCircle2, Download } from "lucide-react";
+import { X, ArrowLeft, MapPin, Clock, Building2, AlertCircle, FileText, CheckCircle2, Download, ExternalLink } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { STATUS_CONFIG } from "../components/permits/PERMIT_DATA";
 import { usePermits } from "../components/permits/usePermits";
 import ParcelPicker from "../components/permits/ParcelPicker";
 import { jsPDF } from "jspdf";
+
+// Permit-specific questions reference
+const PERMIT_SPECIFIC_FIELDS = {
+  "1": [
+    { key: "system_type", label: "Type of Wastewater System" },
+    { key: "daily_flow", label: "Estimated Daily Wastewater Flow (gallons/day)" },
+    { key: "soil_test_done", label: "Has a soil test / site evaluation been completed?" },
+    { key: "designer_name", label: "Licensed Designer Name" },
+  ],
+  "2": [
+    { key: "lot_count", label: "Number of lots being created" },
+    { key: "lot_sizes", label: "Approximate lot sizes (describe)" },
+    { key: "survey_complete", label: "Is a survey plat complete?" },
+  ],
+  "5": [
+    { key: "sewer_district", label: "Sewer District / Municipality" },
+    { key: "connection_size", label: "Proposed connection size (inches)" },
+    { key: "extension_length", label: "Approximate length of sewer extension (feet)" },
+  ],
+  "6.1": [
+    { key: "disturbed_area", label: "Total disturbed area (acres)" },
+    { key: "receiving_waters", label: "Nearest receiving water body" },
+    { key: "swppp_prepared", label: "Has a Stormwater Pollution Prevention Plan (SWPPP) been prepared?" },
+  ],
+  "6.2": [
+    { key: "impervious_area", label: "New impervious surface area (acres)" },
+    { key: "treatment_type", label: "Proposed stormwater treatment type" },
+  ],
+  "29": [
+    { key: "wetland_class", label: "Wetland class (if known)" },
+    { key: "wetland_impact_area", label: "Area of wetland impact (sq ft)" },
+    { key: "delineation_done", label: "Has a wetland delineation been completed?" },
+    { key: "delineator_name", label: "Wetland Scientist / Delineator Name" },
+  ],
+  "32.3": [
+    { key: "flood_zone", label: "FEMA Flood Zone designation" },
+    { key: "base_flood_elevation", label: "Base Flood Elevation (BFE) if known" },
+    { key: "lowest_floor_elevation", label: "Proposed lowest floor elevation" },
+  ],
+  "32": [
+    { key: "stream_name", label: "Name of stream" },
+    { key: "crossing_type", label: "Type of crossing or work" },
+    { key: "crossing_length", label: "Length of stream crossing or work area (ft)" },
+  ],
+  "47": [
+    { key: "act250_application_type", label: "Type of Act 250 Application" },
+    { key: "total_project_acres", label: "Total project acreage" },
+    { key: "nrb_district", label: "Natural Resources Board District (1–9)" },
+  ],
+  "49": [
+    { key: "building_use", label: "Building occupancy type" },
+    { key: "num_stories", label: "Number of stories" },
+    { key: "sprinklered", label: "Will the building be fully sprinklered?" },
+    { key: "construction_type", label: "Construction type (IBC)" },
+  ],
+  "66": [
+    { key: "highway_route", label: "State highway route number" },
+    { key: "access_type", label: "Type of access" },
+    { key: "vtrans_district", label: "VTrans District" },
+  ],
+};
 
 export default function PermitReviewDetail() {
   const navigate = useNavigate();
@@ -177,10 +238,22 @@ export default function PermitReviewDetail() {
       if (sc.elevation_feet != null) addField("Elevation", `${Math.round(sc.elevation_feet)} ft`);
     }
 
+    // Permit-Specific Answers
+    const parsedNotes = permitApp?.notes ? JSON.parse(permitApp.notes) : null;
+    if (parsedNotes?.specific_answers && Object.keys(parsedNotes.specific_answers).length > 0) {
+      addSection("Permit-Specific Answers");
+      const specificFields = PERMIT_SPECIFIC_FIELDS[selectedPermit.permit_id] || [];
+      specificFields.forEach(f => {
+        const answer = parsedNotes.specific_answers[f.key];
+        if (answer) addField(f.label, String(answer));
+      });
+    }
+
     // Attached Documents
-    if (permitApp?.attached_documents?.length > 0) {
+    const documents = parsedNotes?.uploaded_files || permitApp?.attached_documents || [];
+    if (documents.length > 0) {
       addSection("Attached Documents");
-      permitApp.attached_documents.forEach(doc => {
+      documents.forEach(doc => {
         addField("Document", doc.name);
       });
     }
@@ -349,26 +422,56 @@ export default function PermitReviewDetail() {
             </div>
           )}
 
-          {/* Attached Documents */}
-          {permitApp?.attached_documents?.length > 0 && (
-            <div className="rounded-lg border border-slate-200 bg-white p-6">
-              <h3 className="font-bold text-lg mb-4" style={{ color: "var(--vt-green-dark)" }}>Attached Documents</h3>
-              <div className="space-y-2">
-                {permitApp.attached_documents.map((doc, idx) => (
-                  <a
-                    key={idx}
-                    href={doc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
-                  >
-                    <FileText size={16} style={{ color: "#2d6a4f" }} />
-                    <span className="text-sm font-medium text-slate-900">{doc.name}</span>
-                  </a>
-                ))}
+          {/* Permit-Specific Answers */}
+          {(() => {
+            const parsedNotes = permitApp?.notes ? JSON.parse(permitApp.notes) : null;
+            const specificFields = PERMIT_SPECIFIC_FIELDS[selectedPermit.permit_id] || [];
+            const answers = parsedNotes?.specific_answers || {};
+            const hasAnswers = specificFields.some(f => answers[f.key]);
+            return hasAnswers && (
+              <div className="rounded-lg border border-slate-200 bg-white p-6">
+                <h3 className="font-bold text-lg mb-4" style={{ color: "var(--vt-green-dark)" }}>Permit-Specific Answers</h3>
+                <div className="space-y-4">
+                  {specificFields.map(f => {
+                    const answer = answers[f.key];
+                    if (!answer) return null;
+                    return (
+                      <div key={f.key}>
+                        <div className="text-xs font-semibold text-slate-400 mb-1">{f.label}</div>
+                        <div className="text-sm font-medium text-slate-900">{String(answer)}</div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
+
+          {/* Attached Documents */}
+          {(() => {
+            const parsedNotes = permitApp?.notes ? JSON.parse(permitApp.notes) : null;
+            const documents = parsedNotes?.uploaded_files || permitApp?.attached_documents || [];
+            return documents.length > 0 && (
+              <div className="rounded-lg border border-slate-200 bg-white p-6">
+                <h3 className="font-bold text-lg mb-4" style={{ color: "var(--vt-green-dark)" }}>Attached Documents</h3>
+                <div className="space-y-2">
+                  {documents.map((doc, idx) => (
+                    <a
+                      key={idx}
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+                    >
+                      <FileText size={16} style={{ color: "#2d6a4f" }} />
+                      <span className="text-sm font-medium text-slate-900 flex-1">{doc.name}</span>
+                      <ExternalLink size={14} className="text-slate-400" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Other Pending Permits */}
           {pendingPermits.length > 0 && (
