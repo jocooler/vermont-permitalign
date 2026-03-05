@@ -361,7 +361,7 @@ export default function PermitIntakeForm({ permit, project, isInfoRequest, onClo
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Supporting Documents</h3>
-                <p className="text-sm text-slate-500">Upload any plans, surveys, reports, or forms required for this permit.</p>
+                <p className="text-sm text-slate-500">{isInfoRequest ? "Upload documents and files responding to the agency's information request." : "Upload any plans, surveys, reports, or forms required for this permit."}</p>
               </div>
 
               <div className="rounded-lg border-2 border-dashed border-slate-300 p-6 text-center hover:border-green-400 transition-colors">
