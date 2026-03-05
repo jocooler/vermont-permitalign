@@ -265,9 +265,7 @@ export default function ProjectProfile() {
               </div>
             </div>
 
-            <div className="border-t pt-5"></div>
-
-            <div>
+            <div className="border-t pt-5">
               <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2"><User size={15} /> Applicant Information</h3>
               <div className="space-y-4">
                 {[
