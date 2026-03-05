@@ -383,6 +383,11 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
       {/* Permits Tab */}
       {activeTab === "permits" && (
         <>
+          <div className="flex justify-end mb-4">
+            <button onClick={() => setShowAddPermit(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded border" style={{ borderColor: "var(--vt-green)", color: "var(--vt-green)" }}>
+              <Plus size={13} /> Add Permit
+            </button>
+          </div>
           {permits.length === 0 ? (
             <div className="vt-card p-8 text-center text-sm" style={{ color: "var(--vt-gray-mid)" }}>No permits identified yet.</div>
           ) : (
@@ -407,6 +412,14 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
               })}
               <p className="text-xs mt-2" style={{ color: "var(--vt-gray-mid)" }}>Click any permit card to view details and update status.</p>
             </div>
+          )}
+          {showAddPermit && (
+            <AddPermitModal
+              project={project}
+              allPermits={allPermits}
+              onClose={() => setShowAddPermit(false)}
+              onAdded={(updatedProject) => { setShowAddPermit(false); onPermitAdded(updatedProject); }}
+            />
           )}
         </>
       )}
