@@ -54,6 +54,7 @@ function ProjectForm({ onSave, onCancel }) {
   })).filter(g => g.permits.length > 0);
 
   const handleSave = async () => {
+    if (permitsLoading) return;
     setSaving(true);
     const identified = permits.map(p => ({
       permit_id: p.id, permit_name: p.name, category: p.category,
