@@ -372,7 +372,7 @@ export default function ProjectProfile() {
         </div>
       )}
 
-      {profile && !isEditing && !isStaff && (
+      {!isEditing && !isStaff && (
         <div className="rounded-lg border border-green-200 bg-green-50 p-5">
           <p className="text-sm text-green-800">
             <strong>✓ Profile complete.</strong> This information will auto-fill when you start new permit applications.
