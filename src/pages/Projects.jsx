@@ -428,13 +428,17 @@ export default function Projects() {
   };
 
   const handleStatusChange = async (permitId, newStatus) => {
-    const updated = {
-      ...selected,
-      identified_permits: (selected.identified_permits || []).map(ip =>
-        ip.permit_id === permitId ? { ...ip, status: newStatus } : ip
-      )
-    };
-    await base44.entities.Project.update(selected.id, { identified_permits: updated.identified_permits });
+    const updatedPermits = (selected.identified_permits || []).map(ip =>
+      ip.permit_id === permitId ? { ...ip, status: newStatus } : ip
+    );
+    const updated = { ...selected, identified_permits: updatedPermits };
+    const hasSubmitted = updatedPermits.some(ip => ["submitted", "under_review", "info_requested", "approved", "denied"].includes(ip.status));
+    const projectUpdate = { identified_permits: updatedPermits };
+    if (hasSubmitted && selected.status === "draft") {
+      projectUpdate.status = "in_progress";
+      updated.status = "in_progress";
+    }
+    await base44.entities.Project.update(selected.id, projectUpdate);
     setSelected(updated);
     setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
   };
