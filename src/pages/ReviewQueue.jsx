@@ -208,7 +208,7 @@ export default function ReviewQueue() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
       <div className="mb-8">
-        <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--vt-green)" }}>Staff Portal</div>
+        <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#2d6a4f" }}>Staff Portal</div>
         <h1 className="text-2xl font-bold" style={{ color: "var(--vt-green-dark)" }}>Review Queue</h1>
         <p className="text-sm mt-1" style={{ color: "var(--vt-gray-mid)" }}>Select your agency to view active permit applications.</p>
       </div>
@@ -252,14 +252,14 @@ export default function ReviewQueue() {
                 key={agency}
                 onClick={() => { setSelectedAgency(isActive ? null : agency); setSelected(null); setFilterStatus("all"); }}
                 className="vt-card p-4 text-left transition-all hover:shadow-md flex items-start gap-3"
-                style={{ outline: isActive ? "2px solid var(--vt-green)" : "none", background: isActive ? "var(--vt-green-pale)" : "white" }}
+                style={{ outline: isActive ? "2px solid #2d6a4f" : "none", background: isActive ? "#d8f3dc" : "white" }}
               >
-                <Building2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: isActive ? "var(--vt-green)" : "var(--vt-gray-mid)" }} />
+                <Building2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: isActive ? "#2d6a4f" : "#718096" }} />
                 <div>
                   <div className="text-xs font-semibold leading-tight" style={{ color: isActive ? "var(--vt-green-dark)" : "var(--vt-gray-dark)" }}>
                     {agency}
                   </div>
-                  <div className="text-lg font-bold mt-1" style={{ color: isActive ? "var(--vt-green)" : "var(--vt-gray-mid)" }}>
+                  <div className="text-lg font-bold mt-1" style={{ color: isActive ? "#2d6a4f" : "#718096" }}>
                     {agencyCounts[agency]}
                   </div>
                 </div>
@@ -283,8 +283,8 @@ export default function ReviewQueue() {
                   onClick={() => setFilterStatus(s)}
                   className="text-xs font-medium px-3 py-1 rounded-full border transition-all"
                   style={filterStatus === s
-                    ? { background: cfg ? cfg.color : "var(--vt-green-dark)", color: "white", borderColor: "transparent" }
-                    : { color: "var(--vt-gray-mid)", borderColor: "var(--vt-gray-light)", background: "white" }
+                    ? { background: cfg ? cfg.color : "#1a3d2e", color: "white", borderColor: "transparent" }
+                    : { color: "#718096", borderColor: "#e2e8f0", background: "white" }
                   }
                 >
                   {s === "all" ? `All (${count})` : `${cfg?.label || s} (${count})`}
@@ -295,8 +295,8 @@ export default function ReviewQueue() {
               onClick={() => setShowCompleted(v => !v)}
               className="text-xs font-medium px-3 py-1 rounded-full border transition-all ml-auto"
               style={showCompleted
-                ? { background: "var(--vt-gray)", color: "white", borderColor: "transparent" }
-                : { color: "var(--vt-gray-mid)", borderColor: "var(--vt-gray-light)", background: "white" }
+                ? { background: "#4a5568", color: "white", borderColor: "transparent" }
+                : { color: "#718096", borderColor: "#e2e8f0", background: "white" }
               }
             >
               {showCompleted ? "✓ Completed" : "+ Show Completed"}
@@ -320,7 +320,7 @@ export default function ReviewQueue() {
                       <div
                         key={`${project.id}-${ip.permit_id}`}
                         className="vt-card p-4 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
-                        style={{ outline: isSelected ? "2px solid var(--vt-green)" : "none" }}
+                        style={{ outline: isSelected ? "2px solid #2d6a4f" : "none" }}
                         onClick={() => { setSelected({ project, ip }); setNoteText(ip.reviewer_notes || ""); setInfoRequestedText(ip.info_requested || ""); setSelectedStatus(ip.status); setSaveStatus(null); }}
                       >
                         <div className="flex-1 min-w-0">
@@ -339,7 +339,7 @@ export default function ReviewQueue() {
                             onClick={(e) => handleDownloadPDF(e, project, ip)}
                             title="Download PDF"
                             className="p-1.5 rounded hover:bg-green-50 transition-all"
-                            style={{ color: "var(--vt-green)" }}
+                              style={{ color: "#2d6a4f" }}
                           >
                             <Download size={14} />
                           </button>
@@ -458,7 +458,7 @@ export default function ReviewQueue() {
                     <button
                       onClick={(e) => handleDownloadPDF(e, selected.project, selected.ip)}
                       className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded border transition-all hover:bg-green-50"
-                      style={{ color: "var(--vt-green)", borderColor: "var(--vt-green)" }}
+                      style={{ color: "#2d6a4f", borderColor: "#2d6a4f" }}
                     >
                       <Download size={13} /> Download Application PDF
                     </button>
