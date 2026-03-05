@@ -237,7 +237,7 @@ export default function ProjectProfile() {
                     className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
                     style={{ borderColor: "var(--vt-gray-light)" }}
                     value={projectForm.address}
-                    onChange={e => setProject("address", e.target.value)}
+                    onChange={e => setProjectField("address", e.target.value)}
                     placeholder="Street address"
                   />
                 </div>
