@@ -187,8 +187,8 @@ export default function ReviewQueue() {
       addField("Phone", "—");
     }
     
-    if (project.profile?.project_description) {
-      addField("Project Description", project.profile.project_description);
+    if (project.description) {
+      addField("Project Description", project.description);
     }
     if (project.profile?.anticipated_start_date) {
       addField("Anticipated Start", project.profile.anticipated_start_date);

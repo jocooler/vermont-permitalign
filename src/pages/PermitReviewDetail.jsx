@@ -145,8 +145,8 @@ export default function PermitReviewDetail() {
       addField("Phone", "—");
     }
 
-    if (project.profile?.project_description) {
-      addField("Project Description", project.profile.project_description);
+    if (project.description) {
+      addField("Project Description", project.description);
     }
     if (project.profile?.anticipated_start_date) {
       addField("Anticipated Start", project.profile.anticipated_start_date);
@@ -238,10 +238,10 @@ export default function PermitReviewDetail() {
               )}
             </div>
 
-            {project.profile?.project_description && (
+            {project.description && (
               <div className="mt-4 pt-4 border-t">
                 <div className="text-xs font-semibold text-slate-400 mb-2">Project Description</div>
-                <p className="text-sm text-slate-700">{project.profile.project_description}</p>
+                <p className="text-sm text-slate-700">{project.description}</p>
               </div>
             )}
 
