@@ -4,8 +4,11 @@ import { Clock, CheckCircle2, AlertTriangle, ChevronRight, MessageSquare, ArrowU
 import { STATUS_CONFIG } from "../components/permits/PERMIT_DATA";
 import { usePermits } from "../components/permits/usePermits";
 import { jsPDF } from "jspdf";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function ReviewQueue() {
+  const navigate = useNavigate();
   const { permits: allPermits } = usePermits();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -332,13 +335,7 @@ export default function ReviewQueue() {
                         key={`${project.id}-${ip.permit_id}`}
                         className="vt-card p-4 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
                         style={{ outline: isSelected ? "2px solid #2d6a4f" : "none" }}
-                        onClick={() => { 
-                        setSelected({ project, ip }); 
-                        setNoteText(ip.reviewer_notes || ""); 
-                        setInfoRequestedText(ip.info_requested || ""); 
-                        setSelectedStatus(ip.status); 
-                        setSaveStatus(null); 
-                      }}
+                        onClick={() => navigate(createPageUrl(`PermitReviewDetail?projectId=${project.id}&permitId=${ip.permit_id}`))}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate" style={{ color: "var(--vt-gray-dark)" }}>
