@@ -41,6 +41,7 @@ export default function PermitDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeProjectStatus, setActiveProjectStatus] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [filters, setFilters] = useState({ agency: "", projectType: "", town: "", county: "" });
 
   useEffect(() => {
     base44.entities.Project.list("-created_date").then(p => {
@@ -49,11 +50,45 @@ export default function PermitDashboard() {
     });
   }, []);
 
-  // Flatten all permits across all projects
+  // Get unique values for filter dropdowns
+  const uniqueAgencies = useMemo(() => {
+    const agencies = new Set();
+    projects.forEach(p => {
+      (p.identified_permits || []).forEach(ip => {
+        if (ip.agency) agencies.add(ip.agency);
+      });
+    });
+    return Array.from(agencies).sort();
+  }, [projects]);
+
+  const uniqueTowns = useMemo(() => {
+    const towns = new Set();
+    projects.forEach(p => {
+      if (p.town) towns.add(p.town);
+    });
+    return Array.from(towns).sort();
+  }, [projects]);
+
+  const projectTypes = ["residential", "commercial", "industrial", "agricultural", "mixed_use"];
+
+  // Apply filters to projects
+  const filteredProjects = useMemo(() => {
+    return projects.filter(p => {
+      if (filters.projectType && p.project_type !== filters.projectType) return false;
+      if (filters.town && p.town !== filters.town) return false;
+      if (filters.agency) {
+        const hasAgency = (p.identified_permits || []).some(ip => ip.agency === filters.agency);
+        if (!hasAgency) return false;
+      }
+      return true;
+    });
+  }, [projects, filters]);
+
+  // Flatten all permits across filtered projects
   const allPermits = useMemo(() =>
-    projects.flatMap(p =>
+    filteredProjects.flatMap(p =>
       (p.identified_permits || []).map(ip => ({ ...ip, project: p }))
-    ), [projects]);
+    ), [filteredProjects]);
 
   // Permit status breakdown for pie chart
   const permitStatusData = useMemo(() => {
@@ -74,7 +109,7 @@ export default function PermitDashboard() {
 
   // Per-project permit bar chart data
   const projectBarData = useMemo(() =>
-    projects.slice(0, 8).map(p => {
+    filteredProjects.slice(0, 8).map(p => {
       const permits = p.identified_permits || [];
       const approved = permits.filter(ip => ip.status === "approved").length;
       const submitted = permits.filter(ip => ip.status === "submitted" || ip.status === "under_review").length;
@@ -92,7 +127,7 @@ export default function PermitDashboard() {
   // Project status breakdown for clickable cards
   const projectStatusBreakdown = useMemo(() => {
     const counts = {};
-    projects.forEach(p => {
+    filteredProjects.forEach(p => {
       const s = p.status || "draft";
       counts[s] = (counts[s] || 0) + 1;
     });
@@ -101,10 +136,10 @@ export default function PermitDashboard() {
       ...cfg,
       count: counts[status] || 0,
     })).filter(s => s.count > 0);
-  }, [projects]);
+  }, [filteredProjects]);
 
-  const filteredProjects = activeProjectStatus
-    ? projects.filter(p => (p.status || "draft") === activeProjectStatus)
+  const statusFilteredProjects = activeProjectStatus
+    ? filteredProjects.filter(p => (p.status || "draft") === activeProjectStatus)
     : [];
 
   const totalPermits = allPermits.length;
@@ -132,6 +167,65 @@ export default function PermitDashboard() {
           Permit Progress Dashboard
         </h1>
         <p className="text-slate-500 mt-1 text-sm">Permit status across all active projects</p>
+      </div>
+
+      {/* Filters */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        <div>
+          <label className="block text-xs font-semibold mb-1.5 text-slate-600">Project Type</label>
+          <select
+            value={filters.projectType}
+            onChange={e => setFilters(f => ({ ...f, projectType: e.target.value }))}
+            className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+            style={{ borderColor: "var(--vt-gray-light)" }}
+          >
+            <option value="">All Types</option>
+            {projectTypes.map(type => (
+              <option key={type} value={type}>{type.replace(/_/g, " ").toUpperCase()}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold mb-1.5 text-slate-600">Town</label>
+          <select
+            value={filters.town}
+            onChange={e => setFilters(f => ({ ...f, town: e.target.value }))}
+            className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+            style={{ borderColor: "var(--vt-gray-light)" }}
+          >
+            <option value="">All Towns</option>
+            {uniqueTowns.map(town => (
+              <option key={town} value={town}>{town}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold mb-1.5 text-slate-600">Agency</label>
+          <select
+            value={filters.agency}
+            onChange={e => setFilters(f => ({ ...f, agency: e.target.value }))}
+            className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400"
+            style={{ borderColor: "var(--vt-gray-light)" }}
+          >
+            <option value="">All Agencies</option>
+            {uniqueAgencies.map(agency => (
+              <option key={agency} value={agency}>{agency}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold mb-1.5 text-slate-600">Clear Filters</label>
+          <button
+            onClick={() => setFilters({ agency: "", projectType: "", town: "", county: "" })}
+            className="w-full border rounded px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            style={{ borderColor: "var(--vt-gray-light)" }}
+          >
+            Reset
+          </button>
+        </div>
       </div>
 
       {/* Top Metrics */}
@@ -244,14 +338,14 @@ export default function PermitDashboard() {
         <div className="vt-card p-5 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-green-900">
-              {PROJECT_STATUS_CFG[activeProjectStatus]?.label} Projects ({filteredProjects.length})
+              {PROJECT_STATUS_CFG[activeProjectStatus]?.label} Projects ({statusFilteredProjects.length})
             </h3>
             <button onClick={() => setActiveProjectStatus(null)} className="p-1 rounded hover:bg-slate-100 text-slate-400">
               <X size={16} />
             </button>
           </div>
           <div className="space-y-2">
-            {filteredProjects.map(p => {
+            {statusFilteredProjects.map(p => {
               const permits = p.identified_permits || [];
               const approved = permits.filter(ip => ip.status === "approved").length;
               const pct = permits.length ? Math.round((approved / permits.length) * 100) : 0;
@@ -290,7 +384,7 @@ export default function PermitDashboard() {
       )}
 
       {/* All Projects Table */}
-      {!activeProjectStatus && projects.length > 0 && (
+      {!activeProjectStatus && filteredProjects.length > 0 && (
         <div className="vt-card overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
             <h2 className="font-bold text-green-900 text-sm uppercase tracking-wide">All Projects</h2>
@@ -299,7 +393,7 @@ export default function PermitDashboard() {
             </Link>
           </div>
           <div className="divide-y divide-slate-50">
-            {projects.map(p => {
+            {filteredProjects.map(p => {
               const s = PROJECT_STATUS_CFG[p.status] || PROJECT_STATUS_CFG.draft;
               const permits = p.identified_permits || [];
               const approved = permits.filter(ip => ip.status === "approved").length;
@@ -347,6 +441,14 @@ export default function PermitDashboard() {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {filteredProjects.length === 0 && projects.length > 0 && (
+        <div className="vt-card p-12 text-center">
+          <Building2 size={36} className="mx-auto mb-3 text-green-200" />
+          <p className="font-semibold text-slate-600 mb-1">No projects match filters</p>
+          <p className="text-sm text-slate-400 mb-4">Try adjusting your filter criteria</p>
         </div>
       )}
 
