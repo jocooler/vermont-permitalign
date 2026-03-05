@@ -215,9 +215,11 @@ function ProjectForm({ onSave, onCancel }) {
                 {[form.town, `${form.unit_count} units`, `${form.disturbed_acres} ac. disturbed`].filter(Boolean).join(" · ")}
               </div>
               <div className="flex gap-2 mt-2 flex-wrap">
-                {byCategory.core.length > 0 && <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.core.length} core</span>}
-                {byCategory.likely.length > 0 && <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.likely.length} likely</span>}
-                {byCategory.conditional.length > 0 && <span className="text-xs bg-indigo-500 text-white px-2 py-0.5 rounded-full font-semibold">{byCategory.conditional.length} conditional</span>}
+                {byPhase.map(({ phase, permits: pp }) => (
+                  <span key={phase} className="text-xs text-white px-2 py-0.5 rounded-full font-semibold" style={{ background: PHASE_CONFIG[phase]?.color || "#64748b" }}>
+                    Ph{phase}: {pp.length}
+                  </span>
+                ))}
               </div>
             </div>
             <div className="text-center bg-white/10 rounded-lg px-4 py-2 flex-shrink-0">
