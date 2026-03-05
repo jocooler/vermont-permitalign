@@ -38,11 +38,8 @@ export default function TaskCard({ task, onUpdated }) {
   // Determine action link: permit tasks → project permits tab, profile task → project profile
   const getActionUrl = () => {
     if (!task.project_id) return null;
-    if (task.permit_id) {
-      return `${createPageUrl("Projects")}?project=${task.project_id}&tab=permits`;
-    }
     if (task.title?.toLowerCase().includes("profile")) {
-      return `${createPageUrl("ProjectProfile")}?id=${task.project_id}`;
+      return `${createPageUrl("ProjectProfile")}?id=${task.project_id}&back=project`;
     }
     return `${createPageUrl("Projects")}?project=${task.project_id}`;
   };
