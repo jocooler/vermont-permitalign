@@ -316,15 +316,12 @@ function InlineTaskForm({ projectId, onSaved, onCancel }) {
 // ── Project Detail ────────────────────────────────────────────────────────────
 function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded, openPermitId }) {
   const { permits: allPermits } = usePermits();
-  const [activeTab, setActiveTab] = useState("permits");
-
-  const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
-  const initialPermit = openPermitId ? permits.find(p => p.id === openPermitId) || null : null;
-  const [activePermit, setActivePermit] = useState(initialPermit);
   const [tasks, setTasks] = useState([]);
   const [showAddPermit, setShowAddPermit] = useState(false);
 
   const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
+  const [activeTab, setActiveTab] = useState("permits");
+  const [activePermit, setActivePermit] = useState(() => openPermitId ? permits.find(p => p.id === openPermitId) || null : null);
   const ipMap = Object.fromEntries((project.identified_permits || []).map(ip => [ip.permit_id, ip]));
   const approvedCount = (project.identified_permits || []).filter(ip => ip.status === "approved").length;
   const totalCount = (project.identified_permits || []).length;
