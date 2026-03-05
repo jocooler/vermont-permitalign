@@ -319,7 +319,7 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange }) {
   const [activePermit, setActivePermit] = useState(null);
   const [activeTab, setActiveTab] = useState("tasks");
   const [tasks, setTasks] = useState([]);
-  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [showAddPermit, setShowAddPermit] = useState(false);
 
   const permits = allPermits.filter(p => (project.identified_permits || []).some(ip => ip.permit_id === p.id));
   const ipMap = Object.fromEntries((project.identified_permits || []).map(ip => [ip.permit_id, ip]));
