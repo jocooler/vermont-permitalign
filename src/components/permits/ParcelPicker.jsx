@@ -477,18 +477,18 @@ export default function ParcelPicker({ onClose, onSelect }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black/60">
-      <div className="bg-white flex flex-col h-full">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 flex-shrink-0" style={{ background: "#1a3d2e" }}>
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-green-300">Vermont Parcel Finder</div>
-            <div className="text-white font-semibold text-sm">Search or click a parcel to select it</div>
-          </div>
-          <button onClick={onClose} className="text-white/70 hover:text-white p-1 rounded">
-            <X size={20} />
-          </button>
-        </div>
+    <div className="fixed inset-0 z-50 flex flex-col bg-black/60" onClick={onClose}>
+      <div className="bg-white flex flex-col h-full" onClick={e => e.stopPropagation()}>
+         {/* Header */}
+         <div className="flex items-center justify-between px-4 py-3 flex-shrink-0" style={{ background: "#1a3d2e" }}>
+           <div>
+             <div className="text-xs font-bold uppercase tracking-widest text-green-300">Vermont Parcel Finder</div>
+             <div className="text-white font-semibold text-sm">Search or click a parcel to select it</div>
+           </div>
+           <button onClick={onClose} className="text-white/70 hover:text-white p-1 rounded">
+             <X size={20} />
+           </button>
+         </div>
 
         {/* Search Bar */}
         <div className="flex-shrink-0 px-3 py-2 border-b bg-slate-50 flex gap-2 flex-wrap items-center">
