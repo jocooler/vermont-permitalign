@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Plus, ArrowLeft, ArrowRight, MapPin, Building2, CheckCircle2, ChevronRight, Info, Map, ClipboardList, Clock, AlertCircle, Trash2, Edit2 } from "lucide-react";
+import { Plus, ArrowLeft, ArrowRight, MapPin, Building2, CheckCircle2, ChevronRight, Info, Map, ClipboardList, Clock, AlertCircle, Trash2, Edit2, AlertTriangle } from "lucide-react";
 import { STATUS_CONFIG, CATEGORY_CONFIG, PHASE_CONFIG, determinePermits } from "../components/permits/PERMIT_DATA";
 import { usePermits } from "../components/permits/usePermits";
 import PermitCard from "../components/permits/PermitCard";
@@ -314,10 +314,12 @@ function InlineTaskForm({ projectId, onSaved, onCancel }) {
 }
 
 // ── Project Detail ────────────────────────────────────────────────────────────
-function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded, openPermitId }) {
+function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermitAdded, openPermitId, onProjectDeleted }) {
   const { permits: allPermits } = usePermits();
   const [tasks, setTasks] = useState([]);
   const [showAddPermit, setShowAddPermit] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const [activeTab, setActiveTab] = useState("permits");
 
@@ -331,6 +333,58 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
   useEffect(() => { loadTasks(); }, [project.id]);
 
   const pendingTasks = tasks.filter(t => t.status !== "completed" && t.status !== "cancelled").length;
+
+  const handleDeleteProject = async () => {
+    setDeleting(true);
+    try {
+      // Delete all associated tasks
+      await Promise.all(tasks.map(t => base44.entities.Task.delete(t.id)));
+      // Delete the project
+      await base44.entities.Project.delete(project.id);
+      setDeleting(false);
+      onProjectDeleted();
+    } catch (error) {
+      setDeleting(false);
+      alert("Error deleting project: " + error.message);
+    }
+  };
+
+  if (showDeleteConfirm) {
+    return (
+      <div>
+        <button onClick={onBack} className="flex items-center gap-1.5 text-sm font-medium mb-6 hover:opacity-70 transition-opacity" style={{ color: "var(--vt-green)" }}>
+          <ArrowLeft size={15} /> All Projects
+        </button>
+        <div className="vt-card p-8 border-l-4 border-red-500">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="text-red-600 flex-shrink-0 mt-0.5" size={24} />
+            <div className="flex-1">
+              <h3 className="font-bold text-lg text-red-900 mb-2">Delete Project?</h3>
+              <p className="text-sm text-red-800 mb-4">
+                This will permanently delete <strong>{project.name}</strong> and all associated permits and tasks. This action cannot be undone.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-4 py-2 text-sm font-semibold rounded border"
+                  style={{ borderColor: "var(--vt-gray-light)", color: "var(--vt-gray)" }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteProject}
+                  disabled={deleting}
+                  className="px-4 py-2 text-sm font-semibold rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-60"
+                >
+                  {deleting ? "Deleting..." : "Delete Project"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -364,10 +418,16 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <a href={`${createPageUrl("ProjectProfile")}?id=${project.id}&back=project`} className="text-xs font-semibold text-green-700 hover:text-green-900 underline">
           Edit Profile
         </a>
+        <button
+          onClick={() => setShowDeleteConfirm(true)}
+          className="flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-red-800 transition-colors"
+        >
+          <Trash2 size={13} /> Delete Project
+        </button>
       </div>
 
       {/* Tabs */}
@@ -661,6 +721,7 @@ export default function Projects() {
           onNotesChange={handleNotesChange}
           onPermitAdded={(updated) => { setSelected(updated); setProjects(prev => prev.map(p => p.id === updated.id ? updated : p)); }}
           openPermitId={openPermitId}
+          onProjectDeleted={() => { setSelected(null); setView("list"); setProjects(prev => prev.filter(p => p.id !== selected.id)); }}
         />
       )}
     </div>
