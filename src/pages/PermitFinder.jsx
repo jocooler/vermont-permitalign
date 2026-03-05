@@ -29,13 +29,14 @@ const defaultConditions = {
 };
 
 export default function PermitFinder() {
+  const { permits: allPermits } = usePermits();
   const [step, setStep] = useState(0);
   const [conditions, setConditions] = useState(defaultConditions);
   const [expandedPermit, setExpandedPermit] = useState(null);
 
   const set = (key, val) => setConditions(prev => ({ ...prev, [key]: val }));
 
-  const matchedPermits = determinePermits(conditions);
+  const matchedPermits = determinePermits(allPermits, conditions);
   const byCategory = {
     core: matchedPermits.filter(p => p.category === "core"),
     likely: matchedPermits.filter(p => p.category === "likely"),
