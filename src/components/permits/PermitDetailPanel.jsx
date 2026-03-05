@@ -3,6 +3,7 @@ import { X, ExternalLink, FileText, Clock, Building2, ChevronRight, CheckCircle2
 import { STATUS_CONFIG, CATEGORY_CONFIG } from "./PERMIT_DATA";
 import PermitIntakeForm from "./PermitIntakeForm";
 import PermitTimeline from "./PermitTimeline";
+import ApplicantFeeModal from "./ApplicantFeeModal";
 
 const STATUS_OPTS = ["not_started", "in_progress", "submitted", "under_review", "info_requested", "approved", "denied"];
 
@@ -18,6 +19,8 @@ const STATUS_DESCRIPTIONS = {
 
 export default function PermitDetailPanel({ permit, project, ipData, onClose, onStatusChange, onNotesChange }) {
   const [showIntakeForm, setShowIntakeForm] = useState(false);
+  const [showFeeModal, setShowFeeModal] = useState(false);
+  const [feePaid, setFeePaid] = useState(false);
 
   if (!permit) return null;
 
@@ -160,7 +163,7 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
               {currentStatus === "info_requested" ? "Submit Requested Information" : "Application"}
             </div>
             <button
-              onClick={() => setShowIntakeForm(true)}
+              onClick={() => !feePaid ? setShowFeeModal(true) : setShowIntakeForm(true)}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition-colors"
               style={{
                 background: currentStatus === "info_requested" ? "#d97706" : "#16a34a",
@@ -169,7 +172,7 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
               onMouseEnter={(e) => e.target.style.opacity = "0.9"}
               onMouseLeave={(e) => e.target.style.opacity = "1"}
             >
-              <ClipboardList size={15} /> {currentStatus === "info_requested" ? "Submit Response" : "Start / Complete Application"}
+              <ClipboardList size={15} /> {!feePaid ? "Pay & Submit Application" : "Start / Complete Application"}
             </button>
             {(currentStatus === "submitted" || currentStatus === "under_review" || currentStatus === "approved") && (
               <p className="mt-2 text-xs text-center text-green-700">Application previously submitted for this permit.</p>
@@ -190,6 +193,15 @@ export default function PermitDetailPanel({ permit, project, ipData, onClose, on
           </div>
         </div>
       </div>
+
+      {showFeeModal && (
+        <ApplicantFeeModal
+          permit={permit}
+          project={project}
+          onClose={() => setShowFeeModal(false)}
+          onPaymentComplete={() => setFeePaid(true)}
+        />
+      )}
 
       {showIntakeForm && (
         <PermitIntakeForm
