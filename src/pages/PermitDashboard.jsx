@@ -42,6 +42,7 @@ export default function PermitDashboard() {
   const [activeProjectStatus, setActiveProjectStatus] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [filters, setFilters] = useState({ department: "", projectType: "", town: "", county: "" });
+  const isStaff = localStorage.getItem("vt_portal_mode") === "staff";
 
   useEffect(() => {
     base44.entities.Project.list("-created_date").then(p => {
@@ -368,10 +369,10 @@ export default function PermitDashboard() {
               const pct = permits.length ? Math.round((approved / permits.length) * 100) : 0;
               return (
                 <Link
-                  key={p.id}
-                  to={createPageUrl("Projects")}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-slate-100 cursor-pointer"
-                >
+                   key={p.id}
+                   to={isStaff ? `${createPageUrl("ProjectProfile")}?id=${p.id}` : createPageUrl("Projects")}
+                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-slate-100 cursor-pointer"
+                 >
                   <div className="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
                     <Building2 size={16} className="text-green-700" />
                   </div>
@@ -422,10 +423,10 @@ export default function PermitDashboard() {
 
               return (
                 <Link
-                  key={p.id}
-                  to={createPageUrl("Projects")}
-                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors"
-                >
+                   key={p.id}
+                   to={isStaff ? `${createPageUrl("ProjectProfile")}?id=${p.id}` : createPageUrl("Projects")}
+                   className="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors"
+                 >
                   <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
                     <Building2 size={15} className="text-green-700" />
                   </div>
