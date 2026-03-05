@@ -139,10 +139,7 @@ export default function TasksPage() {
             ))
           ) : (
             <div className="vt-card p-8 text-center">
-              <p className="text-slate-500 mb-4">No tasks match your filters</p>
-              <Button onClick={() => setShowForm(true)} variant="outline" className="gap-2">
-                <Plus size={16} /> Create Task
-              </Button>
+              <p className="text-slate-500">No tasks match your filters</p>
             </div>
           )}
         </div>
