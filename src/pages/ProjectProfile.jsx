@@ -250,7 +250,7 @@ export default function ProjectProfile() {
                         min={1}
                         max={20}
                         value={projectForm.unit_count}
-                        onChange={e => setProject("unit_count", Number(e.target.value))}
+                        onChange={e => setProjectField("unit_count", Number(e.target.value))}
                         className="flex-1"
                         style={{ accentColor: "var(--vt-green)" }}
                       />
