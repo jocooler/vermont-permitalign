@@ -7,6 +7,7 @@ import { createPageUrl } from "@/utils";
 export default function ProjectProfile() {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get("id");
+  const backToProject = searchParams.get("back") === "project";
   
   const [project, setProject] = useState(null);
   const [profile, setProfile] = useState(null);

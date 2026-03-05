@@ -351,7 +351,7 @@ function ProjectDetail({ project, onBack, onStatusChange, onNotesChange, onPermi
             {project.description && <p className="mt-2 text-sm text-green-100 opacity-80 line-clamp-2">{project.description}</p>}
           </div>
           <div className="flex items-center gap-2 flex-shrink-0 flex-col">
-            <a href={`${createPageUrl("ProjectProfile")}?id=${project.id}`} className="px-3 py-1.5 text-xs font-semibold rounded bg-white hover:bg-green-50 transition-colors" style={{ color: "var(--vt-green-dark)" }}>Profile</a>
+            <a href={`${createPageUrl("ProjectProfile")}?id=${project.id}&back=project`} className="px-3 py-1.5 text-xs font-semibold rounded bg-white hover:bg-green-50 transition-colors" style={{ color: "var(--vt-green-dark)" }}>Profile</a>
             <div className="text-center bg-white/10 rounded-lg px-4 py-2">
               <div className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>{approvedCount}/{totalCount}</div>
               <div className="text-xs text-green-200">permits done</div>
