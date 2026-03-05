@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, ExternalLink, FileText, Clock, Building2, ChevronRight, CheckCircle2, AlertCircle, Info, ClipboardList } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import { STATUS_CONFIG, CATEGORY_CONFIG } from "./PERMIT_DATA";
 import PermitIntakeForm from "./PermitIntakeForm";
 import PermitTimeline from "./PermitTimeline";
