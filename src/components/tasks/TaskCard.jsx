@@ -35,11 +35,14 @@ export default function TaskCard({ task, onUpdated }) {
     onUpdated();
   };
 
-  // Determine action link: permit tasks → project permits tab, profile task → project profile
+  // Determine action link: permit tasks → project with permit panel open, profile task → project profile
   const getActionUrl = () => {
     if (!task.project_id) return null;
     if (task.title?.toLowerCase().includes("profile")) {
       return `${createPageUrl("ProjectProfile")}?id=${task.project_id}&back=project`;
+    }
+    if (task.permit_id) {
+      return `${createPageUrl("Projects")}?project=${task.project_id}&permit=${task.permit_id}`;
     }
     return `${createPageUrl("Projects")}?project=${task.project_id}`;
   };
