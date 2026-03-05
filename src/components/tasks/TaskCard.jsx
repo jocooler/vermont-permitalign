@@ -99,13 +99,13 @@ export default function TaskCard({ task, onUpdated }) {
           </div>
         </div>
 
-        {actionUrl && !isCompleted && (
+        {actionUrl && (
           <a
             href={actionUrl}
             className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded border hover:bg-green-50 transition-colors"
             style={{ borderColor: "var(--vt-green)", color: "var(--vt-green)" }}
           >
-            Take Action <ExternalLink size={11} />
+            {isCompleted ? <>View Project <ExternalLink size={11} /></> : <>Take Action <ExternalLink size={11} /></>}
           </a>
         )}
       </div>
