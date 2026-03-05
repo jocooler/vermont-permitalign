@@ -1,20 +1,45 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { useState } from "react";
-import { Menu, X, Mountain, ChevronRight, Home, FolderOpen, ClipboardList, BarChart3 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, Mountain, ChevronRight, Home, FolderOpen, ClipboardList, BarChart3, ArrowLeftRight } from "lucide-react";
 
-const navLinks = [
+const APPLICANT_LINKS = [
   { name: "Dashboard", page: "Dashboard", Icon: Home },
   { name: "My Projects", page: "Projects", Icon: FolderOpen },
   { name: "Tasks", page: "Tasks", Icon: ClipboardList },
   { name: "Permit Finder", page: "PermitFinder", Icon: ClipboardList },
+];
+
+const STAFF_LINKS = [
+  { name: "Dashboard", page: "Dashboard", Icon: Home },
   { name: "Review Queue", page: "ReviewQueue", Icon: BarChart3 },
   { name: "Progress Dashboard", page: "PermitDashboard", Icon: BarChart3 },
   { name: "Performance Metrics", page: "PermitMetrics", Icon: BarChart3 },
 ];
 
+const PORTAL_EXEMPT_PAGES = ["PortalSelect"];
+
 export default function Layout({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [portalMode, setPortalMode] = useState(() => localStorage.getItem("vt_portal_mode") || null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const stored = localStorage.getItem("vt_portal_mode");
+    if (!stored && !PORTAL_EXEMPT_PAGES.includes(currentPageName)) {
+      navigate(createPageUrl("PortalSelect"));
+    } else {
+      setPortalMode(stored);
+    }
+  }, [currentPageName]);
+
+  const navLinks = portalMode === "staff" ? STAFF_LINKS : APPLICANT_LINKS;
+  const isStaff = portalMode === "staff";
+
+  const handleSwitchPortal = () => {
+    localStorage.removeItem("vt_portal_mode");
+    navigate(createPageUrl("PortalSelect"));
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
