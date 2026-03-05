@@ -138,12 +138,26 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
   const [uploadedFiles, setUploadedFiles] = useState([]); // [{name, url}]
 
   const specificFields = PERMIT_SPECIFIC_FIELDS[permit.id] || [];
+  const hasSpecificQuestions = specificFields.length > 0;
   
   // Build dynamic steps based on permit content
   const STEPS = BASE_STEPS.filter((_, i) => {
-    if (i === 2) return specificFields.length > 0; // Hide "Specific Questions" if no fields
+    if (i === 2) return hasSpecificQuestions; // Hide "Specific Questions" if no fields
     return true;
   });
+  
+  // Map actual step index to BASE_STEPS index for rendering
+  const getBaseStepIndex = (actualStep) => {
+    let baseIndex = 0;
+    for (let i = 0; i < BASE_STEPS.length; i++) {
+      if (i === 2 && !hasSpecificQuestions) continue;
+      if (baseIndex === actualStep) return i;
+      baseIndex++;
+    }
+    return BASE_STEPS.length - 1;
+  };
+  
+  const baseStep = getBaseStepIndex(step);
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -231,7 +245,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
         <div className="px-6 py-5 flex-1">
 
           {/* Step 0: Applicant Info */}
-          {step === 0 && (
+          {baseStep === 0 && (
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Applicant Information</h3>
@@ -265,7 +279,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
           )}
 
           {/* Step 1: Project Details */}
-          {step === 1 && (
+          {baseStep === 1 && (
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Project & Site Details</h3>
@@ -317,7 +331,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
           )}
 
           {/* Step 2: Permit-Specific Questions */}
-          {step === 2 && (
+          {baseStep === 2 && (
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Permit-Specific Questions</h3>
@@ -343,7 +357,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
           )}
 
           {/* Step 3: Document Uploads */}
-          {step === 3 && (
+          {baseStep === 3 && (
             <div className="space-y-4">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Supporting Documents</h3>
@@ -389,7 +403,7 @@ export default function PermitIntakeForm({ permit, project, onClose, onSubmitted
           )}
 
           {/* Step 4: Review & Submit */}
-          {step === 4 && (
+          {baseStep === 4 && (
             <div className="space-y-5">
               <div>
                 <h3 className="font-bold text-green-900 mb-0.5">Review & Submit</h3>
