@@ -314,7 +314,13 @@ export default function ReviewQueue() {
                         key={`${project.id}-${ip.permit_id}`}
                         className="vt-card p-4 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
                         style={{ outline: isSelected ? "2px solid #2d6a4f" : "none" }}
-                        onClick={() => { setSelected({ project, ip }); setNoteText(ip.reviewer_notes || ""); setInfoRequestedText(ip.info_requested || ""); setSelectedStatus(ip.status); setSaveStatus(null); }}
+                        onClick={() => { 
+                        setSelected({ project, ip }); 
+                        setNoteText(ip.reviewer_notes || ""); 
+                        setInfoRequestedText(ip.info_requested || ""); 
+                        setSelectedStatus(ip.status); 
+                        setSaveStatus(null); 
+                      }}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate" style={{ color: "var(--vt-gray-dark)" }}>
