@@ -329,6 +329,7 @@ export default function PermitReviewDetail() {
                 readOnly={true}
                 latitude={project.latitude}
                 longitude={project.longitude}
+                span={project.parcel_id}
               />
             </div>
           </div>
