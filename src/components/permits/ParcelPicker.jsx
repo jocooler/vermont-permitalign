@@ -209,7 +209,7 @@ function centroidOfRing(rings) {
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export default function ParcelPicker({ onClose, onSelect, readOnly = false, initialAddress = null, initialTown = null, latitude = null, longitude = null }) {
+export default function ParcelPicker({ onClose, onSelect, readOnly = false, initialAddress = null, initialTown = null, latitude = null, longitude = null, span = null }) {
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
   const parcelLayerRef = useRef(null);
