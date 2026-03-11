@@ -312,6 +312,16 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
     return () => { map.remove(); leafletMapRef.current = null; };
   }, [mapReady]);
 
+  // Auto-zoom to parcel by SPAN in read-only mode
+  useEffect(() => {
+    if (!mapReady || !readOnly || !span || !leafletMapRef.current) return;
+    const doZoom = async () => {
+      const feature = await searchBySpan(span);
+      if (feature) highlightParcel(feature);
+    };
+    doZoom();
+  }, [mapReady, span]);
+
   const highlightParcel = (feature) => {
     const L = window.L;
     const map = leafletMapRef.current;
