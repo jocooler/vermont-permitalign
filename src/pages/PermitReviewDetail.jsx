@@ -112,6 +112,13 @@ export default function PermitReviewDetail() {
   const selectedPermit = project.identified_permits?.find(ip => ip.permit_id === permitId);
   if (!selectedPermit) return <div className="max-w-6xl mx-auto px-4 py-10 text-center">Permit not found</div>;
 
+  // Initialize selectedStatus from current permit status if not yet set
+  if (selectedStatus === null && selectedPermit.status) {
+    setSelectedStatus(selectedPermit.status);
+    setNoteText(selectedPermit.reviewer_notes || "");
+    setInfoRequestedText(selectedPermit.info_requested || "");
+  }
+
   const pendingPermits = project.identified_permits?.filter(ip => !["approved", "denied"].includes(ip.status)) || [];
   const permitMeta_selected = permitMeta[selectedPermit.permit_id];
 
