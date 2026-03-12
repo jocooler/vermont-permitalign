@@ -73,7 +73,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
             <div>
               <div className="text-xs font-semibold uppercase tracking-widest text-green-800 leading-none">Vermont</div>
-              <div className="font-bold text-sm leading-tight text-green-900" style={{ fontFamily: "Georgia, serif" }}>Permit Program</div>
+              <div className="font-bold text-sm leading-tight text-green-900" style={{ fontFamily: "Georgia, serif" }}>Permit Path</div>
             </div>
           </Link>
 
