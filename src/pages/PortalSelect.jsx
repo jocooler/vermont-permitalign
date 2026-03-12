@@ -23,10 +23,10 @@ export default function PortalSelect() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(160deg, #0f2d1f 0%, #1a3d2e 40%, #2d6a4f 100%)" }}>
       {/* Gov bar */}
-      <div className="bg-green-950 text-white text-xs py-1.5 px-4 flex items-center gap-2">
-        <Mountain size={13} className="opacity-80" />
-        <span className="font-semibold tracking-wide uppercase opacity-90">An Official Vermont Government Website</span>
-      </div>
+      
+
+
+
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         {/* Logo */}
@@ -47,8 +47,8 @@ export default function PortalSelect() {
           {/* Applicant Portal */}
           <button
             onClick={() => selectPortal("applicant")}
-            className="group relative bg-white rounded-2xl p-8 text-left hover:shadow-2xl transition-all duration-200 hover:-translate-y-1"
-          >
+            className="group relative bg-white rounded-2xl p-8 text-left hover:shadow-2xl transition-all duration-200 hover:-translate-y-1">
+
             <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-5">
               <FolderOpen size={24} className="text-green-700" />
             </div>
@@ -69,8 +69,8 @@ export default function PortalSelect() {
           {/* Staff Portal */}
           <button
             onClick={() => selectPortal("staff")}
-            className="group relative bg-white rounded-2xl p-8 text-left hover:shadow-2xl transition-all duration-200 hover:-translate-y-1"
-          >
+            className="group relative bg-white rounded-2xl p-8 text-left hover:shadow-2xl transition-all duration-200 hover:-translate-y-1">
+
             <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-5">
               <BarChart3 size={24} className="text-blue-700" />
             </div>
@@ -91,6 +91,6 @@ export default function PortalSelect() {
 
         <p className="text-green-400 text-xs mt-10 opacity-60">⚠ DRAFT VERSION — FOR TESTING ONLY</p>
       </div>
-    </div>
-  );
+    </div>);
+
 }
