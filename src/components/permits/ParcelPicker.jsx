@@ -175,7 +175,7 @@ async function queryParcelAtPoint(mapPoint, mapView) {
     geometry: JSON.stringify({ x, y, spatialReference: { wkid: 32145 } }),
     geometryType: "esriGeometryPoint",
     spatialRel: "esriSpatialRelIntersects",
-    outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1",
+    outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1,ACRESGL",
     returnGeometry: true,
     outSR: 4326,
     f: "json",
@@ -188,7 +188,7 @@ async function queryParcelAtPoint(mapPoint, mapView) {
 async function searchBySpan(span) {
   const url = `${PARCEL_URL}/query?` + new URLSearchParams({
     where: `SPAN='${span.trim()}'`,
-    outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1",
+    outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1,ACRESGL",
     returnGeometry: true,
     outSR: 4326,
     f: "json",
@@ -201,7 +201,7 @@ async function searchBySpan(span) {
 async function searchByAddress(address) {
   const url = `${PARCEL_URL}/query?` + new URLSearchParams({
     where: `ADDRGL1 LIKE '%${address.trim().toUpperCase()}%'`,
-    outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1",
+    outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1,ACRESGL",
     returnGeometry: true,
     outSR: 4326,
     resultRecordCount: 5,
@@ -381,7 +381,8 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
     const town = attrs.TOWN || attrs.TNAME || "";
     const owner = attrs.OWNER1 || "";
     const addr = attrs.ADDRGL1 || "";
-    setSelectedParcel({ span, town, owner, addr, feature });
+    const acres = attrs.ACRESGL != null ? parseFloat(attrs.ACRESGL) : null;
+    setSelectedParcel({ span, town, owner, addr, acres, feature });
     setError(null);
 
     // Build GeoJSON geometry from feature
@@ -437,7 +438,7 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
         }),
         geometryType: "esriGeometryEnvelope",
         spatialRel: "esriSpatialRelIntersects",
-        outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1",
+        outFields: "SPAN,TOWN,TNAME,OWNER1,ADDRGL1,ACRESGL",
         returnGeometry: true,
         inSR: 4326,
         outSR: 4326,
@@ -631,6 +632,13 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
                   {selectedParcel.owner && ` · ${selectedParcel.owner}`}
                 </div>
                 <div className="mt-1.5 flex flex-wrap gap-1.5 text-xs">
+                  {selectedParcel.acres != null && (
+                    <span className="flex items-center gap-1 text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                      {selectedParcel.acres < 0.1
+                        ? `${Math.round(selectedParcel.acres * 43560).toLocaleString()} sq ft`
+                        : `${selectedParcel.acres.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} acres`}
+                    </span>
+                  )}
                   {siteChecks === "checking" && (
                     <span className="flex items-center gap-1 text-slate-400">
                       <Loader2 size={11} className="animate-spin" /> Checking site conditions…
