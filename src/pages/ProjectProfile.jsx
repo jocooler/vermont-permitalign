@@ -34,6 +34,7 @@ export default function ProjectProfile() {
     address: "",
     town: "",
     parcel_id: "",
+    parcel_acres: null,
     unit_count: 4,
     disturbed_acres: 0,
   });
@@ -60,6 +61,7 @@ export default function ProjectProfile() {
         address: p?.address || "",
         town: p?.town || "",
         parcel_id: p?.parcel_id || "",
+        parcel_acres: p?.parcel_acres ?? null,
         unit_count: p?.unit_count || 4,
         disturbed_acres: p?.disturbed_acres || 0,
       });
@@ -78,6 +80,7 @@ export default function ProjectProfile() {
       address: projectForm.address,
       town: projectForm.town,
       parcel_id: projectForm.parcel_id,
+      parcel_acres: projectForm.parcel_acres,
       unit_count: Number(projectForm.unit_count),
       disturbed_acres: Number(projectForm.disturbed_acres),
     };
@@ -143,6 +146,16 @@ export default function ProjectProfile() {
               <div className="grid sm:grid-cols-2 gap-4 text-sm">
                 {project.town && <div><span className="text-slate-400">Town:</span> <span className="text-slate-800 font-medium">{project.town}</span></div>}
                 {project.parcel_id && <div><span className="text-slate-400">SPAN:</span> <span className="text-slate-800 font-medium font-mono">{project.parcel_id}</span></div>}
+                {project.parcel_acres != null && (
+                  <div>
+                    <span className="text-slate-400">Parcel Area:</span>{" "}
+                    <span className="text-slate-800 font-medium">
+                      {project.parcel_acres < 0.1
+                        ? `${Math.round(project.parcel_acres * 43560).toLocaleString()} sq ft`
+                        : `${project.parcel_acres.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ac`}
+                    </span>
+                  </div>
+                )}
                 {project.address && <div className="sm:col-span-2"><span className="text-slate-400">Address:</span> <span className="text-slate-800 font-medium">{project.address}</span></div>}
                 {project.unit_count > 0 && <div><span className="text-slate-400">Units:</span> <span className="text-slate-800 font-medium">{project.unit_count}</span></div>}
                 {project.disturbed_acres > 0 && <div><span className="text-slate-400">Disturbed Acres:</span> <span className="text-slate-800 font-medium">{project.disturbed_acres}</span></div>}
@@ -185,8 +198,9 @@ export default function ProjectProfile() {
       {showParcelMap && (
         <ParcelPicker
           onClose={() => setShowParcelMap(false)}
-          onSelect={(span, town, addr, nearWetlands, floodplain, stream, lake, stateHighway, elevation) => {
+          onSelect={(span, town, addr, nearWetlands, floodplain, stream, lake, stateHighway, elevation, acres) => {
             setProjectField("parcel_id", span);
+            if (acres != null) setProjectField("parcel_acres", acres);
             if (town && !projectForm.town) setProjectField("town", town);
             if (addr && !projectForm.address) setProjectField("address", addr);
           }}
@@ -359,7 +373,7 @@ export default function ProjectProfile() {
 
             <div className="flex gap-3 pt-4 border-t">
               <button
-                onClick={() => { setIsEditing(false); setForm(profile || form); setProjectForm({ name: project?.name || "", description: project?.description || "", address: project?.address || "", town: project?.town || "", parcel_id: project?.parcel_id || "", unit_count: project?.unit_count || 4, disturbed_acres: project?.disturbed_acres || 0 }); }}
+                onClick={() => { setIsEditing(false); setForm(profile || form); setProjectForm({ name: project?.name || "", description: project?.description || "", address: project?.address || "", town: project?.town || "", parcel_id: project?.parcel_id || "", parcel_acres: project?.parcel_acres ?? null, unit_count: project?.unit_count || 4, disturbed_acres: project?.disturbed_acres || 0 }); }}
                 className="flex-1 px-4 py-2.5 rounded font-medium text-sm"
                 style={{ background: "var(--vt-gray-light)", color: "var(--vt-gray-dark)" }}
               >

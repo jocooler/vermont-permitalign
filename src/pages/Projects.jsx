@@ -76,8 +76,9 @@ function ProjectForm({ onSave, onCancel }) {
       {showParcelMap && (
         <ParcelPicker
           onClose={() => setShowParcelMap(false)}
-          onSelect={(span, town, addr, nearWetlands, floodplain, stream, lake, stateHighway, elevation) => {
+          onSelect={(span, town, addr, nearWetlands, floodplain, stream, lake, stateHighway, elevation, acres) => {
             set("parcel_id", span);
+            if (acres != null) set("parcel_acres", acres);
             if (town && !form.town) set("town", town);
             if (addr && !form.address) set("address", addr);
             const detected = [];

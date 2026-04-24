@@ -1,0 +1,170 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "address": {
+      "type": "string",
+      "description": "Project site address"
+    },
+    "town": {
+      "type": "string",
+      "description": "Town/municipality"
+    },
+    "parcel_id": {
+      "type": "string",
+      "description": "Parcel ID"
+    },
+    "parcel_acres": {
+      "type": "number",
+      "description": "Parcel area in acres from GIS data"
+    },
+    "project_type": {
+      "type": "string",
+      "enum": [
+        "residential",
+        "commercial",
+        "industrial",
+        "agricultural",
+        "mixed_use"
+      ],
+      "description": "Type of project"
+    },
+    "unit_count": {
+      "type": "number",
+      "description": "Number of residential units"
+    },
+    "disturbed_acres": {
+      "type": "number",
+      "description": "Acres of land disturbed"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "submitted",
+        "under_review",
+        "approved",
+        "denied"
+      ],
+      "default": "draft"
+    },
+    "site_conditions": {
+      "type": "object",
+      "properties": {
+        "near_wetlands": {
+          "type": "boolean"
+        },
+        "in_floodplain": {
+          "type": "boolean"
+        },
+        "near_shoreland": {
+          "type": "boolean"
+        },
+        "near_stream": {
+          "type": "boolean"
+        },
+        "state_highway_access": {
+          "type": "boolean"
+        },
+        "elevation_above_2500": {
+          "type": "boolean"
+        },
+        "existing_structures": {
+          "type": "boolean"
+        },
+        "pre_1978_structures": {
+          "type": "boolean"
+        },
+        "connects_municipal_sewer": {
+          "type": "boolean"
+        },
+        "own_water_system": {
+          "type": "boolean"
+        },
+        "near_lake_or_pond": {
+          "type": "boolean"
+        },
+        "federal_funding": {
+          "type": "boolean"
+        },
+        "soil_test_completed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "identified_permits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "permit_id": {
+            "type": "string"
+          },
+          "permit_name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "why_required": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "description": "Reusable applicant and project profile data",
+      "properties": {
+        "applicant_name": {
+          "type": "string"
+        },
+        "applicant_organization": {
+          "type": "string"
+        },
+        "applicant_email": {
+          "type": "string"
+        },
+        "applicant_phone": {
+          "type": "string"
+        },
+        "applicant_mailing_address": {
+          "type": "string"
+        },
+        "project_description": {
+          "type": "string"
+        },
+        "anticipated_start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "anticipated_end_date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name",
+    "project_type"
+  ]
+}

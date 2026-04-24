@@ -507,6 +507,7 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
         checks?.lake != null ? checks.lake : undefined,
         checks?.stateHighway != null ? checks.stateHighway : undefined,
         checks?.elevation != null ? checks.elevation : undefined,
+        selectedParcel.acres != null ? selectedParcel.acres : undefined,
       );
       onClose();
     }
