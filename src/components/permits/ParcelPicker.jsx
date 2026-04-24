@@ -7,8 +7,11 @@ const PARCEL_URL =
 const WETLAND_URL =
   "https://services5.arcgis.com/Uzks6LSde6r23wwG/arcgis/rest/services/Vermont_Significant_Wetland_Inventory/FeatureServer/0";
 
-const FEMA_NFHL_URL =
-  "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28"; // Flood Hazard Zones
+// FEMA NFHL — try primary, fall back to ArcGIS Online hosted copy
+const FEMA_NFHL_URLS = [
+  "https://hazards-fema.maps.arcgis.com/arcgis/rest/services/FIRMette/NFHLREST/FeatureServer/28",
+  "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28",
+];
 
 const NHD_FLOWLINE_URL =
   "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/6"; // Flowline - Large Scale
@@ -57,18 +60,18 @@ async function checkWetlandIntersection(parcelGeometry) {
     inSR: 4326,
     f: "json",
   });
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   const data = await res.json();
   return data.features || [];
 }
 
-// Check FEMA floodplain — intersect parcel with SFHA zones (A, AE, AO, AH, etc.)
+// Check FEMA floodplain — try multiple endpoints
 async function checkFloodplain(parcelGeometry) {
   const esriGeom = {
     rings: parcelGeometry.coordinates,
     spatialReference: { wkid: 4326 },
   };
-  const url = `${FEMA_NFHL_URL}/query?` + new URLSearchParams({
+  const params = new URLSearchParams({
     geometry: JSON.stringify(esriGeom),
     geometryType: "esriGeometryPolygon",
     spatialRel: "esriSpatialRelIntersects",
@@ -78,9 +81,18 @@ async function checkFloodplain(parcelGeometry) {
     inSR: 4326,
     f: "json",
   });
-  const res = await fetch(url);
-  const data = await res.json();
-  return (data.features || []).length > 0;
+  for (const baseUrl of FEMA_NFHL_URLS) {
+    try {
+      const res = await fetch(`${baseUrl}/query?${params}`, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data.error) continue;
+      return (data.features || []).length > 0;
+    } catch {
+      // try next
+    }
+  }
+  return null; // unavailable
 }
 
 // Check NHD perennial streams within ~100m buffer of parcel
@@ -98,7 +110,7 @@ async function checkNearStream(parcelGeometry) {
     inSR: 4326,
     f: "json",
   });
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   const data = await res.json();
   return (data.features || []).length > 0;
 }
@@ -111,14 +123,14 @@ async function checkNearLake(parcelGeometry) {
     geometry: JSON.stringify(env),
     geometryType: "esriGeometryEnvelope",
     spatialRel: "esriSpatialRelIntersects",
-    // FCode 39004 = lake/pond; filter >10 acres (~40469 sqm). AreaSqKm > 0.040469
-    where: "FCode IN (39004, 39009, 39010, 39011) AND AreaSqKm > 0.040469",
-    outFields: "FCode,GNIS_Name,AreaSqKm",
+    // FTYPE 390 = LakePond, 436 = Reservoir; filter >10 acres (~0.040469 sqkm)
+    where: "FTYPE IN (390, 436) AND AREASQKM > 0.040469",
+    outFields: "FTYPE,GNIS_NAME,AREASQKM",
     returnGeometry: false,
     inSR: 4326,
     f: "json",
   });
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   const data = await res.json();
   return (data.features || []).length > 0;
 }
@@ -131,9 +143,9 @@ async function checkElevation(rings) {
   const lon = sumLon / coords.length;
   const lat = sumLat / coords.length;
   const url = `https://epqs.nationalmap.gov/v1/json?x=${lon}&y=${lat}&units=Feet&includeDate=false`;
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   const data = await res.json();
-  return data.value; // feet
+  return data.value ?? data.locations?.[0]?.elevation; // feet
 }
 
 // Check if parcel touches a state-maintained highway (VTrans AOTCLASS state routes)
@@ -150,7 +162,7 @@ async function checkStateHighway(parcelGeometry) {
     inSR: 4326,
     f: "json",
   });
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   const data = await res.json();
   return (data.features || []).length > 0;
 }
