@@ -395,18 +395,22 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
 
     setSiteChecks("checking");
 
-    const safe = async (fn) => { try { return await fn(); } catch { return null; } };
+    const safe = async (name, fn) => {
+      try { return await fn(); }
+      catch (err) { console.error(`[ParcelPicker] ${name} failed:`, err); return null; }
+    };
 
     const [wetlandHits, floodplain, stream, lake, elevation, stateHighway] = await Promise.all([
-      safe(() => checkWetlandIntersection(geom)),
-      safe(() => checkFloodplain(geom)),
-      safe(() => checkNearStream(geom)),
-      safe(() => checkNearLake(geom)),
-      safe(() => checkElevation(geom.coordinates)),
-      safe(() => checkStateHighway(geom)),
+      safe("Wetlands (VSVI)", () => checkWetlandIntersection(geom)),
+      safe("Floodplain (FEMA NFHL)", () => checkFloodplain(geom)),
+      safe("Streams (NHD Flowline)", () => checkNearStream(geom)),
+      safe("Lakes/Ponds (NHD Waterbody)", () => checkNearLake(geom)),
+      safe("Elevation (USGS EPQS)", () => checkElevation(geom.coordinates)),
+      safe("State Highways (VTrans)", () => checkStateHighway(geom)),
     ]);
 
     const classes = wetlandHits ? [...new Set(wetlandHits.map(h => (h.attributes || h.properties || {}).CLASS))] : [];
+    const allFailed = [wetlandHits, floodplain, stream, lake, elevation, stateHighway].every(v => v === null);
     setSiteChecks({
       wetland: wetlandHits ? { hasWetland: wetlandHits.length > 0, classes } : null,
       floodplain,
@@ -414,6 +418,7 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
       lake,
       elevation,
       stateHighway,
+      fetchError: allFailed,
     });
   };
 
@@ -673,13 +678,19 @@ export default function ParcelPicker({ onClose, onSelect, readOnly = false, init
                       {siteChecks.elevation != null && (
                         <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full border ${siteChecks.elevation > 2500 ? "text-amber-700 bg-amber-50 border-amber-200 font-semibold" : "text-slate-500 bg-slate-50 border-slate-200"}`}>
                           {siteChecks.elevation > 2500 ? <AlertTriangle size={11} /> : null}
-                          {Math.round(siteChecks.elevation).toLocaleString()} ft
+                          Elevation: {Math.round(siteChecks.elevation).toLocaleString()} ft
                         </span>
                       )}
                       {/* State highway */}
                       {siteChecks.stateHighway && (
                         <span className="flex items-center gap-1 text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
                           <AlertTriangle size={11} /> State highway access
+                        </span>
+                      )}
+                      {/* Fetch error */}
+                      {siteChecks.fetchError && (
+                        <span className="flex items-center gap-1 text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                          <AlertTriangle size={11} /> Site condition data unavailable — check console for details
                         </span>
                       )}
                     </>
