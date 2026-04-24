@@ -46,13 +46,10 @@ function bufferEnvelope(rings, bufferDeg) {
 
 // Check if a parcel (GeoJSON geometry) intersects a classified wetland (Class I or II)
 async function checkWetlandIntersection(parcelGeometry) {
-  const esriGeom = {
-    rings: parcelGeometry.coordinates,
-    spatialReference: { wkid: 4326 },
-  };
+  const env = bufferEnvelope(parcelGeometry.coordinates, 0);
   const url = `${WETLAND_URL}/query?` + new URLSearchParams({
-    geometry: JSON.stringify(esriGeom),
-    geometryType: "esriGeometryPolygon",
+    geometry: JSON.stringify(env),
+    geometryType: "esriGeometryEnvelope",
     spatialRel: "esriSpatialRelIntersects",
     where: "CLASS IN (1, 2)",
     outFields: "CLASS,NWICode",
@@ -65,15 +62,12 @@ async function checkWetlandIntersection(parcelGeometry) {
   return data.features || [];
 }
 
-// Check FEMA floodplain — try multiple endpoints
+// Check FEMA floodplain — try multiple endpoints, use envelope to avoid URL length issues
 async function checkFloodplain(parcelGeometry) {
-  const esriGeom = {
-    rings: parcelGeometry.coordinates,
-    spatialReference: { wkid: 4326 },
-  };
+  const env = bufferEnvelope(parcelGeometry.coordinates, 0); // tight bbox, no extra buffer
   const params = new URLSearchParams({
-    geometry: JSON.stringify(esriGeom),
-    geometryType: "esriGeometryPolygon",
+    geometry: JSON.stringify(env),
+    geometryType: "esriGeometryEnvelope",
     spatialRel: "esriSpatialRelIntersects",
     where: "FLD_ZONE LIKE 'A%' OR FLD_ZONE LIKE 'V%'",
     outFields: "FLD_ZONE,ZONE_SUBTY",
