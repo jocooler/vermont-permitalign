@@ -19,8 +19,9 @@ const NHD_FLOWLINE_URL =
 const NHD_WATERBODY_URL =
   "https://hydro.nationalmap.gov/arcgis/rest/services/nhd/MapServer/12"; // Waterbody - Large Scale
 
-const VTRANS_ROADS_URL =
-  "https://maps.vtrans.vermont.gov/arcgis/rest/services/Master/General/FeatureServer/39"; // All Roads
+// US Census TIGER Secondary Roads — CORS-friendly, RTTYP='S' = State route, 'U' = US route
+const TIGER_ROADS_URL =
+  "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Transportation/MapServer/6";
 
 // Degrees per meter at ~44°N latitude
 const DEG_PER_METER = 1 / 111320;
@@ -146,18 +147,19 @@ async function checkElevation(rings) {
   return data.value ?? data.locations?.[0]?.elevation; // feet
 }
 
-// Check if parcel touches a state-maintained highway (VTrans AOTCLASS state routes)
+// Check if parcel touches a state/US highway using US Census TIGER (CORS-friendly)
+// RTTYP: 'I'=Interstate, 'S'=State route, 'U'=US route
 async function checkStateHighway(parcelGeometry) {
   const env = bufferEnvelope(parcelGeometry.coordinates, 0.0005); // ~50m buffer
-  const url = `${VTRANS_ROADS_URL}/query?` + new URLSearchParams({
+  // TIGER uses Web Mercator (WKID 3857) — convert bbox to meters approximation via inSR=4326
+  const url = `${TIGER_ROADS_URL}/query?` + new URLSearchParams({
     geometry: JSON.stringify(env),
     geometryType: "esriGeometryEnvelope",
     spatialRel: "esriSpatialRelIntersects",
-    // AOTCLASS: 5=US Route, 6=State Route, 7=Interstate
-    where: "AOTCLASS IN (5, 6, 7)",
-    outFields: "AOTCLASS,PRIMARYNAME,RTNAME",
-    returnGeometry: false,
-    inSR: 4326,
+    where: "RTTYP IN ('I', 'S', 'U')",
+    outFields: "RTTYP,NAME",
+    returnGeometry: "false",
+    inSR: "4326",
     f: "json",
   });
   const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
