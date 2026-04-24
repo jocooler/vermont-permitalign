@@ -80,9 +80,11 @@ async function checkFloodplain(parcelGeometry) {
       const res = await fetch(`${baseUrl}/query?${params}`, { signal: AbortSignal.timeout(8000) });
       if (!res.ok) continue;
       const data = await res.json();
-      if (data.error) continue;
+      console.log("[FEMA] response:", JSON.stringify(data).slice(0, 500));
+      if (data.error) { console.warn("[FEMA] error:", data.error); continue; }
       return (data.features || []).length > 0;
-    } catch {
+    } catch (e) {
+      console.warn("[FEMA] fetch failed:", e);
       // try next
     }
   }
