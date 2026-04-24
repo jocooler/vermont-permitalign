@@ -62,33 +62,35 @@ async function checkWetlandIntersection(parcelGeometry) {
   return data.features || [];
 }
 
-// Check FEMA floodplain — try multiple endpoints, use envelope to avoid URL length issues
+// Check FEMA floodplain — use POST to avoid URL length limits; try both endpoints
 async function checkFloodplain(parcelGeometry) {
-  const env = bufferEnvelope(parcelGeometry.coordinates, 0); // tight bbox, no extra buffer
-  const params = new URLSearchParams({
-    geometry: JSON.stringify(env),
-    geometryType: "esriGeometryEnvelope",
+  const body = new URLSearchParams({
+    geometry: JSON.stringify({ rings: parcelGeometry.coordinates, spatialReference: { wkid: 4326 } }),
+    geometryType: "esriGeometryPolygon",
     spatialRel: "esriSpatialRelIntersects",
     where: "FLD_ZONE LIKE 'A%' OR FLD_ZONE LIKE 'V%'",
     outFields: "FLD_ZONE,ZONE_SUBTY",
-    returnGeometry: false,
-    inSR: 4326,
+    returnGeometry: "false",
+    inSR: "4326",
     f: "json",
   });
   for (const baseUrl of FEMA_NFHL_URLS) {
     try {
-      const res = await fetch(`${baseUrl}/query?${params}`, { signal: AbortSignal.timeout(8000) });
+      const res = await fetch(`${baseUrl}/query`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+        signal: AbortSignal.timeout(10000),
+      });
       if (!res.ok) continue;
       const data = await res.json();
-      console.log("[FEMA] response:", JSON.stringify(data).slice(0, 500));
-      if (data.error) { console.warn("[FEMA] error:", data.error); continue; }
+      if (data.error) continue;
       return (data.features || []).length > 0;
-    } catch (e) {
-      console.warn("[FEMA] fetch failed:", e);
-      // try next
+    } catch {
+      // try next endpoint
     }
   }
-  return null; // unavailable
+  return null;
 }
 
 // Check NHD perennial streams within ~100m buffer of parcel
