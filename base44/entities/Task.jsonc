@@ -1,0 +1,77 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the project"
+    },
+    "permit_id": {
+      "type": "string",
+      "description": "Reference to the permit (optional)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed task description"
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "document_upload",
+        "information_required",
+        "review",
+        "other"
+      ],
+      "default": "other",
+      "description": "Type of task"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Task status"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the task is due"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the task was completed"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email of assignee (optional)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "Task priority"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about the task"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "task_type"
+  ]
+}

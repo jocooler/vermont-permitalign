@@ -58,6 +58,7 @@ import Projects from './pages/Projects';
 import ReviewQueue from './pages/ReviewQueue';
 import Settings from './pages/Settings';
 import Tasks from './pages/Tasks';
+import RequirementsDoc from './pages/RequirementsDoc';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "ReviewQueue": ReviewQueue,
     "Settings": Settings,
     "Tasks": Tasks,
+    "RequirementsDoc": RequirementsDoc,
 }
 
 export const pagesConfig = {

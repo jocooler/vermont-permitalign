@@ -1,0 +1,77 @@
+{
+  "name": "PermitType",
+  "type": "object",
+  "properties": {
+    "permit_key": {
+      "type": "string",
+      "description": "Unique permit identifier (e.g. '1', '47', '6.1')"
+    },
+    "name": {
+      "type": "string",
+      "description": "Full permit name"
+    },
+    "agency": {
+      "type": "string",
+      "description": "Responsible agency"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "core",
+        "likely",
+        "conditional"
+      ],
+      "description": "How required this permit is"
+    },
+    "phase": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "description": "Project phase: 1=Pre-Application, 2=Pre-Construction, 3=During Construction, 4=Post-Construction"
+    },
+    "sla_days": {
+      "type": "number",
+      "description": "Typical processing time in business days"
+    },
+    "why": {
+      "type": "string",
+      "description": "Short explanation of why this permit is triggered"
+    },
+    "trigger_key": {
+      "type": "string",
+      "description": "Key identifying which trigger function applies (used client-side)"
+    },
+    "sheet": {
+      "type": "string",
+      "description": "DEC Permit Handbook sheet reference (e.g. '#1')"
+    },
+    "description": {
+      "type": "string",
+      "description": "Full description of the permit"
+    },
+    "url": {
+      "type": "string",
+      "description": "Agency website URL"
+    },
+    "info_sheet_url": {
+      "type": "string",
+      "description": "Link to official DEC permit information sheet PDF"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this permit type is active"
+    }
+  },
+  "required": [
+    "permit_key",
+    "name",
+    "agency",
+    "category",
+    "phase"
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "name": "PermitApplication",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the parent project"
+    },
+    "permit_id": {
+      "type": "string",
+      "description": "Permit sheet reference (e.g. #1, #49)"
+    },
+    "permit_name": {
+      "type": "string",
+      "description": "Full permit name"
+    },
+    "agency": {
+      "type": "string",
+      "description": "Responsible agency"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "submitted",
+        "under_review",
+        "info_requested",
+        "approved",
+        "denied"
+      ],
+      "default": "not_started"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "core",
+        "likely_required",
+        "conditional"
+      ],
+      "description": "How required this permit is"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "submitted_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "sla_days": {
+      "type": "number",
+      "description": "Processing time in business days"
+    },
+    "reviewer_notes": {
+      "type": "string"
+    },
+    "info_requested": {
+      "type": "string",
+      "description": "Outstanding information requested from applicant"
+    },
+    "location": {
+      "type": "object",
+      "description": "Persisted location data from parcel lookup",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "town": {
+          "type": "string"
+        },
+        "span": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        }
+      }
+    },
+    "attached_documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Uploaded documents for this permit application"
+    },
+    "site_conditions": {
+      "type": "object",
+      "description": "Auto-detected environmental and site conditions",
+      "properties": {
+        "near_wetlands": {
+          "type": "boolean"
+        },
+        "in_floodplain": {
+          "type": "boolean"
+        },
+        "near_shoreland": {
+          "type": "boolean"
+        },
+        "near_stream": {
+          "type": "boolean"
+        },
+        "state_highway_access": {
+          "type": "boolean"
+        },
+        "elevation_above_2500": {
+          "type": "boolean"
+        },
+        "elevation_feet": {
+          "type": "number"
+        },
+        "existing_structures": {
+          "type": "boolean"
+        },
+        "pre_1978_structures": {
+          "type": "boolean"
+        },
+        "connects_municipal_sewer": {
+          "type": "boolean"
+        },
+        "own_water_system": {
+          "type": "boolean"
+        },
+        "near_lake_or_pond": {
+          "type": "boolean"
+        },
+        "federal_funding": {
+          "type": "boolean"
+        },
+        "soil_test_completed": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "required": [
+    "project_id",
+    "permit_id",
+    "permit_name"
+  ]
+}
